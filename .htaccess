@@ -1,6 +1,7 @@
 RewriteEngine on
 
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !.(ico,css,js,jpg,gif,png)$
 RewriteCond %{REQUEST_URI} !^/public/
 
 RewriteRule (.*) /public/index.php?url=$1 [L]

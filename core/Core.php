@@ -1,7 +1,13 @@
 <?php
 
+require_once("Logger.php");
+
 class Core{
 	function __construct($url){
+		//Initialize logger
+		$logger = new Logger("projectie.log", Logger::DEBUG);
+		$logger->log(Logger::DEBUG, "Processing request from ".$_SERVER['REMOTE_ADDR']."");
+
 		//Parse URL
 		$parsed_url = self::parseUrl($url);
 
