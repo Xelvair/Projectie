@@ -1,6 +1,6 @@
 <?php
-  if(isset($_GET["url"])){
-    $url = explode("/", $_GET["url"]);
-    print_r($url);
-  }
+	require_once("../core/Config.php");
+	require_once("../core/Core.php");
+
+	$core = new Core($_GET["url"]);
 ?>
