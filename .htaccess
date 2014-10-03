@@ -1,7 +1,7 @@
 RewriteEngine on
 
-RewriteCond %{REQUREST_FILENAME} !-f
-RewriteCond %{REQUREST_FILENAME} !-l
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-l
 RewriteCond %{REQUEST_URI} !^/public/
 
 RewriteRule (.*) /public/index.php?url=$1 [L]
