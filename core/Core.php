@@ -2,31 +2,49 @@
 
 require_once("Logger.php");
 
+//Initialize logger
+$logger = new Logger("projectie.log", Logger::DEBUG);
+
+function write_log($loglevel, $message){
+		global $logger;
+		$logger->log($loglevel, $message);
+}
+
 class Core{
 	function __construct($url){
-		//Initialize logger
-		$logger = new Logger("projectie.log", Logger::DEBUG);
-		$logger->log(Logger::DEBUG, "Processing request from ".$_SERVER['REMOTE_ADDR']."");
+		write_log(Logger::DEBUG, "Processing request from ".$_SERVER['REMOTE_ADDR']."");
+		write_log(Logger::DEBUG, "Request info: ".$_SERVER['QUERY_STRING']."");
 
 		//Parse URL
 		$parsed_url = self::parseUrl($url);
 
 		//After we parsed the URL, load controller
+		//If we fail to load, change the request url to home
 		$controller_filepath = self::controllerFilepath($parsed_url["controller"]);
 		if(file_exists($controller_filepath)){
 			require_once($controller_filepath);
 		} else {
 			require_once(self::controllerFilepath("home"));
+			$parsed_url["controller"] = "home";
+			$parsed_url["function"] = "index";
+			$parsed_url["params"] = null;
 		}
 
 		//Instantiate controller
-		$controller = new $parsed_url["controller"];
+		$controller_name = $parsed_url["controller"];
+		if(class_exists($controller_name)){
+			$controller = new $controller_name;
+		} else {
+			write_log(Logger::ERROR, "Failed to instantiate controller class'".$controller_name."'! Is the class named '".$controller_name."'?");
+			return;
+		}
 
 		//Check if method exists and call if it does
-		if(method_exists($controller, $parsed_url["function"])){
-			call_user_func(array($controller, $parsed_url["function"]), $parsed_url["params"]);
+		$function_name = $parsed_url["function"];
+		if(method_exists($controller, $function_name)){
+			call_user_func(array($controller, $function_name), $parsed_url["params"]);
 		} else {
-			echo "ERROR: Function '".$parsed_url["function"]."' does not exist on controller '".$parsed_url["controller"]."'!";
+			write_log(Logger::ERROR, "Function '".$function_name."' doesn't exist on controller '".$controller_name."'!");
 		}
 	}
 

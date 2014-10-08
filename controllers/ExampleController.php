@@ -8,6 +8,9 @@ class ExampleController extends Controller{
 
 	function ExampleFunction(){
 		echo "This is the example page of the ExampleController class.";
+
+		$model = $this->model("ExampleModel");
+		$model->test();
 	}
 }
 ?>
