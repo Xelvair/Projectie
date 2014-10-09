@@ -11,6 +11,7 @@ class ExampleController extends Controller{
 
 		$model = $this->model("ExampleModel");
 		$model->test();
+		print_r($this->view("ExampleView", ["examplestring" => "ExampleView Test String!"]));
 	}
 }
 ?>
