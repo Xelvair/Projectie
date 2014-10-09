@@ -1,9 +1,12 @@
 <?php
 
+require_once("Debug.php");
 require_once("Logger.php");
+require_once("Locale.php");
 
 //Initialize logger
 $logger = new Logger("projectie.log", Logger::DEBUG);
+$locale = new Locale();
 
 function write_log($loglevel, $message){
 		global $logger;
@@ -12,6 +15,8 @@ function write_log($loglevel, $message){
 
 class Core{
 	function __construct($url){
+		global $locale;
+
 		write_log(Logger::DEBUG, "Processing request from ".$_SERVER['REMOTE_ADDR']."");
 		write_log(Logger::DEBUG, "Request info: ".$_SERVER['QUERY_STRING']."");
 

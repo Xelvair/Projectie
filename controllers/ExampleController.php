@@ -6,7 +6,16 @@ class ExampleController extends Controller{
 		echo "This is the index page of the ExampleController class.";
 	}
 
-	function ExampleFunction(){
+	function ExampleFunction($data){
+		//It is important that every controller loads a locale before doing anything with $locale
+		global $locale;
+		if(isset($data[0])){
+			$lang = $data[0];
+		} else {
+			$lang = "en-us";
+		}
+		$locale->load($lang);
+
 		echo "This is the example page of the ExampleController class.";
 
 		$model = $this->model("ExampleModel");
