@@ -7,6 +7,13 @@ require_once("Locale.php");
 //Initialize logger
 $logger = new Logger("projectie.log", Logger::DEBUG);
 $locale = new Locale();
+$mysqli = new mysqli("localhost", "root", "", "projectie");
+
+if($mysqli->connect_errno){
+	write_log(Logger::ERROR, "Failed to connect to database!");
+}
+
+require_once("Db.php");
 
 function write_log($loglevel, $message){
 		global $logger;
@@ -15,10 +22,11 @@ function write_log($loglevel, $message){
 
 class Core{
 	function __construct($url){
+		global $mysqli;
 		global $locale;
 
-		write_log(Logger::DEBUG, "Processing request from ".$_SERVER['REMOTE_ADDR']."");
-		write_log(Logger::DEBUG, "Request info: ".$_SERVER['QUERY_STRING']."");
+		write_log(Logger::DEBUG, "Processing request from ".$_SERVER['REMOTE_ADDR']);
+		write_log(Logger::DEBUG, "Request info: ".$_SERVER['QUERY_STRING']);
 
 		//Parse URL
 		$parsed_url = self::parseUrl($url);
@@ -47,7 +55,7 @@ class Core{
 		//Check if method exists and call if it does
 		$function_name = $parsed_url["function"];
 		if(method_exists($controller, $function_name)){
-			call_user_func(array($controller, $function_name), $parsed_url["params"]);
+			echo call_user_func(array($controller, $function_name), $parsed_url["params"]);
 		} else {
 			write_log(Logger::ERROR, "Function '".$function_name."' doesn't exist on controller '".$controller_name."'!");
 		}

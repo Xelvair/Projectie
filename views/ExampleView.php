@@ -3,5 +3,4 @@
 	global $locale;
 	echo $_DATA["examplestring"];	
 	echo $locale["test"];
-	unset($locale["test"]);
 ?>

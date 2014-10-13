@@ -3,8 +3,7 @@ require_once("../core/Controller.php");
 
 class Home extends Controller{
 	function index(){
-		echo "hi";
-		$this->model("penis", 213, "shit");
+		return $this->view("HtmlBase", array("head" => "<title>this is the title!</title>", "body" => "this is the body"));
 	}
 }
 ?>

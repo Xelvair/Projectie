@@ -36,8 +36,7 @@ class Controller{
 
 		include($view_filepath);
 
-		$content = ob_get_contents();
-		ob_clean();
+		$content = ob_get_clean();
 
 		return $content;
 	}

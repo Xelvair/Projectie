@@ -3,10 +3,12 @@ require_once("../core/Controller.php");
 
 class ExampleController extends Controller{
 	function index(){
-		echo "This is the index page of the ExampleController class.";
+		return "This is the index page of the ExampleController class.";
 	}
 
 	function ExampleFunction($data){
+		$html = "";
+
 		//It is important that every controller loads a locale before doing anything with $locale
 		global $locale;
 		if(isset($data[0])){
@@ -16,11 +18,14 @@ class ExampleController extends Controller{
 		}
 		$locale->load($lang);
 
-		echo "This is the example page of the ExampleController class.";
+		$html .= "This is the example page of the ExampleController class.";
 
 		$model = $this->model("ExampleModel");
-		$model->test();
-		print_r($this->view("ExampleView", ["examplestring" => "ExampleView Test String!"]));
+
+		$html .= $model->test();
+		$html .= $this->view("ExampleView", ["examplestring" => "ExampleView Test String!"]);
+
+		return $html;
 	}
 }
 ?>
