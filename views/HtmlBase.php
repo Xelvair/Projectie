@@ -1,8 +1,20 @@
+<?php
+//PARAMETERS
+//title : title of the webpage
+//body : body of the page
+?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <?=$_DATA["head"];?>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="public/css/bootstrap.min.css">
+		<script type='text/javascript' src="public/js/jquery-2.1.1.min.js"></script>
+		<script type='text/javascript' src="public/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="public/images/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="public/images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" type="text/css" href="public/css/styles.css">
+    <title><?=$_DATA["title"];?></title>
 </head>    
 <body>
     <?php echo $_DATA["body"]; ?>

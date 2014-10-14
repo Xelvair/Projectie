@@ -3,7 +3,10 @@ require_once("../core/Controller.php");
 
 class Home extends Controller{
 	function index(){
-		return $this->view("HtmlBase", array("head" => "<title>this is the title!</title>", "body" => "this is the body"));
+		$content = $this->view("ContentWrapper", array("content" => "content."));
+		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+																						"body" => $content));
+		return $html;
 	}
 }
 ?>
