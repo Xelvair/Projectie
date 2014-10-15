@@ -44,6 +44,9 @@ class Locale implements ArrayAccess{
 	}
 
 	public function offsetGet($offset){
+		if(!isset($this->locale)){
+			write_log(Logger::ERROR, "Tried to retrieve string from locale, but locale wasn't loaded!");
+		}
 		return $this->locale[$offset];
 	}
 

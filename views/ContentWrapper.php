@@ -1,6 +1,7 @@
 <?php
 //PARAMETERS
 //content : site content
+global $locale;
 ?>
 <script>
 	$(document).ready(function(){
@@ -21,13 +22,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#"><img style="margin: -10px;" src="public/images/logo.png" height="40"/></a>
+      <a class="navbar-brand" href="#"><img style="margin: -10px;" src="<?=abspath("/public/images/logo.png")?>" height="40"/></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-left">
-       <li><a href="#toggle-menue" style="font-size:20px;" id="menu-toggle"><span class="glyphicon glyphicon-list"> </span></a></li>
+       <li><a href="#toggle-menue" style="font-size:20px; height:50px;" id="menu-toggle"><span class="glyphicon glyphicon-list"></span></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li style="margin-right:50px;"></li>
@@ -36,16 +37,16 @@
             <input type="text" class="form-control" placeholder="Suche...">
           </div>
           <div class="btn-group">
-            <button type="button" class="btn btn-default">Suche</button>
-            <button type="button" class="btn btn-default">Erweitert...</button>
+            <button type="button" class="btn btn-default"><?=$locale["search"];?></button>
+            <button type="button" class="btn btn-default"><?=$locale["advanced"] ?></button>
           </div>
         </form>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mehr<span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$locale["more"]?><span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="#">About</a></li>
+            <li><a href="#"><?=$locale["about"]?></a></li>
             <li class="divider"></li>
-            <li><a href="#">Logout</a></li>
+            <li><a href="#"><?=$locale["logout"]?></a></li>
           </ul>
         </li>
       </ul>
@@ -56,19 +57,18 @@
 <div id="wrapper">
 	<div id="sidebar-wrapper">
     <ul class="sidebar-nav">
-      <li class="sidebar-brand">
-        Mein Projectie </li>
+      <li class="sidebar-brand">-Username-</li>
       <li>
-        <a href="#">Profil</a>
+        <a href="#"><?=$locale["profile"]?></a>
       </li>
       <li>
-        <a href="#">Eigene Projekte</a>
+        <a href="#"><?=$locale["my_projects"]?></a>
       </li>
       <li>
-        <a href="#">Favoriten</a>
+        <a href="#"><?=$locale["favorites"]?></a>
       </li>
       <li>
-        <a href="#">Konversationen</a>
+        <a href="#"><?=$locale["conversations"]?></a>
       </li>
     </ul>
   </div>

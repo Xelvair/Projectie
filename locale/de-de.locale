@@ -1,3 +1,11 @@
 {
-	"test": "DIES IST EINE TEST ZEICHENKETTE!!!!!"
+	"search": "Suche",
+	"advanced": "Erweitert",
+	"profile": "Profil",
+	"my_projects": "Meine Projekte",
+	"favorites": "Favoriten",
+	"conversations": "Konversationen",
+	"more": "Mehr",
+	"about": "Über",
+	"logout": "Ausloggen"
 }

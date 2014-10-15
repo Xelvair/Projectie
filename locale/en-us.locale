@@ -1,3 +1,11 @@
 {
-	"test": "This is a test string"
+	"search": "Search",
+	"advanced": "Advanced",
+	"profile": "Profile",
+	"my_projects": "My Projects",
+	"favorites": "Favorites",
+	"conversations": "Conversations",
+	"more": "More",
+	"about": "About",
+	"logout": "Log Out"
 }

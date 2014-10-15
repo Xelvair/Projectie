@@ -23,6 +23,7 @@ class ExampleController extends Controller{
 		$model = $this->model("ExampleModel");
 
 		$html .= $model->test();
+		$html .= var_dump($_SERVER);
 		$html .= $this->view("ExampleView", ["examplestring" => "ExampleView Test String!"]);
 
 		return $html;

@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require_once("Debug.php");
 require_once("Logger.php");
 require_once("Locale.php");
@@ -18,6 +20,10 @@ require_once("Db.php");
 function write_log($loglevel, $message){
 		global $logger;
 		$logger->log($loglevel, $message);
+}
+
+function abspath($path){
+	return "http://".preg_replace('#/+#','/', $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/".$path);
 }
 
 class Core{
