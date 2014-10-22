@@ -7,5 +7,10 @@
 	"conversations": "Conversations",
 	"more": "More",
 	"about": "About",
-	"logout": "Log Out"
+	"logout": "Log Out",
+	"welcome_install": "Welcome to the Projectie Install Wizard!",
+	"db_prompt": "Please enter the name of the database, and we'll initialize it in no time!",
+	"go": "Go!",
+	"db_init_succ": "Database was initialized successfully!",
+	"db_init_fail": "Failed to initialize database! Please check whether you have a DB with the entered name!"
 }

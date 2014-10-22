@@ -2,6 +2,8 @@
 
 session_start();
 
+$CONFIG = json_decode(file_get_contents(abspath("projectie.cfg")), true);
+
 require_once("Debug.php");
 require_once("Logger.php");
 require_once("Locale.php");
@@ -9,7 +11,7 @@ require_once("Locale.php");
 //Initialize logger
 $logger = new Logger("projectie.log", Logger::DEBUG);
 $locale = new Locale();
-$mysqli = new mysqli("localhost", "root", "", "projectie");
+$mysqli = new mysqli("localhost", "root", "", $CONFIG["db_name"]);
 
 if($mysqli->connect_errno){
 	write_log(Logger::ERROR, "Failed to connect to database!");
