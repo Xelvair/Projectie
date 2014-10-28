@@ -2,6 +2,7 @@
 //PARAMETERS
 //title : title of the webpage
 //body : body of the page
+//body_padding : whether to add padding to the navbar
 ?>
 
 <!DOCTYPE HTML>
@@ -16,7 +17,7 @@
 		<link rel="stylesheet" type="text/css" href="<?=abspath("public/css/styles.css")?>">
     <title><?=$_DATA["title"];?></title>
 </head>    
-<body>
+<body <?php if($_DATA["body_padding"]){echo "class='body-padding'";} ?>>
     <?php echo $_DATA["body"]; ?>
 </body>
 </html>

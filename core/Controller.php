@@ -1,7 +1,7 @@
 <?php
 
 class Controller{
-	protected function model($model, $data = null){
+	protected function model($model){
 		//Determine filepath
 		$model_filepath = self::modelFilepath($model);
 		if(file_exists($model_filepath)){
@@ -13,7 +13,10 @@ class Controller{
 
 		//Instantiate object
 		if(class_exists($model)){
-			$model_obj = new $model($data);
+			$ref = new ReflectionClass($model);
+			$params = func_get_args();
+			array_shift($params);
+  			return $ref->newInstanceArgs($params);
 		} else {
 			write_log(Logger::ERROR, "Failed to instantiate model class'".$model."'! Is the class named '".$model."'?");
 			return null;

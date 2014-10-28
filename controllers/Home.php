@@ -16,7 +16,8 @@ class Home extends Controller{
 		$content = $this->view("TrendingProjectsSidebar", $trending_projects);
 		$contentwrap = $this->view("ContentWrapper", array("content" => $content));
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-																						"body" => $contentwrap));
+												"body" => $contentwrap, 
+												"body_padding" => true));
 		return $html;
 	}
 }

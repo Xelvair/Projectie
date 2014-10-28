@@ -31,7 +31,8 @@ class Install extends Controller{
 
 			$content = $this->view("Install", array("action" => $action));
 			$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-																							"body" => $content));
+													"body" => $content, 
+													"body_padding" => true));
 			return $html;
 		}
 	}
