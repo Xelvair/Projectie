@@ -5,10 +5,8 @@
 //entries["title"] : entry title
 //entries["desc"] : entry description
 ?>
-<div class="row">          
-  <div class="col-md-10" id="page_content_left">
-  </div><!--page-content-left-->
-  <div class="col-md-2" id="page_content_right">
+
+
   	<div class="h4" id="content_right_header"><strong>Trending Projects</strong></div>
   	<?php foreach($_DATA["entries"] as $entry){ ?>
   	<div class="thumbnail">
@@ -19,5 +17,3 @@
   		</div>
   	</div>
   	<?php }?>
-  </div><!--page-content-right-->
-</div>
