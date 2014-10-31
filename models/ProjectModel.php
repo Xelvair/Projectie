@@ -3,7 +3,7 @@
 require_once("../core/Debug.php");
 require_once("../core/Model.php");
 
-class Project implements Model{
+class ProjectModel implements Model{
 	public function create($creator_id, $info){
 		// $info PARAMETERS
 		// [title]: Title of the Project

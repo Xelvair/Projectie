@@ -2,7 +2,7 @@
 
 require_once "../core/Controller.php";
 
-class Install extends Controller{
+class InstallController extends Controller{
 	public function index($data){
 		global $CONFIG;
 		global $locale;

@@ -2,7 +2,7 @@
 
 require_once(abspath_lcl("/core/Model.php"));
 
-class Chat implements Model{
+class ChatModel implements Model{
 	public function create_public(){
 		global $mysqli;
 

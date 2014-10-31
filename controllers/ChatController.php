@@ -2,7 +2,7 @@
 
 require_once(abspath_lcl("/core/Controller.php"));
 
-class Chat extends Controller{
+class ChatController extends Controller{
 
 	public function get($data){
 		$auth = $this->model("Auth");

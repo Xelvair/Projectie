@@ -2,7 +2,7 @@
 
 require_once(abspath_lcl("/core/Controller.php"));
 
-class Test extends Controller{
+class TestController extends Controller{
 	public function auth(){
 		global $locale;
 		global $CONFIG;

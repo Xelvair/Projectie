@@ -1,7 +1,7 @@
 <?php
 require_once("../core/Controller.php");
 
-class Home extends Controller{
+class HomeController extends Controller{
 	function index(){
 		global $locale;
 		global $CONFIG;

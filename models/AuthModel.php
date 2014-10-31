@@ -1,9 +1,9 @@
 <?php
 
 require_once("../core/Model.php");
-require_once("../models/User.php");
+require_once("../models/UserModel.php");
 
-class Auth implements Model{
+class AuthModel implements Model{
 	function __construct(){
 		global $mysqli;
 		if(isset($_SESSION["login_user_id"])){
@@ -14,7 +14,7 @@ class Auth implements Model{
 			$stmt_load_user->bind_result($user_id, $create_time, $email, $username);
 
 			if($stmt_load_user->fetch()){
-				$this->loggedInUser = new User($user_id, $create_time, $username, $email);
+				$this->loggedInUser = new UserModel($user_id, $create_time, $username, $email);
 				write_log(Logger::DEBUG, "Auth constructed with logged in user '".$username."'!");
 			} else {
 				write_log(Logger::WARNING, "Logged out user ".$_SESSION["login_user_id"]." - id doesn't exist in database!");
@@ -73,7 +73,7 @@ class Auth implements Model{
 		} else {
 			//If login succeeded, write to the session and set values
 			$_SESSION["login_user_id"] = $res_user_id;
-			$loggedInUser = new User($res_user_id, $res_create_time, $res_username, $res_email);
+			$loggedInUser = new UserModel($res_user_id, $res_create_time, $res_username, $res_email);
 			write_log(Logger::DEBUG, "User '".$res_username."' logged in.");
 
 			return true;

@@ -3,6 +3,7 @@
 class Controller{
 	protected function model($model){
 		//Determine filepath
+		$model = $model."Model";
 		$model_filepath = self::modelFilepath($model);
 		if(file_exists($model_filepath)){
 			include_once($model_filepath);
@@ -26,6 +27,7 @@ class Controller{
 	}
 
 	protected function view($view, $data){
+		$view = $view."View";
 		$view_filepath = self::viewFilepath($view);
 
 		if(!file_exists($view_filepath)){

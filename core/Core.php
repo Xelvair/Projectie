@@ -49,8 +49,8 @@ class Core{
 		if(file_exists($controller_filepath)){
 			require_once($controller_filepath);
 		} else {
-			require_once(self::controllerFilepath("home"));
-			$parsed_url["controller"] = "home";
+			require_once(self::controllerFilepath("homecontroller"));
+			$parsed_url["controller"] = "HomeController";
 			$parsed_url["function"] = "index";
 			$parsed_url["params"] = null;
 		}
@@ -79,7 +79,7 @@ class Core{
 
 		if($url != ""){
 			$url = explode("/", $url);
-			$result["controller"] = $url[0];
+			$result["controller"] = $url[0]."Controller";
 			if(sizeof($url) > 1){
 				$result["function"] = $url[1];
 				if(sizeof($url) > 2){
