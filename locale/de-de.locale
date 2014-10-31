@@ -12,5 +12,8 @@
 	"db_prompt": "Bitte geben Sie den Namen der Dantenbank ein, wir werden diese dann initialisieren!",
 	"go": "Los!",
 	"db_init_succ": "Datenbank wurde erfolgreich initialisiert!",
-	"db_init_fail": "Initialisierung fehlgeschlagen! Bitte prüfen Sie, ob eine Datenbank mit dem angegebenen Namen existiert!"
+	"db_init_fail": "Initialisierung fehlgeschlagen! Bitte prüfen Sie, ob eine Datenbank mit dem angegebenen Namen existiert!",
+	"news": "Aktualisierungen",
+	"new_projects": "Neu",
+	"trending_projects": "Aufsteigend"
 }

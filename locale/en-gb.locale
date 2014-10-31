@@ -12,5 +12,8 @@
 	"db_prompt": "Please enter the name of the database, and we'll initialize it in no time!",
 	"go": "Go!",
 	"db_init_succ": "Database was initialized successfully!",
-	"db_init_fail": "Failed to initialize database! Please check whether you have a DB with the entered name!"
+	"db_init_fail": "Failed to initialize database! Please check whether you have a DB with the entered name!",
+	"news": "News",
+	"new_projects": "New",
+	"trending_projects": "Trending"
 }

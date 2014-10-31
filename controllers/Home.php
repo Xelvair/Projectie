@@ -9,15 +9,15 @@ class Home extends Controller{
 		$locale->load("en-us");
 
 	
-		$new_list = array("entries" => array(), "list_title" => "New Projects");
+		$new_list = array("entries" => array(), "list_title" => $locale["new_projects"]);
 		array_push($new_list["entries"], array("title" => "New Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
 		$html_new = $this->view("TitleDescriptionList", $new_list);
 		
-		$news_list = array("entries" => array(), "list_title" => "News");
+		$news_list = array("entries" => array(), "list_title" => $locale["news"]);
 		array_push($news_list["entries"], array("title" => "News 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
 		$html_news = $this->view("TitleDescriptionList", $news_list);
 		
-		$trending_list = array("entries" => array(), "list_title" => "Trending Projects");
+		$trending_list = array("entries" => array(), "list_title" => $locale["trending_projects"]);
 		array_push($trending_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
 		array_push($trending_list["entries"], array("title" => "Trending Project 2", "desc" => "Test Desc 2", "thumb" => abspath("/public/images/question_mark_small.png")));
 		array_push($trending_list["entries"], array("title" => "Trending Project 3", "desc" => "Test Desc 3", "thumb" => abspath("/public/images/question_mark_small.png")));

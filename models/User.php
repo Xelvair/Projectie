@@ -2,11 +2,13 @@
 
 class User{
 	private $id;
+	private $createTime;
 	private $name;
 	private $email;
 
-	function __construct($id, $name, $email){
+	function __construct($id, $create_time, $name, $email){
 		$this->setId($id);
+		$this->setCreateTime($create_time);
 		$this->setName($name);
 		$this->setEmail($email);
 	}
@@ -17,6 +19,14 @@ class User{
 
 	public function getId(){
 		return $this->id;
+	}
+
+	public function setCreateTime($val){
+		$this->createTime = $val;
+	}
+
+	public function getCreateTime(){
+		return $this->createTime;
 	}
 
 	public function setName($val){

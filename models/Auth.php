@@ -8,13 +8,13 @@ class Auth implements Model{
 		global $mysqli;
 		if(isset($_SESSION["login_user_id"])){
 			write_log(Logger::DEBUG, $_SESSION["login_user_id"]);
-			$stmt_load_user = $mysqli->prepare("SELECT user_id, email, username from user WHERE user_id = ?");
+			$stmt_load_user = $mysqli->prepare("SELECT user_id, create_time, email, username from user WHERE user_id = ?");
 			$stmt_load_user->bind_param("s", $_SESSION["login_user_id"]);
 			$stmt_load_user->execute();
-			$stmt_load_user->bind_result($user_id, $email, $username);
+			$stmt_load_user->bind_result($user_id, $create_time, $email, $username);
 
 			if($stmt_load_user->fetch()){
-				$this->loggedInUser = new User($user_id, $username, $email);
+				$this->loggedInUser = new User($user_id, $create_time, $username, $email);
 				write_log(Logger::DEBUG, "Auth constructed with logged in user '".$username."'!");
 			} else {
 				write_log(Logger::WARNING, "Logged out user ".$_SESSION["login_user_id"]." - id doesn't exist in database!");
@@ -39,8 +39,8 @@ class Auth implements Model{
 
 		$password_hash = md5($password.$password_salt);
 
-		$stmt = $mysqli->prepare("INSERT INTO user (email, username, password_salt, password_hash) VALUES(?, ?, ?, ?)");
-		$stmt->bind_param("ssss", $email, $username, $password_salt, $password_hash);
+		$stmt = $mysqli->prepare("INSERT INTO user (create_time, email, username, password_salt, password_hash) VALUES(?, ?, ?, ?, ?)");
+		$stmt->bind_param("issss", time(), $email, $username, $password_salt, $password_hash);
 		if($stmt->execute()){
 			write_log(Logger::DEBUG, "Registered account '".$username."'!");
 			return true;
@@ -54,10 +54,10 @@ class Auth implements Model{
 		global $mysqli;
 
 		//Load user from database
-		$stmt = $mysqli->prepare("SELECT user_id, email, username, password_hash, password_salt FROM user WHERE email = ?");
+		$stmt = $mysqli->prepare("SELECT user_id, create_time, email, username, password_hash, password_salt FROM user WHERE email = ?");
 		$stmt->bind_param("s", $email);
 		$stmt->execute();
-		$stmt->bind_result($res_user_id, $res_email, $res_username, $res_password_hash, $res_password_salt);
+		$stmt->bind_result($res_user_id, $res_create_time, $res_email, $res_username, $res_password_hash, $res_password_salt);
 		if(!$stmt->fetch()){
 			write_log(Logger::WARNING, "Failed to login, email '".$email."' not found!");
 			return false;
@@ -73,7 +73,7 @@ class Auth implements Model{
 		} else {
 			//If login succeeded, write to the session and set values
 			$_SESSION["login_user_id"] = $res_user_id;
-			$loggedInUser = new User($res_user_id, $res_username, $res_email);
+			$loggedInUser = new User($res_user_id, $res_create_time, $res_username, $res_email);
 			write_log(Logger::DEBUG, "User '".$res_username."' logged in.");
 
 			return true;

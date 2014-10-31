@@ -54,6 +54,35 @@ class Test extends Controller{
 			header("Location: ".abspath("/test/auth"));
 		}
 	}
+
+	public function project(){
+		global $locale;
+
+		$locale->load("en-us");
+
+		$content = $this->view("ProjectTest", array());
+		return $this->view("HtmlBase", array(	"title" => "Project Test",
+												"body" => $content,
+												"body_padding" => false));
+	}
+
+	public function project_action(){
+		if(isset($_POST["title"]) && isset($_POST["subtitle"]) && isset($_POST["description"])){
+			$project = $this->model("project");
+			$auth = $this->model("Auth");
+			$logged_in_user = $auth->getLoggedInUser();
+			$create_result = $project->create($logged_in_user->getId(), array(	"title" => htmlentities($_POST["title"]), 
+																				"subtitle" => htmlentities($_POST["subtitle"]), 
+																				"description" => htmlentities($_POST["description"])));
+			if($create_result){
+				header(abspath("/test/project/success"));
+			} else {
+				header(abspath("/test/project/failure"));
+			}
+		} else {
+			header(abspath("/test/project"));
+		}
+	}
 }
 
 ?>
