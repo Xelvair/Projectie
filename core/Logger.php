@@ -27,7 +27,6 @@ class Logger{
 
 		fclose($logfile);
 
-
 	}
 
 	private $filename;

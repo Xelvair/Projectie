@@ -1,6 +1,6 @@
 <?php
 
-require_once("../core/Controller.php");
+require_once(abspath_lcl("/core/Controller.php"));
 
 class Test extends Controller{
 	public function auth(){
@@ -75,9 +75,9 @@ class Test extends Controller{
 																				"subtitle" => htmlentities($_POST["subtitle"]), 
 																				"description" => htmlentities($_POST["description"])));
 			if($create_result){
-				header(abspath("/test/project/success"));
+				header("Location: ".abspath("/test/project/success"));
 			} else {
-				header(abspath("/test/project/failure"));
+				header("Location: ".abspath("/test/project/failure"));
 			}
 		} else {
 			header(abspath("/test/project"));

@@ -28,6 +28,10 @@ function abspath($path){
 	return "http://".preg_replace('#/+#','/', $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/".$path);
 }
 
+function abspath_lcl($path){
+	return preg_replace('#/+#','/', $_SERVER["DOCUMENT_ROOT"].$path);
+}
+
 class Core{
 	function __construct($url){
 		global $mysqli;
