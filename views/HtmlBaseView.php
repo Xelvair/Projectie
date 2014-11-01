@@ -15,6 +15,7 @@
 		<link rel="shortcut icon" href="<?=abspath("public/images/favicon.ico")?>" type="image/x-icon">
 		<link rel="icon" href="<?=abspath("public/images/favicon.ico")?>" type="image/x-icon">
 		<link rel="stylesheet" type="text/css" href="<?=abspath("public/css/styles.css")?>">
+    <script src='<?=abspath("public/js/chat.js")?>'></script>
     <title><?=$_DATA["title"];?></title>
 </head>    
 <body <?php if($_DATA["body_padding"]){echo "class='body-padding'";} ?>>

@@ -87,7 +87,7 @@ class AuthModel implements Model{
 		$this->loggedInUser = null;
 	}
 
-	public function getLoggedInUser(){
+	public function get_current_user(){
 		return $this->loggedInUser;
 	}
 

@@ -27,23 +27,30 @@ class ChatModel implements Model{
 		$stmt_check_access->bind_param("i", $chat_id);
 		$stmt_check_access->execute();
 		$stmt_check_access->bind_result($res_access, $res_access_id);
-		
+
 		//if no chat was retrieved, fail and return
 		if(!$stmt_check_access->fetch()){
 			write_log(Logger::WARNING, "Failed to send message to chat: Chat #".$chat_id." doesn't exist!");
 			return false;
 		}
 
+		$stmt_check_access->free_result();
+
 		switch ($res_access){
 			case "PUBLIC":
 				$stmt_send_message = $mysqli->prepare("INSERT INTO chatmessage (chat_id, user_id, send_time, message) VALUES (?, ?, ?, ?)");
 				$stmt_send_message->bind_param("iiis", $chat_id, $user_id, time(), $message);
+				$stmt_send_message->execute();
+				write_log(Logger::DEBUG, "User #".$user_id." sent message'".$message."'");
 				return true;
 				break;
 			case "PROJECT_SPECIFIC":
 				//TODO: Check more access
 				write_log(Logger::WARNING, "Tried to send message to project-specific chat. Feature not implemented yet.");
 				return false;
+				break;
+			default:
+				write_log(Logger::ERROR, "Default case reached in ChatModel::send()!");
 				break;
 		}
 	}
@@ -66,6 +73,7 @@ class ChatModel implements Model{
 	}
 
 	public function get_messages_since($requester, $chat_id, $time){
+		global $mysqli;
 
 		//TODO: Check access
 

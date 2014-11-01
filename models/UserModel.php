@@ -7,41 +7,41 @@ class UserModel{
 	private $email;
 
 	function __construct($id, $create_time, $name, $email){
-		$this->setId($id);
-		$this->setCreateTime($create_time);
-		$this->setName($name);
-		$this->setEmail($email);
+		$this->set_id($id);
+		$this->set_create_time($create_time);
+		$this->set_name($name);
+		$this->set_email($email);
 	}
 
-	public function setId($val){
+	public function set_id($val){
 		$this->id = $val;
 	}
 
-	public function getId(){
+	public function get_id(){
 		return $this->id;
 	}
 
-	public function setCreateTime($val){
+	public function set_create_time($val){
 		$this->createTime = $val;
 	}
 
-	public function getCreateTime(){
+	public function get_create_time(){
 		return $this->createTime;
 	}
 
-	public function setName($val){
+	public function set_name($val){
 		$this->name = $val;
 	}
 
-	public function getName(){
+	public function get_name(){
 		return $this->name;
 	}
 
-	public function setEmail($val){
+	public function set_email($val){
 		$this->email = $val;
 	}
 
-	public function getEmail(){
+	public function get_email(){
 		return $this->email;
 	}
 }

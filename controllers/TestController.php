@@ -10,9 +10,9 @@ class TestController extends Controller{
 		$locale->load("en-us");
 
 		$auth = $this->model("Auth");
-		$logged_in_user = $auth->getLoggedInUser();
+		$logged_in_user = $auth->get_current_user();
 		if($logged_in_user){
-			$login_name = $logged_in_user->getName();
+			$login_name = $logged_in_user->get_name();
 		} else {
 			$login_name = null;
 		}
@@ -70,8 +70,8 @@ class TestController extends Controller{
 		if(isset($_POST["title"]) && isset($_POST["subtitle"]) && isset($_POST["description"])){
 			$project = $this->model("project");
 			$auth = $this->model("Auth");
-			$logged_in_user = $auth->getLoggedInUser();
-			$create_result = $project->create($logged_in_user->getId(), array(	"title" => htmlentities($_POST["title"]), 
+			$logged_in_user = $auth->get_current_user();
+			$create_result = $project->create($logged_in_user->get_id(), array(	"title" => htmlentities($_POST["title"]), 
 																				"subtitle" => htmlentities($_POST["subtitle"]), 
 																				"description" => htmlentities($_POST["description"])));
 			if($create_result){
