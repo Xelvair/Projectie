@@ -7,7 +7,7 @@
 
 <script>
 function dispatch(msg_obj){
-	$("#chatbox").append("<li>" + msg_obj.message + "</li>");
+	$("#chatbox").append("<li>" + msg_obj.username + ": " + msg_obj.message + "</li>");
 }
 
 var chatbox_obj = null;

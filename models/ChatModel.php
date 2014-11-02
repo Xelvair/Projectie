@@ -60,14 +60,19 @@ class ChatModel implements Model{
 
 		//TODO: Check access
 
-		$stmt_get_msg = $mysqli->prepare("SELECT user_id, send_time, message FROM (SELECT user_id, send_time, message FROM chatmessage WHERE chat_id = ? ORDER BY send_time DESC LIMIT ?) sub ORDER BY send_time ASC");
+		$stmt_get_msg = $mysqli->prepare("
+			SELECT sub.user_id, sub.send_time, sub.message, u.username 
+			FROM (SELECT user_id, send_time, message FROM chatmessage WHERE chat_id = ? ORDER BY send_time DESC LIMIT ?) sub
+			LEFT JOIN user u ON (sub.user_id = u.user_id) 
+			ORDER BY send_time ASC
+		");
 		$stmt_get_msg->bind_param("ii", $chat_id, $count);
 		$stmt_get_msg->execute();
-		$stmt_get_msg->bind_result($res_user_id, $res_send_time, $res_message);
+		$stmt_get_msg->bind_result($res_user_id, $res_send_time, $res_message, $res_username);
 
 		$messages = array();
 		while($stmt_get_msg->fetch()){
-			array_push($messages, array("user_id" => $res_user_id, "send_time" => $res_send_time, "message" => $res_message));
+			array_push($messages, array("user_id" => $res_user_id, "send_time" => $res_send_time, "message" => $res_message, "username" => $res_username));
 		}
 		return $messages;
 	}
@@ -77,14 +82,20 @@ class ChatModel implements Model{
 
 		//TODO: Check access
 
-		$stmt_get_msg = $mysqli->prepare("SELECT user_id, send_time, message FROM chatmessage WHERE chat_id = ? AND send_time >= ? ORDER BY send_time ASC");
+		$stmt_get_msg = $mysqli->prepare("
+			SELECT chatmessage.user_id, chatmessage.send_time, chatmessage.message, user.username 
+			FROM chatmessage 
+			LEFT JOIN user ON(chatmessage.user_id = user.user_id) 
+			WHERE chat_id = ? AND chatmessage.send_time >= ? 
+			ORDER BY chatmessage.send_time ASC
+		");
 		$stmt_get_msg->bind_param("ii", $chat_id, $time);
 		$stmt_get_msg->execute();
-		$stmt_get_msg->bind_result($res_user_id, $res_send_time, $res_message);
+		$stmt_get_msg->bind_result($res_user_id, $res_send_time, $res_message, $res_username);
 
 		$messages = array();
 		while($stmt_get_msg->fetch()){
-			array_push($messages, array("user_id" => $res_user_id, "send_time" => $res_send_time, "message" => $res_message));
+			array_push($messages, array("user_id" => $res_user_id, "send_time" => $res_send_time, "message" => $res_message, "username" => $res_username));
 		}
 		return $messages;
 	}
