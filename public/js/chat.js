@@ -24,6 +24,7 @@ function Chatbox(url, reader_id, chat_id, dispatch_func){
 	});
 
 	this.load_new_messages = function(){
+		var that = this;
 		console.log("loading new msgs.");
 		$.ajax({
 			url : this.url + "/get_new/" + this.chatsession_id,
@@ -32,10 +33,10 @@ function Chatbox(url, reader_id, chat_id, dispatch_func){
 				for(var i = 0; i < result_obj.length; i++){
 					that.dispatch_func(result_obj[i], false);
 				}
-				if(this.is_listen){
-					setTimeout(function(){this.load_new_messages();}, 1000);
+				if(that.is_listen){
+					setTimeout(function(){that.load_new_messages();}, 1000);
 				}
-			}.bind(this)
+			}
 		});
 	}
 
