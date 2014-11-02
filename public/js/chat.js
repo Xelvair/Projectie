@@ -1,37 +1,58 @@
-function chat_listen(controller_url, chat_id, callback){
-	var last_load = Date.now();
+// function dispatch(msg_obj, silent){}
+// msg_obj : object with information about a message
+// msg_obj.message : actual message
+// msg_obj.user_id : user_id of the sender
+// msg_obj.send_time : timestamp of the message
+
+function Chatbox(url, reader_id, chat_id, dispatch_func){
+	this.dispatch_func = dispatch_func;
+	this.reader_id = reader_id;
+	this.chat_id = chat_id;
+	this.chatsession_id = null;
+	this.is_listen = false;
+	this.url = url;
+
 	$.ajax({
-		url : controller_url + "/get/" + chat_id + "/" + 10,
-		async: false,
-		success: function(result){
+		url : this.url + "/get/" + this.chat_id + "/" + 10,
+		success : function(result){
 			result_obj = JSON.parse(result);
-			for(var i = 0; i < result_obj.length; i++){
-				callback(result_obj[i]);
+			this.chatsession_id = result_obj.chatsession;
+			for(var i = 0; i < result_obj.messages.length; i++){
+				dispatch_func(result_obj.messages[i], true);
 			}
-		}
+		}.bind(this)
 	});
 
-	setInterval(function(){
-		console.log("Loading new chat msgs..");
+	this.load_new_messages = function(){
+		console.log("loading new msgs.");
 		$.ajax({
-			url : controller_url + "/get_since/" + chat_id + "/" + last_load,
-			success: function(result){
-				result_obj = JSON.parse(result);
+			url : this.url + "/get_new/" + this.chatsession_id,
+			success : function(result){
+				var result_obj = JSON.parse(result);
 				for(var i = 0; i < result_obj.length; i++){
-					callback(result_obj[i]);
+					that.dispatch_func(result_obj[i], false);
 				}
-			}
+				if(this.is_listen){
+					setTimeout(function(){this.load_new_messages();}, 1000);
+				}
+			}.bind(this)
 		});
-		last_load = Date.now();
-	},
-	1000);
-}
+	}
 
-function chat_send(controller_url, chat_id, message){
-	$.ajax({
-		url : controller_url + "/send/" + chat_id,
-		type: "POST",
-		data: "message=" + message,
-		success: function(result){console.log(result);}
-	});
+	this.toggle_listen = function(){
+		this.is_listen = !this.is_listen;
+		if(this.is_listen == true){
+			this.load_new_messages();
+		}
+	}
+
+	this.send = function(msg){
+		$.ajax({
+			url : this.url + "/send/" + this.chat_id,
+			method : "POST",
+			data : "message=" + msg,
+			success : function(){}
+		});
+	}
+
 }

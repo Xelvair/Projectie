@@ -83,6 +83,17 @@ class TestController extends Controller{
 			header(abspath("/test/project"));
 		}
 	}
+
+	public function chat(){
+		global $locale;
+
+		$locale->load("en-us");
+
+		$content = $this->view("ChatTest", array());
+		return $this->view("HtmlBase", array(	"title" => "Chat Test",
+												"body" => $content,
+												"body_padding" => false));
+	}
 }
 
 ?>
