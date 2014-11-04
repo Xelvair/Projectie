@@ -15,5 +15,12 @@
 	"db_init_fail": "Failed to initialize database! Please check whether you have a DB with the entered name!",
 	"news": "News",
 	"new_projects": "New",
-	"trending_projects": "Trending"
+	"trending_projects": "Trending",
+	"guest": "guest",
+	"register": "Register",
+	"password": "Password",
+	"submit" : "Submit",
+	"username" : "Username",
+	"retype_password" : "Retype Password",
+	"select_language" : "Select Language"
 }

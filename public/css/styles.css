@@ -248,3 +248,35 @@ hr{
 	margin-bottom: 60px;
 	
 }
+
+
+.footer_label{
+	padding-right: 20px;
+	font-size: 12px;
+	
+}
+
+.footer_label a{
+	color: #323232
+	
+	
+}
+
+.footer_label a:hover{
+	color: #93D706 ;
+	
+	
+}
+
+.row{
+	margin-left: 0px;
+	margin-right: 0px;
+	
+}
+
+.modal-dialog{
+	
+	width: 25%;
+	max-width: 600px;
+	margin-top: 100px;
+}
