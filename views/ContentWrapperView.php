@@ -12,6 +12,11 @@ global $locale;
 		
 	});
 </script>
+
+
+<?=$_DATA['login_modal']?>
+
+
 <nav class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -47,6 +52,7 @@ global $locale;
             <li><a href="#"><?=$locale["about"]?></a></li>
             <li class="divider"></li>
             <li><a href="#"><?=$locale["logout"]?></a></li>
+            <li><a href="#loginModal" role="button" class="btn" data-toggle="modal">Login</a></li>
           </ul>
         </li>
       </ul>

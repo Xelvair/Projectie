@@ -4,7 +4,7 @@
 global $locale;
 ?>
 <?php if($_DATA["login"]){ ?>
-Logged in as <?=$_DATA["login"]?>. <a href="<?=abspath("/test/logout")?>">Logout</a>
+Logged in as <?=$_DATA["login"]?>. <a href="<?=abspath("/test/logout_action")?>">Logout</a>
 <?php } else { ?>
 Not logged in.
 <?php } ?>

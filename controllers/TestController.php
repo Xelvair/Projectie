@@ -24,34 +24,24 @@ class TestController extends Controller{
 	public function login_action(){
 		if(isset($_POST["email"]) && isset($_POST["password"])){
 			$auth = $this->model("Auth");
-			$login_user = $auth->login($_POST["email"], $_POST["password"]);
-			print_r($login_user);
-			if($login_user){
-				header("Location: ".abspath("/test/auth/login_success"));
-			} else {
-				header("Location: ".abspath("/test/auth/login_failure"));
-			}
+			return json_encode($auth->login($_POST["email"], $_POST["password"]));
 		} else {
-			header("Location: ".abspath("/test/auth"));
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 	}
 
-	public function logout(){
+	public function logout_action(){
 		$auth = $this->model("Auth");
 		$auth->logout();
-		header("Location: ".abspath("/test/auth"));
+		return json_encode(array());
 	}
 
 	public function register_action(){
 		if(isset($_POST["email"]) && isset($_POST["username"]) && isset($_POST["password"])){
 			$auth = $this->model("Auth");
-			if($auth->register($_POST["email"], $_POST["username"], $_POST["password"])){
-				header("Location: ".abspath("/test/auth/register_success"));
-			} else {
-				header("Location: ".abspath("/test/auth/register_failure"));
-			}
+			return json_encode($auth->register($_POST["email"], $_POST["username"], $_POST["password"]));
 		} else {
-			header("Location: ".abspath("/test/auth"));
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 	}
 
@@ -74,13 +64,10 @@ class TestController extends Controller{
 			$create_result = $project->create($logged_in_user->get_id(), array(	"title" => htmlentities($_POST["title"]), 
 																				"subtitle" => htmlentities($_POST["subtitle"]), 
 																				"description" => htmlentities($_POST["description"])));
-			if($create_result){
-				header("Location: ".abspath("/test/project/success"));
-			} else {
-				header("Location: ".abspath("/test/project/failure"));
-			}
+
+			return json_encode($create_result);
 		} else {
-			header(abspath("/test/project"));
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 	}
 

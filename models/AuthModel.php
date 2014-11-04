@@ -32,7 +32,7 @@ class AuthModel implements Model{
 		$stmt_check_existence->execute();
 		if($stmt_check_existence->get_result()->num_rows > 0){
 			write_log(Logger::DEBUG, "Tried to register already existing account '".$username."<".$email.">'!");
-			return false;
+			return array("ERROR" => "ERR_USERNAME_OR_EMAIL_IN_USE");
 		}
 
 		$password_salt = substr(md5(time()), 0, 8);
@@ -43,10 +43,10 @@ class AuthModel implements Model{
 		$stmt->bind_param("issss", time(), $email, $username, $password_salt, $password_hash);
 		if($stmt->execute()){
 			write_log(Logger::DEBUG, "Registered account '".$username."'!");
-			return true;
+			return array();
 		} else {
 			write_log(Logger::ERROR, "Failed to register account!");
-			return false;
+			return array("ERROR" => "ERR_DB_INSERT_FAILED");
 		}
 	}
 
@@ -60,7 +60,7 @@ class AuthModel implements Model{
 		$stmt->bind_result($res_user_id, $res_create_time, $res_email, $res_username, $res_lang, $res_password_hash, $res_password_salt);
 		if(!$stmt->fetch()){
 			write_log(Logger::WARNING, "Failed to login, email '".$email."' not found!");
-			return false;
+			return array("ERROR" => "ERR_USER_NOT_FOUND");
 		}
 		
 		//Check the password
@@ -69,14 +69,14 @@ class AuthModel implements Model{
 			//If login failed, unset all values and exit
 			$this->logout();
 			write_log(Logger::DEBUG, "Failed login: incorrect password.");
-			return false;
+			return array("ERROR" => "ERR_INCORRECT_PASSWORD");
 		} else {
 			//If login succeeded, write to the session and set values
 			$_SESSION["login_user_id"] = $res_user_id;
 			$loggedInUser = new UserModel($res_user_id, $res_create_time, $res_username, $res_email, $res_lang);
 			write_log(Logger::DEBUG, "User '".$res_username."' logged in.");
 
-			return true;
+			return array();
 		}
 	}
 
@@ -85,6 +85,8 @@ class AuthModel implements Model{
 			unset($_SESSION["login_user_id"]);
 		}
 		$this->loggedInUser = null;
+
+		return array();
 	}
 
 	public function get_current_user(){

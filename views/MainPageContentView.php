@@ -3,7 +3,7 @@
 #left_col : left col
 #mid_col : middle col
 #right_col : right col
-#
+#footer : footer
 #top_project : best projects :
 #thumb : pic
 #title: project title
@@ -81,4 +81,5 @@
                         
                         </div><!--col-md-4-->
                     </div><!--row-->
+                     <?=$_DATA['footer']?>
                 </div>
