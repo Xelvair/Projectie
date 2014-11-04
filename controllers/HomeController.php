@@ -6,8 +6,17 @@ class HomeController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$locale->load("en-us");
+		$auth = $this->model("Auth");
+		$user = $auth->get_current_user();
+		if($user != null){
+			$locale_load_result = $locale->load($user->get_lang());
 
+			if($locale_load_result == false){
+				$locale->load("en-us");
+			}
+		} else {
+			$locale->load("en-us");
+		}
 	
 		$new_list = array("entries" => array(), "list_title" => $locale["new_projects"]);
 		array_push($new_list["entries"], array("title" => "New Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
@@ -31,7 +40,7 @@ class HomeController extends Controller{
 
 		$content = $this->view("MainPageContent", $mainpagelists);
 		
-		$contentwrap = $this->view("ContentWrapper", array("content" => $content));
+		$contentwrap = $this->view("ContentWrapper", array("content" => $content, "user" => ($user == null ? null : $user->get_name())));
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 
 												"body_padding" => true));

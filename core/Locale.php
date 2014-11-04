@@ -16,8 +16,10 @@ class Locale implements ArrayAccess{
 		$this->locale = json_decode($locale_contents, true);
 		if($this->locale){
 			write_log(Logger::DEBUG, "Successfully loaded locale '".$lang."'!");
+			return true;
 		} else {
 			write_log(Logger::ERROR, "Failed to load locale '".$lang."'! Malformed JSON-Object!");
+			return false;
 		}
 	}
 

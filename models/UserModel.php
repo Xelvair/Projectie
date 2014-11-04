@@ -6,11 +6,12 @@ class UserModel{
 	private $name;
 	private $email;
 
-	function __construct($id, $create_time, $name, $email){
+	function __construct($id, $create_time, $name, $email, $lang){
 		$this->set_id($id);
 		$this->set_create_time($create_time);
 		$this->set_name($name);
 		$this->set_email($email);
+		$this->set_lang($lang);
 	}
 
 	public function set_id($val){
@@ -43,6 +44,14 @@ class UserModel{
 
 	public function get_email(){
 		return $this->email;
+	}
+
+	public function set_lang($val){
+		$this->lang = $val;
+	}
+
+	public function get_lang(){
+		return $this->lang;
 	}
 }
 

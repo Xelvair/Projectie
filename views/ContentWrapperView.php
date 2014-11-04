@@ -57,7 +57,7 @@ global $locale;
 <div id="wrapper">
 	<div id="sidebar-wrapper">
     <ul class="sidebar-nav">
-      <li class="sidebar-brand">-Username-</li>
+      <li class="sidebar-brand"><?php echo($_DATA["user"] != null ? $_DATA["user"] : $locale["welcome"]); ?></li>
       <li>
         <a href="#"><?=$locale["profile"]?></a>
       </li>
