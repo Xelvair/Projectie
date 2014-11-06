@@ -17,11 +17,12 @@
 	"news": "News",
 	"new_projects": "New",
 	"trending_projects": "Trending",
-	"guest": "guest",
+	"guest": "Guest",
 	"register": "Register",
 	"password": "Password",
 	"submit" : "Submit",
 	"username" : "Username",
 	"retype_password" : "Retype Password",
-	"select_language" : "Select Language"
+	"select_language" : "Select Language",
+	"logged_in_as" : "Logged in as"
 }

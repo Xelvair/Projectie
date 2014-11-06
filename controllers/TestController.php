@@ -37,9 +37,14 @@ class TestController extends Controller{
 	}
 
 	public function register_action(){
-		if(isset($_POST["email"]) && isset($_POST["username"]) && isset($_POST["password"])){
+		if(isset($_POST["email"]) && isset($_POST["username"]) && isset($_POST["lang"]) && isset($_POST["password"])){
 			$auth = $this->model("Auth");
-			return json_encode($auth->register($_POST["email"], $_POST["username"], $_POST["password"]));
+			$result_register = $auth->register($_POST["email"], $_POST["username"], $_POST["lang"], $_POST["password"]);
+			if(isset($result_register["ERROR"])){
+				return json_encode($result_register);
+			} else {
+				return json_encode($auth->login($_POST["email"], $_POST["password"]));
+			}
 		} else {
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}

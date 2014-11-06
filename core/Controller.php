@@ -26,7 +26,7 @@ class Controller{
 		return $model_obj;
 	}
 
-	protected function view($view, $data){
+	protected function view($view, $data = array()){
 		$view = $view."View";
 		$view_filepath = self::viewFilepath($view);
 

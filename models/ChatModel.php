@@ -31,7 +31,7 @@ class ChatModel implements Model{
 		//if no chat was retrieved, fail and return
 		if(!$stmt_check_access->fetch()){
 			write_log(Logger::WARNING, "Failed to send message to chat: Chat #".$chat_id." doesn't exist!");
-			return false;
+			return array("ERROR" => "ERR_CHAT_DOESNT_EXIST");
 		}
 
 		$stmt_check_access->free_result();

@@ -20,7 +20,7 @@ global $locale;
 					$("#pw_form_group").removeClass("has-error");
 					
 					$.post( "http://localhost:8001/test/login_action", { email: email, password: pw } ).done(function(data){
-						//alert(data);
+						alert(data);
 					});
 					
 				}else{
@@ -224,8 +224,6 @@ global $locale;
                         </select>
                   
                  </div>
-                 
-                 
                  <div class="row">
                         
                         <div class="col-md-6 text-right pull-right">

@@ -23,24 +23,53 @@ class AuthModel implements Model{
 		}
 	}
 
-	public function register($email, $username, $password /*blahblah*/){ 
+	public function register($email, $username, $lang, $password /*blahblah*/){ 
 		global $mysqli;
 
-		//Check if account name or email already exists
-		$stmt_check_existence = $mysqli->prepare("SELECT user_id FROM user WHERE email = ? OR username = ?");
-		$stmt_check_existence->bind_param("ss", $email, $username);
-		$stmt_check_existence->execute();
-		if($stmt_check_existence->get_result()->num_rows > 0){
-			write_log(Logger::DEBUG, "Tried to register already existing account '".$username."<".$email.">'!");
-			return array("ERROR" => "ERR_USERNAME_OR_EMAIL_IN_USE");
+		//All kinds of checks on the parameters
+		if(!preg_match("/\A[a-zA-Z0-9-.]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}\z/", $email)){
+			return array("ERROR" => "ERR_INVALID_EMAIL");
+		}
+
+		//Check pw length
+		if(strlen($password) < 7){
+			return array("ERROR" => "ERR_INVALID_PASSWORD");
+		}
+
+		//Check if username has no special chars
+		if(!preg_match("/\A[a-zA-Z0-9.-]+\z/", $username)){
+			return array("ERROR" => "ERR_INVALID_USERNAME");
+		}
+
+		//Check if file for chosen locale exists
+		if(!file_exists(abspath_lcl("/locale/".$lang.".locale"))){
+			return array("ERROR" => "ERR_INVALID_LANG");
+		}
+
+		//Check if email already exists
+		$stmt_check_email = $mysqli->prepare("SELECT user_id FROM user WHERE email = ?");
+		$stmt_check_email->bind_param("s", $email);
+		$stmt_check_email->execute();
+		if($stmt_check_email->get_result()->num_rows > 0){
+			write_log(Logger::DEBUG, "Tried to register already existing email <".$email.">!");
+			return array("ERROR" => "ERR_EMAIL_IN_USE");
+		}
+
+		//Check if username already exists
+		$stmt_check_username = $mysqli->prepare("SELECT user_id FROM user WHERE username = ?");
+		$stmt_check_username->bind_param("s", $username);
+		$stmt_check_username->execute();
+		if($stmt_check_username->get_result()->num_rows > 0){
+			write_log(Logger::DEBUG, "Tried to register already existing username '".$$username.">!");
+			return array("ERROR" => "ERR_USERNAME_IN_USE");
 		}
 
 		$password_salt = substr(md5(time()), 0, 8);
 
 		$password_hash = md5($password.$password_salt);
 
-		$stmt = $mysqli->prepare("INSERT INTO user (create_time, email, username, password_salt, password_hash) VALUES(?, ?, ?, ?, ?)");
-		$stmt->bind_param("issss", time(), $email, $username, $password_salt, $password_hash);
+		$stmt = $mysqli->prepare("INSERT INTO user (create_time, email, username, lang, password_salt, password_hash) VALUES(?, ?, ?, ?, ?, ?)");
+		$stmt->bind_param("isssss", time(), $email, $username, $lang, $password_salt, $password_hash);
 		if($stmt->execute()){
 			write_log(Logger::DEBUG, "Registered account '".$username."'!");
 			return array();
@@ -87,6 +116,32 @@ class AuthModel implements Model{
 		$this->loggedInUser = null;
 
 		return array();
+	}
+
+	public function email_exists($email){
+		global $mysqli;
+
+		$stmt = $mysqli->query("SELECT user_id FROM user WHERE email = ?");
+		$stmt->bind_param("s", $email);
+		$stmt->execute();
+		if($stmt->fetch()){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function user_exists($username){
+		global $mysqli;
+
+		$stmt = $mysqli->query("SELECT user_id FROM user WHERE username = ?");
+		$stmt->bind_param("s", $username);
+		$stmt->execute();
+		if($stmt->fetch()){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public function get_current_user(){

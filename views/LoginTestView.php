@@ -19,6 +19,7 @@ Not logged in.
 <form method="POST" action="<?=abspath("/test/register_action")?>">
 <input type="text" name="email" placeholder="email">
 <input type="text" name="username" placeholder="username">
+<input type="text" name="lang" = placeholder="language">
 <input type="password" name="password" placeholder="password">
 <input type="submit" value="Register">
 </form>
