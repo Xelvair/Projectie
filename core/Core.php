@@ -112,12 +112,11 @@ class Core{
 
 	private function load_and_check_config(){
 		global $CONFIG;
-
-		//Check if config file exists
-		$config_str = file_get_contents(abspath_lcl("projectie.cfg"));
-		if($config_str == false){
+		//Check if file exists
+		if(!file_exists(abspath_lcl("projectie.cfg"))){
 			return false;
 		}
+		$config_str = file_get_contents(abspath_lcl("projectie.cfg"));
 
 		//Check if config file is valid JSON
 		$config_obj = json_decode($config_str, true);
