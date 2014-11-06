@@ -5,12 +5,16 @@ global $locale;
 
 <script>
 
-
-
+	
 	function user_login(){
 		
 		var email = document.getElementById("email").value;
 		var pw = document.getElementById("pw").value;
+		
+		 $('#email').popover('destroy');
+		  $('#pw').popover('destroy');	
+		
+		$("#loginModal").find(".form-group").removeClass("has-error");
 		
 		if(email != ""){
 			
@@ -19,8 +23,24 @@ global $locale;
 				if(pw != ""){
 					$("#pw_form_group").removeClass("has-error");
 					
-					$.post( "http://localhost:8001/test/login_action", { email: email, password: pw } ).done(function(data){
+					$.post( "<?=abspath("/test/login_action")?>", { email: email, password: pw } ).done(function(data){
 						//alert(data);
+						var result = JSON.parse(data);
+						if("ERROR" in result){
+							switch(result.ERROR){
+								case "ERR_USER_NOT_FOUND":
+								 $('#email').popover('show');
+								 $("#email_form_group").addClass("has-error");
+									break;
+								case "ERR_INCORRECT_PASSWORD":
+								$('#pw').popover('show');
+								$("#pw_form_group").addClass("has-error");
+									break;
+							}
+						}else{
+							window.location.href = "<?=abspath("")?>";
+						}
+						
 					});
 					
 				}else{
@@ -62,9 +82,45 @@ global $locale;
 					  
 					  if(language != 0){
 				  
-						  $.post( "http://localhost:8001/test/register_action", { email: email, username: username, password: password, language: language  } ).done(function(data){
-											alert(data);
-										});
+						  $.post( "<?=abspath("/test/register_action")?>", { email: email, username: username, password: password, language: language  } ).done(function(data){
+											//alert(data);
+											var result = JSON.parse(data);
+											
+												if("ERROR" in result){
+													switch(result.ERROR){
+														
+														case "ERR_INVALID_EMAIL":
+														 $('#reg_email').popover('show');
+														 $("#reg_email_form_group").addClass("has-error");
+															break;
+															
+														case "ERR_INVALID_PASSWORD":
+														$('#reg_password').popover('show');
+														$("#reg_password_form_group").addClass("has-error");
+															break;
+															
+														case "ERR_INVALID_USERNAME":
+														$('#reg_username').popover('show');
+														$("#reg_username_form_group").addClass("has-error");
+															break;
+																													
+														case "ERR_USERNAME_IN_USE":
+														$('#reg_username').popover('show');
+														$("#reg_username_form_group").addClass("has-error");
+															break;
+															
+														case "ERR_EMAIL_IN_USE":
+														$('#reg_email').popover('show');
+														$("#reg_email_form_group").addClass("has-error");
+															break;
+														
+													}
+												}else{
+													window.location.href = "<?=abspath("")?>";
+												}
+												
+										});//post
+										
 					  }else{$("#reg_language_form").addClass("has-error");}//if language
 									
 					}else{$("#reg_retypepassword_form").addClass("has-error");
@@ -141,20 +197,20 @@ global $locale;
           	<form name="login_form">
                 <div class="form-group" id="email_form_group">
                    
-                    	<input type="text" class="form-control" placeholder="E-mail" id="email"/>
+                    	<input type="text" class="form-control" placeholder="E-mail" id="email" data-content="<?=$locale["login_email_err"]?>" data-placement="top"/>
                    
                  </div>
                  
                  <div class="form-group" id="pw_form_group">
                     
-                    	<input type="password" class="form-control" placeholder="<?=$locale["password"]?>" id="pw" />
+                    	<input type="password" class="form-control" placeholder="<?=$locale["password"]?>" id="pw" data-content="<?=$locale["login_pw_err"]?>" data-placement="bottom" />
                   
                  </div>
                  
                  <div class="row">
                  
                     	<div class="col-md-6 text-left" style="padding-top:10px;">
-                        <a href="#registerModal" onclick="modal_toggle()"><?=$locale["register"]?></a>
+                        <a onclick="modal_toggle()"><?=$locale["register"]?></a>
                         </div>
                         
                         <div class="col-md-6 text-right">
@@ -186,7 +242,7 @@ global $locale;
           	<form name="login_form">
                 <div class="form-group" id="reg_email_form">
                    
-                    	<input type="text" class="form-control" placeholder="E-mail" title="E-mail" id="reg_email"/>
+                    	<input type="text" class="form-control" placeholder="E-mail" title="E-mail" id="reg_email"  data-placement="bottom"/>
                    
                  </div>
                  
@@ -194,21 +250,21 @@ global $locale;
                  
                  <div class="form-group" id="reg_username_form">
                     
-                    	<input type="text" class="form-control" placeholder="<?=$locale["username"]?>" title="<?=$locale["username"]?>" id="reg_username"/>
+                    	<input type="text" class="form-control" placeholder="<?=$locale["username"]?>" title="<?=$locale["username"]?>" id="reg_username"  data-placement="bottom"/>
                   
                  </div>
                  
                  <div class="form-group" id="reg_password_form">
                  
                   
-                    	<input type="password" class="form-control" placeholder="<?=$locale["password"]?>" title="<?=$locale["password"]?>" id="reg_password"/>
+                    	<input type="password" class="form-control" placeholder="<?=$locale["password"]?>" title="<?=$locale["password"]?>" id="reg_password"  data-placement="bottom"/>
                   
                  </div>
                  
                   <div class="form-group" id="reg_retypepassword_form">
                  
                   
-                    	<input type="password" class="form-control" placeholder="<?=$locale["retype_password"]?>" title="<?=$locale["retype_password"]?>" id="reg_retypepassword"/>
+                    	<input type="password" class="form-control" placeholder="<?=$locale["retype_password"]?>" title="<?=$locale["retype_password"]?>" data-placement="bottom" id="reg_retypepassword"/>
                   
                  </div>
                  

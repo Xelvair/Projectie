@@ -277,6 +277,7 @@ hr{
 .modal-dialog{
 	
 	width: 25%;
+	min-width: 300px;
 	max-width: 600px;
 	margin-top: 100px;
 }

@@ -10,7 +10,21 @@ global $locale;
 	        $("#wrapper").toggleClass("toggled");
 	    });
 		
+		
+		$('#logout_btn').on('click', function(){
+		$.post("<?=abspath("/test/logout_action")?>").done(function(){
+			
+			 window.location.href="<?=abspath("")?>";
+			});
+		
+		
+		});
+		
 	});
+	
+	
+	
+
 </script>
 
 
@@ -27,7 +41,7 @@ global $locale;
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#"><img style="margin: -10px;" src="<?=abspath("/public/images/logo.png")?>" height="40"/></a>
+      <a class="navbar-brand" href="<?=abspath("")?>"><img style="margin: -10px;" src="<?=abspath("/public/images/logo.png")?>" height="40"/></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -51,7 +65,7 @@ global $locale;
           <ul class="dropdown-menu" role="menu">
             <li><a href="#"><?=$locale["about"]?></a></li>
             <li class="divider"></li>
-            <li><a href="#"><?=$locale["logout"]?></a></li>
+            <li><a href="#" id="logout_btn"><?=$locale["logout"]?></a></li>
             <li><a href="#loginModal" role="button" class="btn" data-toggle="modal">Login</a></li>
           </ul>
         </li>

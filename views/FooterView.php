@@ -2,31 +2,46 @@
 global $locale;
 ?>
 
-<div class="row">
+<div class="row" style="padding-left: 20px; padding-right: 20px;">
 
-	<div class="col-md-12">
+	<div class="col-md-4 text-left col-xs-4">
     
+    	<ul class="list-inline">
+        	<li>©2014 Projectie</li>
+            <li><a href="#"><?= $locale['about']?></a></li>
+        
+        </ul>
+
+       
+	</div> 
     
-        <p align="center">
-        	<label class="footer_label"><a href="#"><?= $locale['about']?></a></label>
-            <label class="footer_label" style="padding-right: 50px;">Projectie© 2014</label>
-            <label class="footer_label"><?php if(isset($_DATA['username']) && $_DATA['username'] != ""){ 
+    <div class="col-md-4 col-xs-4 text-center">
+    	<ul class="list-inline">
+       		 <li>Online: 103.232</li>
+        </ul>
+    </div>
+    
+    <div class="col-md-4 col-xs-4 text-right">
+    
+        <ul class="list-inline">
+        	<li><?php echo $locale['logged_in_as'].": ";  if(isset($_DATA['username']) && $_DATA['username'] != ""){ 
 			echo $_DATA['username']; 
 			
 			}else{
 				echo $locale['guest'];
-			}?>
-            </label>
+			}?></li>
             
             <?php
 			if(!isset($_DATA['username']) || $_DATA['username'] == ""){ 
-           		echo "<label class='footer_label'><a  href='#registerModal' data-toggle='modal'>".$locale["register"]."?</a></label>";
+           		echo "<li><a  href='#registerModal' data-toggle='modal'>".$locale["register"]."?</a></li>";
 			}
 				?>
-            <label class="footer_label">Online: 234.930</label>
-            
         
-        </p>
-       <hr style="margin-top: -10px;"/>
-	</div> 
+        </ul>
+   
+    
+    </div>
+    
+     
 <div>
+<hr style="margin-top: -10px;"/>
