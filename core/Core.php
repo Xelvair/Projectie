@@ -20,8 +20,8 @@ if($mysqli->connect_errno){
 require_once("Db.php");
 
 function write_log($loglevel, $message){
-		global $logger;
-		$logger->log($loglevel, $message);
+	global $logger;
+	$logger->log($loglevel, $message);
 }
 
 function abspath($path){

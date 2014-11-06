@@ -16,5 +16,15 @@
 	"db_init_fail": "Failed to initialize database! Please check whether you have a DB with the entered name!",
 	"news": "News",
 	"new_projects": "New",
-	"trending_projects": "Trending"
+	"trending_projects": "Trending",
+	"guest": "Guest",
+	"register": "Register",
+	"password": "Password",
+	"submit" : "Submit",
+	"username" : "Username",
+	"retype_password" : "Retype Password",
+	"select_language" : "Select Language...",
+	"logged_in_as" : "Logged in as",
+	"login_email_err" : "Your E-Mail is not correct!",
+	"login_pw_err" : "Your password is not correct!"
 }

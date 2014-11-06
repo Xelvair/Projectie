@@ -23,6 +23,8 @@
 	"submit" : "Submit",
 	"username" : "Username",
 	"retype_password" : "Retype Password",
-	"select_language" : "Select Language",
-	"logged_in_as" : "Logged in as"
+	"select_language" : "Select Language...",
+	"logged_in_as" : "Logged in as",
+	"login_email_err" : "Your E-Mail is not correct!",
+	"login_pw_err" : "Your password is not correct!"
 }

@@ -16,5 +16,15 @@
 	"db_init_fail": "Initialisierung fehlgeschlagen! Bitte prüfen Sie, ob eine Datenbank mit dem angegebenen Namen existiert!",
 	"news": "Aktualisierungen",
 	"new_projects": "Neu",
-	"trending_projects": "Aufsteigend"
+	"trending_projects": "Aufsteigend",
+	"guest": "Gast",
+	"register": "Registrieren",
+	"password": "Passwort",
+	"submit" : "Senden",
+	"username" : "Benutzername",
+	"retype_password" : "Passwort erneut",
+	"select_language" : "Sprache auswählen...",
+	"logged_in_as" : "Eingeloggt als ",
+	"login_email_err" : "Ihre E-Mail ist inkorrekt!",
+	"login_pw_err" : "Ihr Passwort ist inkorrekt!"
 }
