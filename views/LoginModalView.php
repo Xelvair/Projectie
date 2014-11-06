@@ -50,19 +50,19 @@ function user_register(){
 	var username = document.getElementById("reg_username").value;
 	var password = document.getElementById("reg_password").value;
 	var retype_password = document.getElementById("reg_retypepassword").value;
-	var language = document.getElementById("reg_language").value;
+	var lang = document.getElementById("reg_language").value;
 	
 	$("#registerModal").find(".form-group").removeClass("has-error");	
+
 	if(email != ""){	  
 	  if(username != ""){
 		  if(password != ""){
 			  if(retype_password != ""){
 			  	if(password == retype_password){  
-					  if(language != 0){
-						  $.post(	"<?=abspath("/test/register_action")?>", 
-						  				{email: email, username: username, password: password, language: language}
+					  if(lang != 0){
+						  $.post(	"<?=abspath('/test/register_action')?>", 
+						  				{email: email, username: username, password: password, lang: lang}
 						  ).done(function(data){
-								//alert(data);
 								var result = JSON.parse(data);
 								
 								if("ERROR" in result){

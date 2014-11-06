@@ -10,6 +10,7 @@ class InstallController extends Controller{
 
 		if(isset($_POST["submit"]) && isset($_POST["db_name"])){
 			write_log(Logger::DEBUG, "Initializing DB...");
+			$mysqli = new mysqli("localhost", "root", "");
 			if(!$mysqli->select_db($_POST["db_name"])){
 				header("Location: ".abspath("/Install/index/failure"));
 				exit();
@@ -17,7 +18,8 @@ class InstallController extends Controller{
 			$mysqli->multi_query(file_get_contents(abspath("sql/install.sql")));
 
 			$CONFIG["db_name"] = $_POST["db_name"];
-			write_log(Logger::DEBUG, file_put_contents("../projectie.cfg", json_encode($CONFIG)));
+			$CONFIG["db_checksum"] = md5_file(abspath_lcl("/sql/install.sql"));
+			file_put_contents("../projectie.cfg", json_encode($CONFIG));
 
 			header("Location: ".abspath("/Install/index/success"));
 		} else {

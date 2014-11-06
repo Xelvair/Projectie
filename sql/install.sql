@@ -24,6 +24,8 @@ CREATE TABLE project (
 	PRIMARY KEY(project_id)
 );
 
+#if access is "PUBLIC", access_id is not needed
+#if access is "PROJECT_SPECIFIC", access_id points to the project_id the chat belongs to
 DROP TABLE IF EXISTS chat;
 CREATE TABLE chat(
 	chat_id int NOT NULL AUTO_INCREMENT,
@@ -34,10 +36,6 @@ CREATE TABLE chat(
 
 INSERT INTO chat (access)
 VALUES ("PUBLIC");
-#if access is "PUBLIC", access_id is not needed
-#if access is "PROJECT_SPECIFIC", access_id points to the project_id the chat belongs to
-
-INSERT INTO chat (access) VALUES ("PUBLIC");
 
 DROP TABLE IF EXISTS chatmessage;
 CREATE TABLE chatmessage(

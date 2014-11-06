@@ -2,7 +2,7 @@
 
 session_start();
 
-$CONFIG = json_decode(file_get_contents(abspath("projectie.cfg")), true);
+$CONFIG = array();
 
 require_once("Debug.php");
 require_once("Logger.php");
@@ -11,11 +11,7 @@ require_once("Locale.php");
 //Initialize logger
 $logger = new Logger("projectie.log", Logger::DEBUG);
 $locale = new Locale();
-$mysqli = new mysqli("localhost", "root", "", $CONFIG["db_name"]);
-
-if($mysqli->connect_errno){
-	write_log(Logger::ERROR, "Failed to connect to database!");
-}
+$mysqli = null;
 
 require_once("Db.php");
 
@@ -29,13 +25,14 @@ function abspath($path){
 }
 
 function abspath_lcl($path){
-	return preg_replace('#/+#','/', $_SERVER["DOCUMENT_ROOT"].$path);
+	return preg_replace('#/+#','/', $_SERVER["DOCUMENT_ROOT"]."/".$path);
 }
 
 class Core{
 	function __construct($url){
 		global $mysqli;
 		global $locale;
+		global $CONFIG;
 
 		write_log(Logger::DEBUG, "Processing request from ".$_SERVER['REMOTE_ADDR']);
 		write_log(Logger::DEBUG, "Request info: ".$_SERVER['QUERY_STRING']);
@@ -43,20 +40,32 @@ class Core{
 		//Parse URL
 		$parsed_url = self::parseUrl($url);
 
+		//If the config & DB isn't initialized, forward to /install/
+		if(!self::load_and_check_config()){
+			$parsed_url = array("controller" => "install", "function" => "index", "params" => null);
+		} else {
+			$mysqli = new mysqli("localhost", "root", "", $CONFIG["db_name"]);
+
+			if($mysqli->connect_errno){
+				write_log(Logger::ERROR, "Failed to connect to database!");
+			}
+		}
+
 		//After we parsed the URL, load controller
 		//If we fail to load, change the request url to home
 		$controller_filepath = self::controllerFilepath($parsed_url["controller"]);
 		if(file_exists($controller_filepath)){
 			require_once($controller_filepath);
 		} else {
-			require_once(self::controllerFilepath("homecontroller"));
-			$parsed_url["controller"] = "HomeController";
+			require_once(self::controllerFilepath("home"));
+			$parsed_url["controller"] = "Home";
 			$parsed_url["function"] = "index";
 			$parsed_url["params"] = null;
 		}
+		
+		//Instantiate Controller
+		$controller_name = $parsed_url["controller"]."Controller";
 
-		//Instantiate controller
-		$controller_name = $parsed_url["controller"];
 		if(class_exists($controller_name)){
 			$controller = new $controller_name;
 		} else {
@@ -79,7 +88,7 @@ class Core{
 
 		if($url != ""){
 			$url = explode("/", $url);
-			$result["controller"] = $url[0]."Controller";
+			$result["controller"] = $url[0];
 			if(sizeof($url) > 1){
 				$result["function"] = $url[1];
 				if(sizeof($url) > 2){
@@ -98,7 +107,38 @@ class Core{
 	}
 
 	private function controllerFilepath($controller){
-		return "../controllers/".$controller.".php";
+		return "../controllers/".$controller."Controller.php";
+	}
+
+	private function load_and_check_config(){
+		global $CONFIG;
+
+		//Check if config file exists
+		$config_str = file_get_contents(abspath_lcl("projectie.cfg"));
+		if($config_str == false){
+			return false;
+		}
+
+		//Check if config file is valid JSON
+		$config_obj = json_decode($config_str, true);
+		if($config_obj == null){
+			return false;
+		}
+
+		//Check if config file has required fields
+		if(	!isset($config_obj["db_name"]) ||
+				!isset($config_obj["db_checksum"]))
+		{
+			return false;
+		}
+
+		//Check if install.sql is in sync with db state
+		if($config_obj["db_checksum"] != md5_file(abspath_lcl("/sql/install.sql"))){
+			return false;
+		}
+
+		$CONFIG = $config_obj;
+		return true;
 	}
 }
 

@@ -5,21 +5,16 @@ global $locale;
 ?>
 <script>
 	$(document).ready(function(){
-	    $("#menu-toggle").click(function(e) {
-	        e.preventDefault();
-	        $("#wrapper").toggleClass("toggled");
-	    });
-		
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });		
 		
 		$('#logout_btn').on('click', function(){
-		$.post("<?=abspath("/test/logout_action")?>").done(function(){
-			
+		  $.post("<?=abspath("/test/logout_action")?>").done(function(){
 			 window.location.href="<?=abspath("")?>";
 			});
-		
-		
 		});
-		
 	});
 	
 	
