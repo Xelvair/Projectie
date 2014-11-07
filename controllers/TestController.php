@@ -51,21 +51,27 @@ class TestController extends Controller{
 	}
 
 	public function project(){
-		global $locale;
+		$project = $this->model("Project");
+	
+		$project_list = $project->get_all_projects();
 
-		$locale->load("en-us");
+		$content = $this->view("ProjectTest", array("projects" => $project_list));
 
-		$content = $this->view("ProjectTest", array());
 		return $this->view("HtmlBase", array(	"title" => "Project Test",
-												"body" => $content,
-												"body_padding" => false));
+																					"body" => $content,
+																					"body_padding" => false));
 	}
 
 	public function project_action(){
+		$auth = $this->model("Auth");
+		$logged_in_user = $auth->get_current_user();
+
+		if($logged_in_user == null){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
 		if(isset($_POST["title"]) && isset($_POST["subtitle"]) && isset($_POST["description"])){
 			$project = $this->model("project");
-			$auth = $this->model("Auth");
-			$logged_in_user = $auth->get_current_user();
 			$create_result = $project->create($logged_in_user->get_id(), array(	"title" => htmlentities($_POST["title"]), 
 																				"subtitle" => htmlentities($_POST["subtitle"]), 
 																				"description" => htmlentities($_POST["description"])));

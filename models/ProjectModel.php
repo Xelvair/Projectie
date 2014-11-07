@@ -30,8 +30,58 @@ class ProjectModel implements Model{
 		}
 	}
 
-	public function get($id){}
-	public function set($creator_id, $id, $info){}
+	public function get($id){
+		global $mysqli;
+
+		$stmt = $mysqli->prepare("SELECT project_id, creator_id, create_time, title, subtitle, description FROM project WHERE project_id = ?");
+		$stmt->bind_param("i", $id);
+		$stmt->execute();
+		$stmt->bind_result($result["id"], $result["creator_id"], $result["create_time"], $result["title"], $result["subtitle"], $result["description"]);
+
+		if($stmt->fetch()){
+			write_log(Logger::WARNING, "Failed to retrieve project #".$id." from databaase!");
+			return array("ERROR" => "ERR_PROJECT_NONEXISTENT");
+		} else {
+			return $result;
+		}
+
+	}
+	public function set($creator_id, $id, $info){
+		global $mysqli;
+
+		$update_str = "";
+		$is_first_attr = true;
+
+		//Iterate through attributes of $info object,
+		//Update for each existing valid attribute
+		foreach($info as $attr_name => $attr_val){
+			if(
+				$attr_name == "creator_id" ||
+				$attr_name == "create_time" ||
+				$attr_name == "title" ||
+				$attr_name == "subtitle" ||
+				$attr_name == "description"
+			)
+			{
+				$stmt = $mysqli->prepare("UPDATE project SET ".$attr_name." = ? WHERE project_id = ?");
+				$stmt->bind_param("si", $attr_value, $id);
+				
+				if($stmt->execute()){
+					write_log(Logger::ERROR, "Execution of query failed!".callinfo());
+				}
+			} else {
+				write_log(Logger::WARNING, "Invalid attribute in info structure: '".$attr_name."'!".callinfo());
+			}
+		}
+	}
+
+	public function get_all_projects(){
+		global $mysqli;
+
+		$result = $mysqli->query("SELECT * FROM project");
+		return $result->fetch_all(MYSQLI_ASSOC);
+	}
+
 	public function add_picture($id, $picture_id){}
 	public function remove_picture($id){}
 
