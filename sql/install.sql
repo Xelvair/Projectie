@@ -24,10 +24,23 @@ CREATE TABLE project (
 	PRIMARY KEY(project_id)
 );
 
+DROP TABLE IF EXISTS project_participation;
+CREATE TABLE project_participation (
+	participation_id int NOT NULL AUTO_INCREMENT,
+	project_id int NOT NULL,
+	user_id int NOT NULL,
+	can_delete boolean NOT NULL,
+	can_edit boolean NOT NULL,
+	can_post boolean NOT NULL,
+	can_add_participants boolean NOT NULL,
+	can_remove_participants boolean NOT NULL,
+	PRIMARY KEY(participation_id)
+);
+
 #if access is "PUBLIC", access_id is not needed
 #if access is "PROJECT_SPECIFIC", access_id points to the project_id the chat belongs to
 DROP TABLE IF EXISTS chat;
-CREATE TABLE chat(
+CREATE TABLE chat (
 	chat_id int NOT NULL AUTO_INCREMENT,
 	access enum("PUBLIC", "PROJECT_SPECIFIC") NOT NULL,
 	access_id int,
@@ -38,7 +51,7 @@ INSERT INTO chat (access)
 VALUES ("PUBLIC");
 
 DROP TABLE IF EXISTS chatmessage;
-CREATE TABLE chatmessage(
+CREATE TABLE chatmessage (
 	chatmessage_id int NOT NULL AUTO_INCREMENT,
 	chat_id int NOT NULL,
 	user_id int NOT NULL,
