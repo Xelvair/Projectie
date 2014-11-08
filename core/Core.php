@@ -76,7 +76,15 @@ class Core{
 		//Check if method exists and call if it does
 		$function_name = $parsed_url["function"];
 		if(method_exists($controller, $function_name)){
-			echo call_user_func(array($controller, $function_name), $parsed_url["params"]);
+			$controller_result = call_user_func(array($controller, $function_name), $parsed_url["params"]);
+
+			if(isset($_GET["redirect"])){
+				//If we have a redirect, don't output HTML, instead forward to new URL
+				header("Location: ".abspath($_GET["redirect"]));
+			} else {
+				//Else, just output the generated HTML and call it a day
+				echo $controller_result;
+			}
 		} else {
 			write_log(Logger::ERROR, "Function '".$function_name."' doesn't exist on controller '".$controller_name."'!");
 		}

@@ -24,9 +24,12 @@ CREATE TABLE project (
 	PRIMARY KEY(project_id)
 );
 
+INSERT INTO project (creator_id, create_time, title, subtitle, description)
+VALUES(1, UNIX_TIMESTAMP(), "Sample Project", "Sample Subtitle", "Sample Description");
+
 DROP TABLE IF EXISTS project_participation;
 CREATE TABLE project_participation (
-	participation_id int NOT NULL AUTO_INCREMENT,
+	project_participation_id int NOT NULL AUTO_INCREMENT,
 	project_id int NOT NULL,
 	user_id int NOT NULL,
 	can_delete boolean NOT NULL,
@@ -34,7 +37,15 @@ CREATE TABLE project_participation (
 	can_post boolean NOT NULL,
 	can_add_participants boolean NOT NULL,
 	can_remove_participants boolean NOT NULL,
-	PRIMARY KEY(participation_id)
+	PRIMARY KEY(project_participation_id)
+);
+
+DROP TABLE IF EXISTS project_participation_request;
+	CREATE TABLE project_participation_request (
+	project_participation_request_id int NOT NULL AUTO_INCREMENT,
+	project_id int NOT NULL,
+	requester_id int NOT NULL,
+	PRIMARY KEY(project_participation_request_id)
 );
 
 #if access is "PUBLIC", access_id is not needed
