@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS project_participation_request;
 DROP TABLE IF EXISTS chat;
 CREATE TABLE chat (
 	chat_id int NOT NULL AUTO_INCREMENT,
-	access enum("PUBLIC", "PROJECT_SPECIFIC") NOT NULL,
+	access enum("PUBLIC", "PROJECT_SPECIFIC", "PARTICIPATION_REQUEST") NOT NULL,
 	access_id int,
 	PRIMARY KEY(chat_id)
 );

@@ -21,35 +21,6 @@ class TestController extends Controller{
 		return $this->view("HtmlBase", array("title" => "Login Test", "body" => $content, "body_padding" => false));
 	}
 
-	public function login_action(){
-		if(isset($_POST["email"]) && isset($_POST["password"])){
-			$auth = $this->model("Auth");
-			return json_encode($auth->login($_POST["email"], $_POST["password"]));
-		} else {
-			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
-		}
-	}
-
-	public function logout_action(){
-		$auth = $this->model("Auth");
-		$auth->logout();
-		return json_encode(array());
-	}
-
-	public function register_action(){
-		if(isset($_POST["email"]) && isset($_POST["username"]) && isset($_POST["lang"]) && isset($_POST["password"])){
-			$auth = $this->model("Auth");
-			$result_register = $auth->register($_POST["email"], $_POST["username"], $_POST["lang"], $_POST["password"]);
-			if(isset($result_register["ERROR"])){
-				return json_encode($result_register);
-			} else {
-				return json_encode($auth->login($_POST["email"], $_POST["password"]));
-			}
-		} else {
-			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
-		}
-	}
-
 	public function project(){
 		$project = $this->model("Project");
 	

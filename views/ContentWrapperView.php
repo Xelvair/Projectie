@@ -11,7 +11,7 @@ global $locale;
     });		
 		
 		$('#logout_btn').on('click', function(){
-		  $.post("<?=abspath("/test/logout_action")?>").done(function(){
+		  $.post("<?=abspath("/auth/logout")?>").done(function(){
 			 window.location.href="<?=abspath("")?>";
 			});
 		});

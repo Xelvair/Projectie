@@ -18,7 +18,7 @@ function user_login(){
 		$("#email_form_group").removeClass("has-error");		
 		if(pw != ""){
 			$("#pw_form_group").removeClass("has-error");
-			$.post( "<?=abspath("/test/login_action")?>", 
+			$.post( "<?=abspath("/auth/login")?>", 
 							{email: email, password: pw}
 			).done(function(data){
 				var result = JSON.parse(data);
@@ -60,7 +60,7 @@ function user_register(){
 			  if(retype_password != ""){
 			  	if(password == retype_password){  
 					  if(lang != 0){
-						  $.post(	"<?=abspath('/test/register_action')?>", 
+						  $.post(	"<?=abspath('/auth/register')?>", 
 						  				{email: email, username: username, password: password, lang: lang}
 						  ).done(function(data){
 								var result = JSON.parse(data);
