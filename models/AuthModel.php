@@ -8,15 +8,20 @@ class AuthModel implements Model{
 		global $mysqli;
 		if(isset($_SESSION["login_user_id"])){
 			write_log(Logger::DEBUG, $_SESSION["login_user_id"]);
-			$stmt_load_user = $mysqli->prepare("SELECT user_id, create_time, email, username, lang from user WHERE user_id = ?");
+			$stmt_load_user = $mysqli->prepare("SELECT user_id, create_time, email, username, lang from user WHERE user_id = ? AND active = true");
 			$stmt_load_user->bind_param("s", $_SESSION["login_user_id"]);
 			$stmt_load_user->execute();
 			$stmt_load_user->bind_result($user_id, $create_time, $email, $username, $lang);
 
 			if($stmt_load_user->fetch()){
 				$this->loggedInUser = new UserModel($user_id, $create_time, $username, $email, $lang);
+
+				$stmt_load_user->close();
+
 				write_log(Logger::DEBUG, "Auth constructed with logged in user '".$username."'!");
 			} else {
+				$stmt_load_user->close();
+
 				write_log(Logger::WARNING, "Logged out user ".$_SESSION["login_user_id"]." - id doesn't exist in database!");
 				unset($_SESSION["login_user_id"]);
 			}
@@ -27,7 +32,7 @@ class AuthModel implements Model{
 		global $mysqli;
 
 		//All kinds of checks on the parameters
-		if(!preg_match("/\A[a-zA-Z0-9-.]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}\z/", $email)){
+		if(!preg_match("/^[a-zA-Z0-9-.]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}$/", $email)){
 			return array("ERROR" => "ERR_INVALID_EMAIL");
 		}
 
@@ -37,7 +42,7 @@ class AuthModel implements Model{
 		}
 
 		//Check if username has no special chars
-		if(!preg_match("/\A[a-zA-Z0-9.-]+\z/", $username)){
+		if(!preg_match("/^[a-zA-Z0-9.-]+$/", $username)){
 			return array("ERROR" => "ERR_INVALID_USERNAME");
 		}
 
@@ -47,19 +52,13 @@ class AuthModel implements Model{
 		}
 
 		//Check if email already exists
-		$stmt_check_email = $mysqli->prepare("SELECT user_id FROM user WHERE email = ?");
-		$stmt_check_email->bind_param("s", $email);
-		$stmt_check_email->execute();
-		if($stmt_check_email->get_result()->num_rows > 0){
+		if(self::email_exists($email)){
 			write_log(Logger::DEBUG, "Tried to register already existing email <".$email.">!");
 			return array("ERROR" => "ERR_EMAIL_IN_USE");
 		}
 
 		//Check if username already exists
-		$stmt_check_username = $mysqli->prepare("SELECT user_id FROM user WHERE username = ?");
-		$stmt_check_username->bind_param("s", $username);
-		$stmt_check_username->execute();
-		if($stmt_check_username->get_result()->num_rows > 0){
+		if(self::username_exists($username)){
 			write_log(Logger::DEBUG, "Tried to register already existing username '".$$username.">!");
 			return array("ERROR" => "ERR_USERNAME_IN_USE");
 		}
@@ -68,7 +67,7 @@ class AuthModel implements Model{
 
 		$password_hash = md5($password.$password_salt);
 
-		$stmt = $mysqli->prepare("INSERT INTO user (create_time, email, username, lang, password_salt, password_hash) VALUES(?, ?, ?, ?, ?, ?)");
+		$stmt = $mysqli->prepare("INSERT INTO user (create_time, email, username, lang, password_salt, password_hash, active) VALUES(?, ?, ?, ?, ?, ?, true)");
 		$stmt->bind_param("isssss", time(), $email, $username, $lang, $password_salt, $password_hash);
 		if($stmt->execute()){
 			write_log(Logger::DEBUG, "Registered account '".$username."'!");
@@ -83,7 +82,7 @@ class AuthModel implements Model{
 		global $mysqli;
 
 		//Load user from database
-		$stmt = $mysqli->prepare("SELECT user_id, create_time, email, username, lang, password_hash, password_salt FROM user WHERE email = ?");
+		$stmt = $mysqli->prepare("SELECT user_id, create_time, email, username, lang, password_hash, password_salt FROM user WHERE email = ? AND active = true");
 		$stmt->bind_param("s", $email);
 		$stmt->execute();
 		$stmt->bind_result($res_user_id, $res_create_time, $res_email, $res_username, $res_lang, $res_password_hash, $res_password_salt);
@@ -97,14 +96,19 @@ class AuthModel implements Model{
 		if($password_hash != $res_password_hash){
 			//If login failed, unset all values and exit
 			$this->logout();
+
 			write_log(Logger::DEBUG, "Failed login: incorrect password.");
+
+			$stmt->close();
 			return array("ERROR" => "ERR_INCORRECT_PASSWORD");
 		} else {
 			//If login succeeded, write to the session and set values
 			$_SESSION["login_user_id"] = $res_user_id;
 			$loggedInUser = new UserModel($res_user_id, $res_create_time, $res_username, $res_email, $res_lang);
+
 			write_log(Logger::DEBUG, "User '".$res_username."' logged in.");
 
+			$stmt->close();
 			return array();
 		}
 	}
@@ -121,31 +125,36 @@ class AuthModel implements Model{
 	public function email_exists($email){
 		global $mysqli;
 
-		$stmt = $mysqli->query("SELECT user_id FROM user WHERE email = ?");
+		$stmt = $mysqli->prepare("SELECT user_id FROM user WHERE email = ? AND active = true");
 		$stmt->bind_param("s", $email);
 		$stmt->execute();
-		if($stmt->fetch()){
-			return true;
-		} else {
-			return false;
-		}
+		$mail_exists = $stmt->fetch() ? true : false;
+		$stmt->close();
+		return $mail_exists;
 	}
 
-	public function user_exists($username){
+	public function username_exists($username){
 		global $mysqli;
 
-		$stmt = $mysqli->query("SELECT user_id FROM user WHERE username = ?");
+		$stmt = $mysqli->prepare("SELECT user_id FROM user WHERE username = ? AND active = true");
 		$stmt->bind_param("s", $username);
 		$stmt->execute();
-		if($stmt->fetch()){
-			return true;
-		} else {
-			return false;
-		}
+		$username_exists = $stmt->fetch() ? true : false;
+		$stmt->close();
+		return $username_exists;
 	}
 
 	public function get_current_user(){
 		return $this->loggedInUser;
+	}
+
+	public function deactivate($requester, $user_id){
+		if($requester == $user_id){
+			$stmt = $mysqli->prepare("UPDATE user SET active = false WHERE user_id = ?");
+			$stmt->bind_param("i", $user_id);
+			$stmt->execute();
+			$stmt->close();
+		}
 	}
 
 	private $loggedInUser = null;

@@ -21,7 +21,6 @@ class ProfileController extends Controller{
 		}
 		
 		$content = $this->view("Profile", "");
-		write_log(Logger::DEBUG, $content);
 		
 		$login_modal = $this->view("LoginModal", "");
 

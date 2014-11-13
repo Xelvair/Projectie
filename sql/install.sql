@@ -7,11 +7,12 @@ CREATE TABLE user (
 	lang varchar(10) NOT NULL,
 	password_salt varchar(8) NOT NULL,
 	password_hash varchar(32) NOT NULL,
+	active boolean NOT NULL,
 	PRIMARY KEY (user_id)
 );
 
-INSERT INTO user (user_id, email, username, lang, password_salt, password_hash)
-VALUES (1, 'admin@projectie.com', 'admin', 'de-de', 'a77239ba', '73bfd1bfe49f8b4e238c94f3a6a6ef4d');
+INSERT INTO user (user_id, email, username, lang, password_salt, password_hash, active)
+VALUES (1, 'admin@projectie.com', 'admin', 'de-de', 'a77239ba', '73bfd1bfe49f8b4e238c94f3a6a6ef4d', true);
 
 DROP TABLE IF EXISTS project;
 CREATE TABLE project (
@@ -21,6 +22,9 @@ CREATE TABLE project (
 	title varchar(256) NOT NULL,
 	subtitle varchar(512) NOT NULL,
 	description text NOT NULL,
+	public_chat_id int NOT NULL,
+	private_chat_id int NOT NULL,
+	active boolean NOT NULL,
 	PRIMARY KEY(project_id)
 );
 

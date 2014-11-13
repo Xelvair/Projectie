@@ -13,14 +13,16 @@ class ProjectModel implements Model{
 
 		if(	$info["title"] == "" ||
 			$info["subtitle"] == "" ||
-			$info["description"] == "")
+			$info["description"] == "" ||
+			$info["public_chat_id"] == "" ||
+			$info["private_chat_id"] == "")
 		{
 			write_log(Logger::WARNING, "Invalid parameters to project::create()!".callinfo());
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$stmt_create_proj = $mysqli->prepare("INSERT INTO project (creator_id, create_time, title, subtitle, description) VALUES (?, ?, ?, ?, ?)");
-		$stmt_create_proj->bind_param("iisss", $creator_id, time(), $info["title"], $info["subtitle"], $info["description"]);
+		$stmt_create_proj = $mysqli->prepare("INSERT INTO project (creator_id, create_time, title, subtitle, description, public_chat_id, private_chat_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+		$stmt_create_proj->bind_param("iisssii", $creator_id, time(), $info["title"], $info["subtitle"], $info["description"], $info["public_chat_id"], $info["private_chat_id"]);
 
 		//If we failed, exit
 		if(!$stmt_create_proj->execute()){
@@ -51,10 +53,10 @@ class ProjectModel implements Model{
 	public function get($id){
 		global $mysqli;
 
-		$stmt = $mysqli->prepare("SELECT project_id, creator_id, create_time, title, subtitle, description FROM project WHERE project_id = ?");
+		$stmt = $mysqli->prepare("SELECT project_id, creator_id, create_time, title, subtitle, description, public_chat_id, private_chat_Id FROM project WHERE project_id = ?");
 		$stmt->bind_param("i", $id);
 		$stmt->execute();
-		$stmt->bind_result($result["id"], $result["creator_id"], $result["create_time"], $result["title"], $result["subtitle"], $result["description"]);
+		$stmt->bind_result($result["id"], $result["creator_id"], $result["create_time"], $result["title"], $result["subtitle"], $result["description"], $result["public_chat_id"], $result["private_chat_id"]);
 
 		if($stmt->fetch()){
 			write_log(Logger::WARNING, "Failed to retrieve project #".$id." from databaase!");

@@ -40,8 +40,6 @@ class ChatModel implements Model{
 			return false;
 		}
 
-		write_log(Logger::DEBUG, $res_access);
-
 		//If public, return true right away
 		if($res_access == "PUBLIC"){
 			return true;
