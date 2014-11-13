@@ -16,10 +16,6 @@ global $locale;
 			});
 		});
 	});
-	
-	
-	
-
 </script>
 
 

@@ -35,7 +35,7 @@ class ProjectModel implements Model{
 
 		//If successful, create the participation entry for the creator
 		$stmt_create_participation = $mysqli->prepare("
-			INSERT INTO project_participation (project_id, user_id, can_delete, can_edit, can_post, can_add_participants, can_remove_participants)
+			INSERT INTO project_participation (project_id, user_id, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants)
 			VALUES(?, ?, true, true, true, true, true)
 		");
 		$stmt_create_participation->bind_param("ii", $project_id, $creator_id);

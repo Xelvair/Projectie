@@ -3,62 +3,115 @@
 require_once(abspath_lcl("/core/Model.php"));
 
 class ChatModel implements Model{
+
 	public function create_public(){
 		global $mysqli;
 
-		$mysqli->query("INSERT INTO chat (access) VALUES ('PUBLIC')");
+		if(!$mysqli->query("INSERT INTO chat (access) VALUES ('PUBLIC')")){
+			wrtie_log(Logger::ERROR, "Failed to create private project chat instance!");
+			return;
+		}
+
 		return $mysqli->insert_id;
 	}
 
-	public function create_project_specific($project_id){
+	public function create_private(){
 		global $mysqli;
 
-		$stmt = $mysqli->prepare("INSERT INTO chat (access, access_id) VALUES ('PUBLIC', ?)");
-		$stmt->bind_param("i", $project_id);
-		$stmt->execute();
+		if(!$mysqli->query("INSERT INTO chat (access) VALUES ('PRIVATE')")){
+			wrtie_log(Logger::ERROR, "Failed to create private project chat instance!");
+			return;
+		}
+
 		return $mysqli->insert_id;
+	}
+
+	public function can_participate($chat_id, $user_id){
+		global $mysqli;
+
+		//Check if it's a public chat
+		$stmt_check_public = $mysqli->prepare("SELECT access FROM chat WHERE chat_id = ?");
+		$stmt_check_public->bind_param("i", $chat_id);
+		$stmt_check_public->execute();
+
+		$stmt_check_public->bind_result($res_access);
+
+		if(!$stmt_check_public->fetch()){
+			return false;
+		}
+
+		write_log(Logger::DEBUG, $res_access);
+
+		//If public, return true right away
+		if($res_access == "PUBLIC"){
+			return true;
+		}
+
+		$stmt_check_public->close();
+
+		//Else, check participation table
+		$stmt_check_participation = $mysqli->prepare("SELECT chat_participation_id FROM chat_participation WHERE chat_id = ? AND participant_id = ?");
+		$stmt_check_participation->bind_param("ii", $chat_id, $user_id);
+		$stmt_check_participation->execute();
+
+		$got_result = $stmt_check_participation->fetch() != null;
+
+		$stmt_check_participation->close();
+
+		return $got_result;
+
+	}
+
+	public function add_user($chat_id, $user_id){
+		global $mysqli;
+
+		$stmt = $mysqli->prepare("INSERT INTO chat_participation(chat_id, participant_id) VALUES(?, ?)");
+		$stmt->bind_param("ii", $chat_id, $user_id);
+
+		if(!$stmt->execute()){
+			return array("ERR" => "ERR_DB_INSERT_FAILED");
+		}
+
+		return true;
+	}
+
+	public function remove_user($chat_id, $user_id){
+		global $mysqli;
+
+		$stmt = $mysqli->prepare("DELETE FROM chat_participation WHERE chat_id = ? AND participant_id = ?");
+		$stmt->bind_param("ii", $chat_id, $user_id);
+		
+		if(!$stmt->execute()){
+			return array("ERR" => "ERR_DB_DELETE_FAILED");
+		}
+
+		if($mysqli->affected_rows <= 0){
+			return array("ERR" => "ERR_USER_DOESNT_EXIST");
+		}
+
+		return true;
 	}
 
 	public function send($chat_id, $user_id, $message){
 		global $mysqli;
 
-		//Check to see whether the chat exists and it can be accessed by the user
-		$stmt_check_access = $mysqli->prepare("SELECT access, access_id FROM chat WHERE chat_id = ?");
-		$stmt_check_access->bind_param("i", $chat_id);
-		$stmt_check_access->execute();
-		$stmt_check_access->bind_result($res_access, $res_access_id);
-
-		//if no chat was retrieved, fail and return
-		if(!$stmt_check_access->fetch()){
-			write_log(Logger::WARNING, "Failed to send message to chat: Chat #".$chat_id." doesn't exist!");
-			return array("ERROR" => "ERR_CHAT_DOESNT_EXIST");
+		if(!self::can_participate($chat_id, $user_id)){
+			write_log(Logger::WARNING, "User #".$user_id." attempted to participate in chat #".$chat_id."! Not allowed!");
+			return;
 		}
 
-		$stmt_check_access->free_result();
-
-		switch ($res_access){
-			case "PUBLIC":
-				$stmt_send_message = $mysqli->prepare("INSERT INTO chatmessage (chat_id, user_id, send_time, message) VALUES (?, ?, ?, ?)");
-				$stmt_send_message->bind_param("iiis", $chat_id, $user_id, time(), $message);
-				$stmt_send_message->execute();
-				write_log(Logger::DEBUG, "User #".$user_id." sent message'".$message."'");
-				return true;
-				break;
-			case "PROJECT_SPECIFIC":
-				//TODO: Check more access
-				write_log(Logger::WARNING, "Tried to send message to project-specific chat. Feature not implemented yet.");
-				return false;
-				break;
-			default:
-				write_log(Logger::ERROR, "Default case reached in ChatModel::send()!");
-				break;
-		}
+		$stmt_send_msg = $mysqli->prepare("INSERT INTO chatmessage(chat_id, user_id, send_time, message) VALUES (?, ?, ?, ?)");
+		$stmt_send_msg->bind_param("iiis", $chat_id, $user_id, time(), htmlentities($message));
+		return $stmt_send_msg->execute();
 	}
 
 	public function get_messages($requester, $chat_id, $count){
 		global $mysqli;
 
-		//TODO: Check access
+		if(!self::can_participate($chat_id, $requester)){
+			write_log(Logger::WARNING, "User #".$user_id." attempted to participate in chat #".$chat_id."! Not allowed!");
+			return array("ERROR" => "ERR_NO_PARTICIPATION_RIGHTS");
+		}
 
 		$stmt_get_msg = $mysqli->prepare("
 			SELECT sub.user_id, sub.send_time, sub.message, u.username 
@@ -80,7 +133,10 @@ class ChatModel implements Model{
 	public function get_messages_since($requester, $chat_id, $time){
 		global $mysqli;
 
-		//TODO: Check access
+		if(!self::can_participate($chat_id, $requester)){
+			write_log(Logger::WARNING, "User #".$user_id." attempted to participate in chat #".$chat_id."! Not allowed!");
+			return array("ERROR" => "ERR_NO_PARTICIPATION_RIGHTS");
+		}
 
 		$stmt_get_msg = $mysqli->prepare("
 			SELECT chatmessage.user_id, chatmessage.send_time, chatmessage.message, user.username 
