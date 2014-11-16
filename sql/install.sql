@@ -48,7 +48,8 @@ DROP TABLE IF EXISTS project_participation_request;
 	CREATE TABLE project_participation_request (
 	project_participation_request_id int NOT NULL AUTO_INCREMENT,
 	project_id int NOT NULL,
-	requester_id int NOT NULL,
+	user_id int NOT NULL,
+	requester_type enum("USER", "PROJECT") NOT NULL,
 	PRIMARY KEY(project_participation_request_id)
 );
 
