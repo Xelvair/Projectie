@@ -28,8 +28,8 @@ CREATE TABLE project (
 	PRIMARY KEY(project_id)
 );
 
-INSERT INTO project (creator_id, create_time, title, subtitle, description)
-VALUES(1, UNIX_TIMESTAMP(), "Sample Project", "Sample Subtitle", "Sample Description");
+INSERT INTO project (creator_id, create_time, title, subtitle, description, active)
+VALUES(1, UNIX_TIMESTAMP(), "Sample Project", "Sample Subtitle", "Sample Description", true);
 
 DROP TABLE IF EXISTS project_participation;
 CREATE TABLE project_participation (

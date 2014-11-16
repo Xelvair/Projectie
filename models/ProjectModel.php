@@ -23,7 +23,7 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$stmt_create_proj = $mysqli->prepare("INSERT INTO project (creator_id, create_time, title, subtitle, description, public_chat_id, private_chat_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+		$stmt_create_proj = $mysqli->prepare("INSERT INTO project (creator_id, create_time, title, subtitle, description, public_chat_id, private_chat_id, active) VALUES (?, ?, ?, ?, ?, ?, ?, true)");
 		$stmt_create_proj->bind_param("iisssii", $creator_id, time(), $info["title"], $info["subtitle"], $info["description"], $info["public_chat_id"], $info["private_chat_id"]);
 
 		//If we failed, exit
@@ -248,6 +248,65 @@ class ProjectModel implements Model{
 		$query_check_participation->close();
 
 		return $result;
+	}
+
+	public function get_created_projects($user_id){
+		global $mysqli;
+
+		$query_get_projects = $mysqli->prepare("SELECT project_id, create_time, title, subtitle FROM project WHERE creator_id = ? and active = true");
+		$query_get_projects->bind_param("i", $user_id);
+		$query_get_projects->execute();
+
+		$result = $query_get_projects->get_result();
+
+		$created_projects = array();
+
+		// currently, the result array looks like this:
+		// [n] -> [project_id, create_time, title, ...]
+		// we want to change it to such a format:
+		// [project_id] -> [create_time, title, ...]
+		// so we extract the id from the array, and rebuild a new one with the project_id as index
+		while($row = $result->fetch_assoc()){
+			$id = $row["project_id"];
+			unset($row["project_id"]);
+			$created_projects[$id] = array_values($row);
+		}
+
+		return $created_projects;
+	}
+
+	public function get_user_participations($user_id){
+		global $mysqli;
+
+		$query_get_projects = $mysqli->prepare("
+			SELECT 
+				p.project_id AS project_id, 
+				p.title AS title, 
+				p.subtitle AS subtitle, 
+				p.create_time AS create_time 
+			FROM project AS p 
+			LEFT OUTER JOIN project_participation AS pp 
+				ON p.project_id = pp.project_id 
+			WHERE pp.user_id = ?");
+		$query_get_projects->bind_param("i", $user_id);
+		$query_get_projects->execute();
+
+		$result = $query_get_projects->get_result();
+
+		$user_participations = array();
+
+		// currently, the result array looks like this:
+		// [n] -> [project_id, create_time, title, ...]
+		// we want to change it to such a format:
+		// [project_id] -> [create_time, title, ...]
+		// so we extract the id from the array, and rebuild a new one with the project_id as index
+		while($row = $result->fetch_assoc()){
+			$id = $row["project_id"];
+			unset($row["project_id"]);
+			$user_participations[$id] = array_values($row);
+		}
+
+		return $user_participations;
 	}
 
 	public function add_picture($id, $picture_id){}
