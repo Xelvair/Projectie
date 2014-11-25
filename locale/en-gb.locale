@@ -26,5 +26,13 @@
 	"select_language" : "Select Language...",
 	"logged_in_as" : "Logged in as",
 	"login_email_err" : "Your E-Mail is not correct!",
-	"login_pw_err" : "Your password is not correct!"
+	"login_pw_err" : "Your password is not correct!",
+	"projects_created" : "Projects created",
+	"projects_involved" : "Projects Involved",
+	"skills" : "Skills",
+	"create" : "Create",
+	"create_desc_title" : "Descripe what you are targeting with your project and what your intentions are.",
+	"create_subtitle_title" : "This should be a short description what your project is about.",
+	"create_title_title" : "Select a matching project tilte.",
+	"upload_pic" : "Upload Picture"
 }

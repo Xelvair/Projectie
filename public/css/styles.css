@@ -91,8 +91,8 @@ box-shadow:         0px 3px 4px 0px rgba(50, 50, 50, 0.71);
     width: 250px;
 }
 #page-content-wrapper{
-	width: 100%;
-	float:left;	
+    width: 100%;
+    float:left; 
 }
 #page-list-wrapper {
     width: 100%;
@@ -222,62 +222,122 @@ box-shadow:         0px 3px 4px 0px rgba(50, 50, 50, 0.71);
 }
 
 hr{
-	border-color: #AAAAAA;
+    border-color: #AAAAAA;
 }
 
 .carousel{
-	max-width: 1200px;
-	margin-left:auto;
-	margin-right: auto;
-	
+    max-width: 1200px;
+    margin-left:auto;
+    margin-right: auto;
+    
 }
 
 #carousel_row{
-	background-color: #323232;
-	padding: 0px;
-	
+    background-color: #323232;
+    padding: 0px;
+    
 }
 
 #page_list_wrapper{
-	padding: 15px;
-	
-	
+    padding: 15px;
+    
+    
 }
 
 .content_list{
-	margin-bottom: 60px;
-	
+    margin-bottom: 60px;
+    
 }
 
 
-.footer_label{
-	padding-right: 20px;
-	font-size: 12px;
-	
+
+#footer a{
+    color: #323232
+    
+    
 }
 
-.footer_label a{
-	color: #323232
-	
-	
-}
-
-.footer_label a:hover{
-	color: #93D706 ;
-	
-	
+#footer a:hover{
+    color: #93D706 ;
+    
+    
 }
 
 .row{
-	margin-left: 0px;
-	margin-right: 0px;
-	
+    margin-left: 0px;
+    margin-right: 0px;
+    
 }
 
 .modal-dialog{
-	
-	width: 25%;
-	min-width: 300px;
-	max-width: 600px;
-	margin-top: 100px;
+    
+    width: 50%;
+    min-width: 300px;
+    max-width: 600px;
+    margin-top: 100px;
 }
+
+.skill_box{
+    width:100%;
+    height: 100%;
+    min-height: 100px;
+    border:solid;
+    border-width: 1px;
+    border-color: #AAAAAA;  
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    padding: 10px;
+    max-height: 320px;
+    overflow-y: auto;
+    margin-top: 20px;
+    
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(50, 48, 50, 0.5);
+    -moz-box-shadow:    2px 2px 5px 0px rgba(50, 48, 50, 0.5);
+    box-shadow:         2px 2px 5px 0px rgba(50, 48, 50, 0.5);
+    
+}
+
+.media-object{
+    max-height:150px;
+    max-width: 150px;
+}
+
+.content_heading{
+    margin-bottom: 30px;
+}
+
+#upload_tag{
+    
+    top: 0px;
+    right: 10%;
+    position:absolute;
+    float: right;
+    margin: 15px;
+    z-index: 500;
+    width:50px;
+    height:50px;
+}
+
+
+
+.banner{
+    width: 100%;
+    
+}
+
+#banner_wrap{
+    position:relative;
+    background-color: #323232;
+    padding-left:10%;
+    padding-right:10%;
+
+}
+
+#PicUploadModal .modal-content{
+width: 100%;
+
+}
+
+
+
