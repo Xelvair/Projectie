@@ -3,10 +3,10 @@
 #projects : list of all projects as returned by mysqli_result::fetch_all()
 ?>
 
-<form method="POST" action="<?=abspath("/test/project_action&redirect=/test/project")?>">
+<form method="POST" action="<?=abspath("/project/create&redirect=/test/project")?>">
 	<table>
 		<tr>
-			<td>Title</td>
+			<td>Title</td>y
 			<td><input type="text" name="title"></td>
 		</tr>
 		<tr>

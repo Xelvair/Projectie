@@ -12,7 +12,7 @@ class TestController extends Controller{
 		$auth = $this->model("Auth");
 		$logged_in_user = $auth->get_current_user();
 		if($logged_in_user){
-			$login_name = $logged_in_user->get_name();
+			$login_name = $logged_in_user["username"];
 		} else {
 			$login_name = null;
 		}

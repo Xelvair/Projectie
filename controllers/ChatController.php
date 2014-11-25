@@ -15,7 +15,7 @@ class ChatController extends Controller{
 		$chat = $this->model("Chat");
 
 		$logged_in_user = $auth->get_current_user();
-		$requester_id = $logged_in_user ? $logged_in_user->get_id() : null;
+		$requester_id = $logged_in_user ? $logged_in_user["id"] : null;
 
 		do{
 			$chatsession_id = substr(md5(rand()), 0, 8);
@@ -48,7 +48,7 @@ class ChatController extends Controller{
 		$chat = $this->model("Chat");
 
 		$logged_in_user = $auth->get_current_user();
-		$requester_id = $logged_in_user ? $logged_in_user->get_id() : null;
+		$requester_id = $logged_in_user ? $logged_in_user["id"] : null;
 
 		$result = json_encode($chat->get_messages_since($requester_id, $chatsession["chat_id"], $chatsession["last_load"]));
 	
@@ -67,7 +67,7 @@ class ChatController extends Controller{
 
 		$logged_in_user = $auth->get_current_user();
 
-		$sender_id = $logged_in_user ? $logged_in_user->get_id() : null;
+		$sender_id = $logged_in_user ? $logged_in_user["id"] : null;
 		$chat->send($data[0], $sender_id, $_POST["message"]);
 
 	}

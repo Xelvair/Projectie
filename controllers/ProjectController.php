@@ -1,7 +1,7 @@
 <?php
 require_once("../core/Controller.php");
 
-class ExampleController extends Controller{
+class ProjectController extends Controller{
 	public function create(){
 		$auth = $this->model("Auth");
 		$logged_in_user = $auth->get_current_user();
@@ -18,12 +18,12 @@ class ExampleController extends Controller{
 			$public_chat_id = $chat->create_private();
 
 			//Add creator to private chat
-			$chat->add_user($private_chat_id, $creator_id);
+			$chat->add_user($private_chat_id, $logged_in_user["id"]);
 
 			//Create the project itself
 			$project = $this->model("project");
 			$create_result = $project->create(
-				$logged_in_user->get_id(), 
+				$logged_in_user["id"], 
 				array(
 					"title" => htmlentities($_POST["title"]), 
 					"subtitle" => htmlentities($_POST["subtitle"]), 

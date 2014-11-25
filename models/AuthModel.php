@@ -1,7 +1,6 @@
 <?php
 
 require_once("../core/Model.php");
-require_once("../models/UserModel.php");
 
 class AuthModel implements Model{
 	function __construct(){
@@ -11,16 +10,16 @@ class AuthModel implements Model{
 			$stmt_load_user = $mysqli->prepare("SELECT user_id, create_time, email, username, lang from user WHERE user_id = ? AND active = true");
 			$stmt_load_user->bind_param("s", $_SESSION["login_user_id"]);
 			$stmt_load_user->execute();
+			$stmt_load_user->store_result();
 			$stmt_load_user->bind_result($user_id, $create_time, $email, $username, $lang);
 
 			if($stmt_load_user->fetch()){
-				$this->loggedInUser = new UserModel($user_id, $create_time, $username, $email, $lang);
-
 				$stmt_load_user->close();
+
+				$this->loggedInUser = self::get_user($user_id);
 
 				write_log(Logger::DEBUG, "Auth constructed with logged in user '".$username."'!");
 			} else {
-				$stmt_load_user->close();
 
 				write_log(Logger::WARNING, "Logged out user ".$_SESSION["login_user_id"]." - id doesn't exist in database!");
 				unset($_SESSION["login_user_id"]);
@@ -82,11 +81,13 @@ class AuthModel implements Model{
 		global $mysqli;
 
 		//Load user from database
-		$stmt = $mysqli->prepare("SELECT user_id, create_time, email, username, lang, password_hash, password_salt FROM user WHERE email = ? AND active = true");
+		$stmt = $mysqli->prepare("SELECT user_id, password_hash, password_salt FROM user WHERE email = ? AND active = true");
 		$stmt->bind_param("s", $email);
 		$stmt->execute();
-		$stmt->bind_result($res_user_id, $res_create_time, $res_email, $res_username, $res_lang, $res_password_hash, $res_password_salt);
+		$stmt->store_result();
+		$stmt->bind_result($res_user_id, $res_password_hash, $res_password_salt);
 		if(!$stmt->fetch()){
+			$stmt->close();
 			write_log(Logger::WARNING, "Failed to login, email '".$email."' not found!");
 			return array("ERROR" => "ERR_USER_NOT_FOUND");
 		}
@@ -100,13 +101,15 @@ class AuthModel implements Model{
 			write_log(Logger::DEBUG, "Failed login: incorrect password.");
 
 			$stmt->close();
+
+			$stmt->close();
 			return array("ERROR" => "ERR_INCORRECT_PASSWORD");
 		} else {
 			//If login succeeded, write to the session and set values
 			$_SESSION["login_user_id"] = $res_user_id;
-			$loggedInUser = new UserModel($res_user_id, $res_create_time, $res_username, $res_email, $res_lang);
+			$loggedInUser = self::get_user($res_user_id);
 
-			write_log(Logger::DEBUG, "User '".$res_username."' logged in.");
+			write_log(Logger::DEBUG, "User #".$res_user_id." logged in.");
 
 			$stmt->close();
 			return array();
@@ -158,6 +161,101 @@ class AuthModel implements Model{
 	}
 
 	private $loggedInUser = null;
+
+	public function get_created_projects($user_id){
+		global $mysqli;
+
+		$query_get_projects = $mysqli->prepare("SELECT project_id, create_time, title, subtitle FROM project WHERE creator_id = ? and active = true");
+		$query_get_projects->bind_param("i", $user_id);
+		$query_get_projects->execute();
+
+		$result = $query_get_projects->get_result();
+
+		$created_projects = array();
+
+		// currently, the result array looks like this:
+		// [n] -> [project_id, create_time, title, ...]
+		// we want to change it to such a format:
+		// [project_id] -> [create_time, title, ...]
+		// so we extract the id from the array, and rebuild a new one with the project_id as index
+		while($row = $result->fetch_assoc()){
+			$id = $row["project_id"];
+			unset($row["project_id"]);
+			$created_projects[$id] = array_values($row);
+		}
+
+		$query_get_projects->close();
+
+		return $created_projects;
+	}
+
+	public function get_user_participations($user_id){
+		global $mysqli;
+
+		$query_get_projects = $mysqli->prepare("
+			SELECT 
+				p.project_id AS project_id, 
+				p.title AS title, 
+				p.subtitle AS subtitle, 
+				p.create_time AS create_time 
+			FROM project AS p 
+			LEFT OUTER JOIN project_participation AS pp 
+				ON p.project_id = pp.project_id 
+			WHERE pp.user_id = ?");
+		$query_get_projects->bind_param("i", $user_id);
+		$query_get_projects->execute();
+
+		$result = $query_get_projects->get_result();
+
+		$user_participations = array();
+
+		// currently, the result array looks like this:
+		// [n] -> [project_id, create_time, title, ...]
+		// we want to change it to such a format:
+		// [project_id] -> [create_time, title, ...]
+		// so we extract the id from the array, and rebuild a new one with the project_id as index
+		while($row = $result->fetch_assoc()){
+			$id = $row["project_id"];
+			unset($row["project_id"]);
+			$user_participations[$id] = array_values($row);
+		}
+
+		$query_get_projects->close();
+
+		return $user_participations;
+	}	
+
+	public function get_user($user_id){
+		global $mysqli;
+		$stmt = $mysqli->prepare("SELECT user_id, create_time, username, email, lang FROM user WHERE user_id = ?");
+		$stmt->bind_param("i", $user_id);
+		$stmt->execute();
+		$stmt->store_result();
+
+		$stmt->bind_result($res_user_id, $res_create_time, $res_username, $res_email, $res_lang);
+
+		if(!$stmt->fetch()){
+			write_log(Logger::WARNING, "User #".$user_id." doesn't exist!");
+			return array("ERR" => "ERR_USER_NOT_FOUND");
+		}
+
+		$user_obj = array(
+			"id" => $res_user_id,
+			"create_time" => $res_create_time,
+			"username" => $res_username,
+			"email" => $res_email,
+			"lang" => $res_lang,
+			"created_projects" => array(),
+			"project_participations" => array()
+		);
+
+		$stmt->close();
+
+		$user_obj["created_projects"] = self::get_created_projects($user_id);
+		$user_obj["project_participations"] = self::get_user_participations($user_id);
+
+		return $user_obj;
+	}
 }
 
 ?>
