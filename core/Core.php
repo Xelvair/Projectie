@@ -48,6 +48,8 @@ class Core{
 
 			if($mysqli->connect_errno){
 				write_log(Logger::ERROR, "Failed to connect to database!");
+			} else {
+				$mysqli->set_charset("utf8");
 			}
 		}
 

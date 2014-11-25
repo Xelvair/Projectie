@@ -80,3 +80,10 @@ CREATE TABLE chatmessage (
 	message varchar(512) NOT NULL,
 	PRIMARY KEY (chatmessage_id)
 );
+
+DROP TABLE IF EXISTS tag;
+CREATE TABLE tag (
+	tag_id int NOT NULL AUTO_INCREMENT,
+	name varchar(64) NOT NULL,
+	PRIMARY KEY(tag_id)
+);
