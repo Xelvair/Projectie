@@ -11,7 +11,7 @@
 			$.ajax({
 				url: "http://localhost:8001/Debug/debug",
 				type: "POST",
-				data: "code=" + $("#code").val(),
+				data: "code=" + encodeURIComponent($("#code").val()),
 				success: function(data){
 					$("#result").html(data);
 				}

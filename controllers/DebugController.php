@@ -16,7 +16,7 @@ class DebugController extends Controller{
 		$result = eval($_POST["code"]);
 
 		if(is_array($result)){
-			return print_r($result ,true);
+			return print_r($result, true);
 		} else {
 			return var_export($result);
 		}
