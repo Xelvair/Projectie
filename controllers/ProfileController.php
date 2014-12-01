@@ -23,7 +23,7 @@ class ProfileController extends Controller{
 		$footer_array = array("username" => "");
 		$footer = $this->view("Footer", $footer_array);
 		
-		$profile_content = array("footer" => $footer, "profile_pic" => abspath("/public/images/question_mark_big.png"), "username" => "Max da Boss", "sum_projects_created" => "123", "sum_projects_involved" => "34", "skill" => array("CSS", "JAVA", "PHP"), "created_project" => array(), "involved_project" => array());
+		$profile_content = array("footer" => $footer, "profile_pic" => abspath("/public/images/question_mark_big.png"), "username" => "Max da Boss", "sum_projects_created" => "123", "sum_projects_involved" => "34", "skill" => array("PHP|1","CSS|2", "JAVASCRIPT|3", "BOOTSTRAP|4", "C#|5"), "created_project" => array(), "involved_project" => array());
 		
 		array_push($profile_content["created_project"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
 		array_push($profile_content["created_project"], array("title" => "Trending Project 2", "desc" => "Test Desc 2", "thumb" => abspath("/public/images/question_mark_small.png")));

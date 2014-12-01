@@ -10,6 +10,100 @@
 #involved_project : involved projects
 global $locale;
 ?>
+
+<script>
+var popover = "hidden";
+
+$(document).ready(function(){
+	/*$('.tag').on('mouseenter', function(){
+		$(this).find('.tag_delete').animate({width:'toggle'},200);
+	});
+	
+	$('.tag').on('mouseleave',function(){
+		$(this).find('.tag_delete').animate({width:'toggle'},200);
+	});
+	*/
+	var tOut;
+	
+	$('.tag').hover(function(){
+		var element = $(this);
+		tOut = setTimeout(function(){
+					$(element).find('.tag_delete').show().animate({width: '20px'},200);
+				},500);
+		
+			
+		
+			
+		},function(){
+			clearTimeout(tOut);
+			$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
+			
+			});
+	
+	
+	$('#addskill').click(function(){
+		if(popover=="shown"){
+			$('#addskill').popover('hide');
+			popover="hidden";
+		}else if(popover == "hidden"){
+			$('#addskill').popover('show');
+			popover = "shown";
+		}
+		
+	});
+	
+});
+
+function submit_skill(event){
+	
+	$('#skill_input_group').removeClass('has-error');
+	
+	if (event.which == 13 || event.keyCode == 13) {
+		
+			var new_skill = document.getElementById('input_newskill').value;
+			
+			if(new_skill == ""){
+				
+				$('#skill_input_group').addClass('has-error');
+				
+			}else{
+				
+			var id = 23;
+			
+            $('#addskill').popover('hide');
+			$('#skill-list').append('<li class="tag" id="skill'+id+'">'+new_skill+'<div class="tag_delete"><a onclick="delete_skill(this, '+id+');" class="skill_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>');
+			
+			var tOut;
+	
+	$('.tag').hover(function(){
+		var element = $(this);
+		tOut = setTimeout(function(){
+					$(element).find('.tag_delete').show().animate({width: '20px'},200);
+				},500);
+		
+			
+		
+			
+		},function(){
+			clearTimeout(tOut);
+			$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
+			
+			});
+			
+			}
+            return false;
+        }
+        return true;
+}
+
+function delete_skill(element, id){
+
+		$('#skill'+id).remove();
+	
+}
+
+</script>
+
 <div class="row">
     <div class="col-md-3 col-xs-3" style="padding-top:20px;">
         <img src="<?=$_DATA['profile_pic']?>" class="img-responsive img-rounded">
@@ -27,11 +121,19 @@ global $locale;
         <div class="row">
             <div class="skill_box">
             <h1 align="center" style="margin-top:0px;"><small><?=$locale['skills']?></small></h1>
-                <ul>
-                    <?php foreach($_DATA["skill"] as $entry){ ?>
-                         <li><?=$entry?></li>
-                    <?php }?>
+                <ul class="list-inline" id="skill-list">
+                    <?php foreach($_DATA["skill"] as $entry){ 
+							$skill = explode('|',$entry);
+								?>
+                         <li class="tag" id="skill<?=$skill[1]?>"><?=$skill[0]?><div class="tag_delete"><a onclick="delete_skill(this, <?=$skill[1]?>);" class="skill_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>
+                    <?php 
+					}?>
                 </ul>
+            	<div class="skill_box_bottom">
+                <button class="skill_btn" id="addskill"  data-toggle="popover" data-html="true" data-content="<div id='skill_input_group'><input type='text' class='form-control' placeholder='New skill...' id='input_newskill' onkeypress='submit_skill(event);'/></div>" data-placement="left">             
+                                <span class="glyphicon glyphicon-plus"></span><strong>Skill</strong>
+                </button>
+               </div>
             </div>
         </div>
     </div>

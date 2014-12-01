@@ -65,12 +65,12 @@ global $locale;
   </div><!-- /.container-fluid -->
 </nav>
 
-<div id="wrapper">
+<div id="wrapper" class="toggled">
 	<div id="sidebar-wrapper">
     <ul class="sidebar-nav">
       <li class="sidebar-brand"><?php echo($_DATA["user"] != null ? $_DATA["user"] : $locale["welcome"]); ?></li>
       <li>
-        <a href="#"><?=$locale["profile"]?></a>
+        <a href="<?=abspath("profile")?>"><?=$locale["profile"]?></a>
       </li>
       <li>
         <a href="#"><?=$locale["my_projects"]?></a>
@@ -79,7 +79,7 @@ global $locale;
         <a href="#"><?=$locale["favorites"]?></a>
       </li>
       <li>
-        <a href="#"><?=$locale["conversations"]?></a>
+        <a href="<?=abspath("chat")?>"><?=$locale["conversations"]?></a>
       </li>
     </ul>
   </div>
