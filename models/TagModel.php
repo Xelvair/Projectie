@@ -17,7 +17,7 @@ class TagModel implements Model{
 		if(!$result){
 			return array("ERROR" => "ERR_DB_INSERT_FAILED");
 		} else {
-			return array($mysqli->insert_id);
+			return $mysqli->insert_id;
 		}
 	}
 
@@ -41,10 +41,28 @@ class TagModel implements Model{
 		return $autocomplete_obj;
 	}
 
-	public function get_tag_by_id($tag_id){
+	//returns an associative array of the requested tag
+	//if the tag in question doesn't exist, returns an empty array
+	//parameter may be a string, in which case the tag is searched by name
+	//or an int, in which case it is searched by id instead
+	//any other types will throw an exception 
+	public function get_tag($tag){
 		global $mysqli;
-		$stmt_check_existence = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE tag_id = ?");
-		$stmt_check_existence->bind_param("i", $tag_id);
+
+		switch (gettype($tag)){
+			case "integer":
+				$stmt_check_existence = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE tag_id = ?");
+				$stmt_check_existence->bind_param("i", $tag);
+				break;
+			case "string":
+				$stmt_check_existence = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE name = ?");
+				$stmt_check_existence->bind_param("s", $tag);
+				break;
+			default:
+				throw new InvalidArgumentException("get_tag function expects integer or string. ".gettype($tag)." given.");
+				break;
+		}
+
 		$stmt_check_existence->execute();
 		$stmt_check_existence->bind_result($res_tag_id, $res_name);
 
@@ -60,34 +78,28 @@ class TagModel implements Model{
 		return $result;
 	}
 
-	public function get_tag_by_name($name){
-		global $mysqli;
-		$stmt_check_existence = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE name = ?");
-		$stmt_check_existence->bind_param("s", $name);
-		$stmt_check_existence->execute();
-		$stmt_check_existence->bind_result($res_tag_id, $res_name);
-
-		$result = array();
-
-		if($stmt_check_existence->fetch()){
-			$result["tag_id"] = $res_tag_id;
-			$result["name"] = $res_name;
+	//similar to get_tag, except that if a string is passed, it will create the tag if it doesn't already exists
+	//returns an empty array if an id is passed and that id is nonexistent
+	public function request_tag($tag){
+		//Check parameters
+		if(gettype($tag) != "integer" && gettype($tag) != "string"){
+			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
 		}
 
-		$stmt_check_existence->close();
+		$tag_entry = self::get_tag($tag);
 
-		return $result;
-	}
-
-	//Tries to retrieve tag from DB, if said tag doesn't exist, create one
-	//Always returns a valid tag-id
-	public function request_tag($name){
-		$tag = self::get_tag_by_name($name);
-
-		if(sizeof($tag) == 0){
-			return self::create_tag($name);
+		if(sizeof($tag_entry) <= 0){
+			switch(gettype($tag)){
+				case "string":
+					$new_tag_id = self::create_tag($tag);
+					return self::get_tag($new_tag_id);
+					break;
+				case "integer":
+					return array();
+					break;
+			}
 		} else {
-			return $tag;
+			return $tag_entry;
 		}
 	}
 }

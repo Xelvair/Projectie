@@ -87,3 +87,11 @@ CREATE TABLE tag (
 	name varchar(64) NOT NULL,
 	PRIMARY KEY(tag_id)
 );
+
+DROP TABLE IF EXISTS project_tag;
+CREATE TABLE project_tag (
+	project_tag_id int NOT NULL AUTO_INCREMENT,
+	project_id int NOT NULL,
+	tag_id int NOT NULL,
+	PRIMARY KEY(project_tag_id)
+);

@@ -67,6 +67,22 @@ class ProjectModel implements Model{
 		}
 
 	}
+
+	public function exists($project_id){
+		global $mysqli;
+
+		$stmt_check_project = $mysqli->prepare("SELECT project_id FROM project WHERE project_id = ?");
+		$stmt_check_project->bind_param("i", $project_id);
+		$stmt_check_project->execute();
+		$stmt_check_project->store_result();
+
+		$result = $stmt_check_project->num_rows;
+
+		$stmt_check_project->close();
+
+		return ($result > 0);
+	}
+
 	public function set($creator_id, $id, $info){
 		global $mysqli;
 
@@ -248,6 +264,78 @@ class ProjectModel implements Model{
 		$query_check_participation->close();
 
 		return $result;
+	}
+
+	public function tag($tag_model, $project_id, $tag){
+		global $mysqli;
+
+		if(!self::exists($project_id)){
+			return array("ERROR" => "ERR_PROJECT_NONEXISTENT");
+		}
+
+		if(gettype($tag) != "integer" && gettype($tag) != "string"){
+			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
+		}
+
+		//Get tag from database
+		$tag_entry = $tag_model->request_tag($tag);
+
+		if(sizeof($tag_entry) <= 0){
+			return array("ERROR" => "ERR_TAG_NONEXISTENT");
+		}
+
+		if(self::is_tagged($tag_model, $project_id, $tag)){
+			return array("ERROR" => "ERR_PROJECT_ALREADY_TAGGED");
+		}
+
+		$tag_id = $tag_entry["tag_id"];
+
+		$query_tag_project = $mysqli->prepare("INSERT INTO project_tag (project_id, tag_id) VALUES (?, ?)");
+		$query_tag_project->bind_param("ii", $project_id, $tag_id);
+		$query_tag_project->execute();
+	
+		return array();
+	}
+
+	public function is_tagged($tag_model, $project_id, $tag){
+		global $mysqli;
+
+		if(gettype($tag) != "integer" && gettype($tag) != "string"){
+			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
+		}
+
+		$tag_entry = $tag_model->get_tag($tag);
+
+		if(sizeof($tag_entry) <= 0){
+			throw new InvalidArgumentException("request_tag function cannot find '".$tag."' in database!");
+		}
+
+		$tag_id = $tag_entry["tag_id"];
+
+		$query_check_tag = $mysqli->prepare("SELECT project_tag_id FROM project_tag WHERE project_id = ? AND tag_id = ?");
+		$query_check_tag->bind_param("ii", $project_id, $tag_id);
+		$query_check_tag->execute();
+		$query_check_tag->store_result();
+
+		$result = $query_check_tag->num_rows;
+
+		$query_check_tag->close();
+
+		return ($result > 0);
+	}
+
+	public function untag($tag_model, $project_id, $tag){
+		global $mysqli;
+
+		$tag_entry = $tag_model->get_tag($tag);
+
+		$tag_id = $tag_entry["tag_id"];
+
+		$query_untag_project = $mysqli->prepare("DELETE FROM project_tag WHERE project_id = ? AND tag_id = ?");
+		$query_untag_project->bind_param("ii", $project_id, $tag_id);
+		$query_untag_project->execute();
+
+		return array();
 	}
 
 	public function add_picture($id, $picture_id){}
