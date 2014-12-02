@@ -162,19 +162,7 @@ class ProjectModel implements Model{
 
 		//Determine who originally sent requesst
 		if($res_requester_type == "USER"){
-			//IF a user sent the request, check if we have the rights to accept in behalf of the project
-			$query_check_accept_rights = $mysqli->prepare("SELECT can_add_participants FROM project_participation WHERE project_id = ? and user_id = ?");
-			$query_check_accept_rights->bind_param("ii", $res_project_id, $acceptor_id);
-			$query_check_accept_rights->execute();
-			$query_check_accept_rights->store_result();
-			$query_check_accept_rights->bind_result($res_can_add_participants);
-
-			if(!$query_check_accept_rights->fetch()){
-				write_log(Logger::WARNING, "User #".$acceptor_id." has no rights to accept participation request #".$participation_req_id."1!");
-				return array("ERROR" => "ERR_NO_RIGHTS");
-			}
-
-			if($res_can_add_participants){
+			if(self::user_has_right($res_project_id, $acceptor_id, "add_participants")){
 				self::create_participation($participation_req_id);
 			} else {
 				write_log(Logger::WARNING, "User #".$acceptor_id." has no rights to accept participation request #".$participation_req_id."2!");
@@ -192,7 +180,31 @@ class ProjectModel implements Model{
 
 		$query_check_participation->close();
 
-	} //Such ugly code, very spaghetti, much refactor soon (maybe)
+	}
+
+	public function user_has_right($project_id, $user_id, $right){
+		global $mysqli;
+
+		$stmt_get_rights = $mysqli->prepare("SELECT * FROM project_participation WHERE project_id = ? AND user_id = ?");
+		$stmt_get_rights->bind_param("ii", $project_id, $user_id);
+		$stmt_get_rights->execute();
+
+		$result = $stmt_get_rights->get_result();
+
+		if($result->num_rows <= 0){
+			return false;
+		}
+
+		$row = $result->fetch_all(MYSQLI_ASSOC)[0];
+
+		$stmt_get_rights->close();
+
+		if(isset($row["can_".$right])){
+			return (boolean)$row["can_".$right];
+		}
+
+		return false;
+	}
 
 	public function create_participation($participation_req_id){
 		global $mysqli;

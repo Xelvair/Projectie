@@ -4,7 +4,7 @@ require_once("../core/Controller.php");
 class TagController extends Controller{
 	function create(){
 		if(!isset($_POST["tag_name"])){
-			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
 		$auth = $this->model("Auth");

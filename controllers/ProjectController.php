@@ -37,5 +37,35 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 	}
+
+	public function tag(){
+		$exists_and_filled_out = function(&$var){
+			return (isset($var) && $var != "");
+		}
+
+		if
+		(
+			!$exists_and_filled_out($_POST["project_id"]) ||
+			!(
+				$exists_and_filled_out($_POST["tag_id"]) ||
+				$exists_and_filled_out($_POST["tag_name"])
+			)
+		){
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+
+		$project_id = $_POST["project_id"];
+
+		$auth = $this->model("Auth");
+		$project = $this->model("Project");
+
+		if($project->user_has_right()){
+
+		}
+	}
+
+	public function untag(){
+
+	}
 }
 ?>

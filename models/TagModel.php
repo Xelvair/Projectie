@@ -17,7 +17,7 @@ class TagModel implements Model{
 		if(!$result){
 			return array("ERROR" => "ERR_DB_INSERT_FAILED");
 		} else {
-			return $mysqli->insert_id;
+			return self::get_tag($mysqli->insert_id);
 		}
 	}
 
