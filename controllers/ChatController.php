@@ -80,7 +80,7 @@ class ChatController extends Controller{
 		$auth = $this->model("Auth");
 		$user = $auth->get_current_user();
 		if($user != null){
-			$locale_load_result = $locale->load($user->get_lang());
+			$locale_load_result = $locale->load($user["lang"]);
 
 			if($locale_load_result == false){
 				$locale->load("en-us");
