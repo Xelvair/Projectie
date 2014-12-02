@@ -6,7 +6,7 @@
 	<input type="button" id="add_entry_row" value="Add Row">
 	<input type="button" id="send_post_debug" value="Send">
 </form>
-<div id="post_debug_result"></div>
+<div id="post_debug_result" style="overflow: scroll;"></div>
 
 <script>
 var row_count = 0;
@@ -35,7 +35,7 @@ function send_post_debug(){
 		post_data
 	).done(
 		function(data){
-			$("#post_debug_result").text(data);
+			$("#post_debug_result").html(data);
 		}
 	);
 }

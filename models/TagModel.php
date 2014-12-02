@@ -91,8 +91,7 @@ class TagModel implements Model{
 		if(sizeof($tag_entry) <= 0){
 			switch(gettype($tag)){
 				case "string":
-					$new_tag_id = self::create_tag($tag);
-					return self::get_tag($new_tag_id);
+					return self::create_tag($tag);
 					break;
 				case "integer":
 					return array();

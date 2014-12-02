@@ -350,6 +350,19 @@ class ProjectModel implements Model{
 		return array();
 	}
 
+	public function get_tags($project_id){
+		global $mysqli;
+
+		$query_get_tags = $mysqli->prepare("SELECT t.tag_id AS tag_id, t.name AS name FROM project_tag pt LEFT JOIN tag t ON(pt.tag_id = t.tag_id) WHERE pt.project_id = ?");
+		$query_get_tags->bind_param("i", $project_id);
+		$query_get_tags->execute();
+		$result = $query_get_tags->get_result();
+
+		$query_get_tags->close();
+
+		return $result->fetch_all(MYSQLI_ASSOC);
+	}
+
 	public function add_picture($id, $picture_id){}
 	public function remove_picture($id){}
 

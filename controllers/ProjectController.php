@@ -40,8 +40,8 @@ class ProjectController extends Controller{
 
 	public function tag(){
 		$exists_and_filled_out = function(&$var){
-			return (isset($var) && $var != "");
-		}
+			return (isset($var) && !empty($var));
+		};
 
 		if
 		(
@@ -54,14 +54,28 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
-		$project_id = $_POST["project_id"];
+		if($exists_and_filled_out($_POST["tag_id"])){
+			if(!filter_var($_POST["tag_id"], FILTER_VALIDATE_INT)){
+				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
+			}
+		}
 
 		$auth = $this->model("Auth");
 		$project = $this->model("Project");
+		$tag = $this->model("Tag");
 
-		if($project->user_has_right()){
+		$project_id = $_POST["project_id"];
 
+		$current_user_id = $auth->get_current_user()["id"];
+
+		if(!$project->user_has_right($project_id, $current_user_id, "edit")){
+			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
 		}
+
+		$tag_expr = $exists_and_filled_out($_POST["tag_id"]) ? (integer)$_POST["tag_id"] : (string)$_POST["tag_name"];
+
+		return json_encode($project->tag($tag, $project_id, $tag_expr));
+
 	}
 
 	public function untag(){
