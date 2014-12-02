@@ -7,11 +7,11 @@ class AuthModel implements Model{
 		global $mysqli;
 		if(isset($_SESSION["login_user_id"])){
 			write_log(Logger::DEBUG, $_SESSION["login_user_id"]);
-			$stmt_load_user = $mysqli->prepare("SELECT user_id, create_time, email, username, lang from user WHERE user_id = ? AND active = true");
+			$stmt_load_user = $mysqli->prepare("SELECT user_id, create_time, email, username, lang, is_admin from user WHERE user_id = ? AND active = true");
 			$stmt_load_user->bind_param("s", $_SESSION["login_user_id"]);
 			$stmt_load_user->execute();
 			$stmt_load_user->store_result();
-			$stmt_load_user->bind_result($user_id, $create_time, $email, $username, $lang);
+			$stmt_load_user->bind_result($user_id, $create_time, $email, $username, $lang, $is_admin);
 
 			if($stmt_load_user->fetch()){
 				$stmt_load_user->close();
@@ -66,7 +66,7 @@ class AuthModel implements Model{
 
 		$password_hash = md5($password.$password_salt);
 
-		$stmt = $mysqli->prepare("INSERT INTO user (create_time, email, username, lang, password_salt, password_hash, active) VALUES(?, ?, ?, ?, ?, ?, true)");
+		$stmt = $mysqli->prepare("INSERT INTO user (create_time, email, username, lang, is_admin, password_salt, password_hash, active) VALUES(?, ?, ?, ?, false, ?, ?, true)");
 		$stmt->bind_param("isssss", time(), $email, $username, $lang, $password_salt, $password_hash);
 		if($stmt->execute()){
 			write_log(Logger::DEBUG, "Registered account '".$username."'!");
@@ -227,12 +227,12 @@ class AuthModel implements Model{
 
 	public function get_user($user_id){
 		global $mysqli;
-		$stmt = $mysqli->prepare("SELECT user_id, create_time, username, email, lang FROM user WHERE user_id = ?");
+		$stmt = $mysqli->prepare("SELECT user_id, create_time, username, email, lang, is_admin FROM user WHERE user_id = ?");
 		$stmt->bind_param("i", $user_id);
 		$stmt->execute();
 		$stmt->store_result();
 
-		$stmt->bind_result($res_user_id, $res_create_time, $res_username, $res_email, $res_lang);
+		$stmt->bind_result($res_user_id, $res_create_time, $res_username, $res_email, $res_lang, $res_is_admin);
 
 		if(!$stmt->fetch()){
 			write_log(Logger::WARNING, "User #".$user_id." doesn't exist!");
@@ -245,6 +245,7 @@ class AuthModel implements Model{
 			"username" => $res_username,
 			"email" => $res_email,
 			"lang" => $res_lang,
+			"is_admin" => $res_is_admin,
 			"created_projects" => array(),
 			"project_participations" => array()
 		);

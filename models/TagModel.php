@@ -102,6 +102,27 @@ class TagModel implements Model{
 			return $tag_entry;
 		}
 	}
+
+	public function delete_tag($is_admin, $tag){
+		global $mysqli;
+
+		if(!$is_admin){
+			return array("ERROR" => "ERR_NO_RIGHTS");
+		}
+
+		//Check parameters
+		if(gettype($tag) != "integer" && gettype($tag) != "string"){
+			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
+		}
+
+		$tag_entry = self::get_tag($tag);
+
+		if(sizeof($tag_entry) > 0){
+			$stmt_delete_tag = $mysqli->prepare("DELETE FROM tag WHERE tag_id = ?");
+			$stmt_delete_tag->bind_param("i", $tag_entry);
+			$stmt_delete_tag->execute();
+		}
+	}
 }
 
 ?>

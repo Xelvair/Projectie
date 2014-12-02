@@ -5,13 +5,15 @@ class UserModel{
 	private $createTime;
 	private $name;
 	private $email;
+	private $is_admin;
 
-	function __construct($id, $create_time, $name, $email, $lang){
+	function __construct($id, $create_time, $name, $email, $lang, $is_admin){
 		$this->set_id($id);
 		$this->set_create_time($create_time);
 		$this->set_name($name);
 		$this->set_email($email);
 		$this->set_lang($lang);
+		$this->set_is_admin($is_admin);
 	}
 
 	public function set_id($val){
@@ -52,6 +54,14 @@ class UserModel{
 
 	public function get_lang(){
 		return $this->lang;
+	}
+
+	public function set_is_admin($val){
+		$this->is_admin = $val;
+	}
+
+	public function get_is_admin(){
+		return $this->is_admin;
 	}
 }
 

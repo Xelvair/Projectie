@@ -7,12 +7,13 @@ CREATE TABLE user (
 	lang varchar(10) NOT NULL,
 	password_salt varchar(8) NOT NULL,
 	password_hash varchar(32) NOT NULL,
+	is_admin boolean NOT NULL,
 	active boolean NOT NULL,
 	PRIMARY KEY (user_id)
 );
 
-INSERT INTO user (user_id, email, username, lang, password_salt, password_hash, active)
-VALUES (1, 'admin@projectie.com', 'admin', 'de-de', 'a77239ba', '73bfd1bfe49f8b4e238c94f3a6a6ef4d', true);
+INSERT INTO user (user_id, email, username, lang, password_salt, password_hash, is_admin, active)
+VALUES (1, 'admin@projectie.com', 'admin', 'de-de', 'a77239ba', '73bfd1bfe49f8b4e238c94f3a6a6ef4d', true, true);
 
 DROP TABLE IF EXISTS project;
 CREATE TABLE project (
