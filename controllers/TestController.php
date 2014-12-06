@@ -38,7 +38,10 @@ class TestController extends Controller{
 
 		$locale->load("en-us");
 
-		$content = $this->view("ChatTest", array());
+		$auth = $this->model("Auth");
+		$user = $auth->get_current_user();
+
+		$content = $this->view("ChatTest", array("user_id" => $user["id"], "user_name" => $user["username"]));
 		return $this->view("HtmlBase", array(	"title" => "Chat Test",
 												"body" => $content,
 												"body_padding" => false));

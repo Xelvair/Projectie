@@ -34,6 +34,9 @@ class Core{
 		global $locale;
 		global $CONFIG;
 
+		//Initiate RNG
+		srand(time());
+
 		write_log(Logger::DEBUG, "Processing request from ".$_SERVER['REMOTE_ADDR']);
 		write_log(Logger::DEBUG, "Request info: ".$_SERVER['QUERY_STRING']);
 
@@ -44,7 +47,7 @@ class Core{
 		if(!self::load_and_check_config()){
 			$parsed_url = array("controller" => "install", "function" => "index", "params" => null);
 		} else {
-			$mysqli = new mysqli("localhost", "root", "", $CONFIG["db_name"]);
+			$mysqli = new mysqli("127.0.0.1", "root", "", $CONFIG["db_name"]);
 
 			if($mysqli->connect_errno){
 				write_log(Logger::ERROR, "Failed to connect to database!");

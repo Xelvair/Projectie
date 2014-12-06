@@ -1,3 +1,8 @@
+<?php
+//PARAMETERS
+//user_id : the id of the chat user
+//user_name : the name of the chat user
+?>
 <form>
 	<input type="text" id="chat_input">
 	<button type="button" id="chat_send">Senden</button>
@@ -13,8 +18,7 @@ function dispatch(msg_obj){
 var chatbox_obj = null;
 
 $(document).ready(function(){
-	chatbox_obj = new Chatbox("<?=abspath('/chat/')?>", 2, 1, dispatch);
-	chatbox_obj.toggle_listen();
+	chatbox_obj = new Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, '<?=$_DATA["user_name"]?>', 1, dispatch);
 
 	$("#chat_send").on("click", function(){
 		chatbox_obj.send($("#chat_input").val());

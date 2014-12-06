@@ -4,8 +4,15 @@
 // msg_obj.user_id : user_id of the sender
 // msg_obj.send_time : timestamp of the message
 
-function Chatbox(url, reader_id, chat_id, dispatch_func){
+function Chatbox(url, reader_id, reader_username, chat_id, dispatch_func){
+	this.ChatType = {
+		PRELOAD: 1,
+		SELF: 2,
+		OTHER: 3
+	}
+
 	this.dispatch_func = dispatch_func;
+	this.reader_username = reader_username;
 	this.reader_id = reader_id;
 	this.chat_id = chat_id;
 	this.chatsession_id = null;
@@ -16,10 +23,11 @@ function Chatbox(url, reader_id, chat_id, dispatch_func){
 		url : this.url + "/get/" + this.chat_id + "/" + 10,
 		success : function(result){
 			result_obj = JSON.parse(result);
-			this.chatsession_id = result_obj.chatsession;
+			this.chatsession_id = result_obj.chat_session_id;
 			for(var i = 0; i < result_obj.messages.length; i++){
-				dispatch_func(result_obj.messages[i], true);
+				dispatch_func(result_obj.messages[i], this.ChatType.PRELOAD);
 			}
+			this.toggle_listen();
 		}.bind(this)
 	});
 
@@ -31,12 +39,12 @@ function Chatbox(url, reader_id, chat_id, dispatch_func){
 			success : function(result){
 				var result_obj = JSON.parse(result);
 				for(var i = 0; i < result_obj.length; i++){
-					that.dispatch_func(result_obj[i], false);
+					that.dispatch_func(result_obj[i], this.ChatType.OTHER);
 				}
 				if(that.is_listen){
 					setTimeout(function(){that.load_new_messages();}, 1000);
 				}
-			}
+			}.bind(this)
 		});
 	}
 
@@ -48,12 +56,18 @@ function Chatbox(url, reader_id, chat_id, dispatch_func){
 	}
 
 	this.send = function(msg){
+		if(msg.trim() == ""){
+			return;
+		}
+
 		$.ajax({
-			url : this.url + "/send/" + this.chat_id,
+			url : this.url + "/send/" + this.chatsession_id,
 			method : "POST",
 			data : "message=" + msg,
 			success : function(){}
 		});
+		var msg_obj = {user_id: this.reader_id, send_time: Math.floor(Date.now() / 1000), message: msg, username: this.reader_username};
+		this.dispatch_func(msg_obj, this.ChatType.OWN);
 	}
 
 }

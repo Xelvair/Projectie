@@ -72,14 +72,15 @@ CREATE TABLE chat_participation (
 	PRIMARY KEY (chat_participation_id)
 );
 
-DROP TABLE IF EXISTS chatmessage;
-CREATE TABLE chatmessage (
-	chatmessage_id int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS chat_message;
+CREATE TABLE chat_message (
+	chat_message_id int NOT NULL AUTO_INCREMENT,
 	chat_id int NOT NULL,
 	user_id int NOT NULL,
+	chat_session_id int NOT NULL,
 	send_time int NOT NULL,
 	message varchar(512) NOT NULL,
-	PRIMARY KEY (chatmessage_id)
+	PRIMARY KEY (chat_message_id)
 );
 
 DROP TABLE IF EXISTS tag;

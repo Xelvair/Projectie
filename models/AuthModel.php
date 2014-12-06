@@ -3,27 +3,25 @@
 require_once("../core/Model.php");
 
 class AuthModel implements Model{
+	private $loggedInUser;
+
 	function __construct(){
 		global $mysqli;
 		if(isset($_SESSION["login_user_id"])){
-			write_log(Logger::DEBUG, $_SESSION["login_user_id"]);
-			$stmt_load_user = $mysqli->prepare("SELECT user_id, create_time, email, username, lang, is_admin from user WHERE user_id = ? AND active = true");
-			$stmt_load_user->bind_param("s", $_SESSION["login_user_id"]);
-			$stmt_load_user->execute();
-			$stmt_load_user->store_result();
-			$stmt_load_user->bind_result($user_id, $create_time, $email, $username, $lang, $is_admin);
 
-			if($stmt_load_user->fetch()){
-				$stmt_load_user->close();
+			$user = self::get_user($_SESSION["login_user_id"]);
 
-				$this->loggedInUser = self::get_user($user_id);
-
-				write_log(Logger::DEBUG, "Auth constructed with logged in user '".$username."'!");
-			} else {
-
+			if(isset($user["ERROR"])){
 				write_log(Logger::WARNING, "Logged out user ".$_SESSION["login_user_id"]." - id doesn't exist in database!");
 				unset($_SESSION["login_user_id"]);
+				return;
 			}
+
+			$this->loggedInUser = $user;
+
+			write_log(Logger::DEBUG, "Auth constructed with logged in user #".$_SESSION["login_user_id"]."!");
+		} else {
+			write_log(Logger::DEBUG, "Auth not fully constructed - guest visit.");
 		}
 	}
 
@@ -160,8 +158,6 @@ class AuthModel implements Model{
 		}
 	}
 
-	private $loggedInUser = null;
-
 	public function get_created_projects($user_id){
 		global $mysqli;
 
@@ -236,7 +232,7 @@ class AuthModel implements Model{
 
 		if(!$stmt->fetch()){
 			write_log(Logger::WARNING, "User #".$user_id." doesn't exist!");
-			return array("ERR" => "ERR_USER_NOT_FOUND");
+			return array("ERROR" => "ERR_USER_NOT_FOUND");
 		}
 
 		$user_obj = array(
