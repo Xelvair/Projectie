@@ -4,26 +4,52 @@ require_once(abspath_lcl("/core/Model.php"));
 
 class ChatModel implements Model{
 
-	public function create_public(){
+	public function create_public($creator_id, $title = null){
 		global $mysqli;
 
-		if(!$mysqli->query("INSERT INTO chat (access) VALUES ('PUBLIC')")){
-			wrtie_log(Logger::ERROR, "Failed to create private project chat instance!");
+		$title = ($title ? $title : "New Public Chat");
+
+		$stmt_create_public_chat = $mysqli->prepare("INSERT INTO chat (creator_id, title, access) VALUES (?, ?, 'PUBLIC')");
+		$stmt_create_public_chat->bind_param("is", $creator_id, htmlentities($title));
+
+		if(!$stmt_create_public_chat->execute()){
+			wrtie_log(Logger::ERROR, "Failed to create public project chat instance!");
 			return;
 		}
 
-		return $mysqli->insert_id;
+		return self::get_chat($mysqli->insert_id);
 	}
 
-	public function create_private(){
+	public function create_private($creator_id, $title = null){
 		global $mysqli;
 
-		if(!$mysqli->query("INSERT INTO chat (access) VALUES ('PRIVATE')")){
+		$title = ($title ? $title : "New Private Chat");
+
+		$stmt_create_private_chat = $mysqli->prepare("INSERT INTO chat (creator_id, title, access) VALUES (?, ?, 'PRIVATE')");
+		$stmt_create_private_chat->bind_param("is", $creator_id, htmlentities($title));
+
+		if(!$stmt_create_private_chat->execute()){
 			wrtie_log(Logger::ERROR, "Failed to create private project chat instance!");
 			return;
 		}
 
-		return $mysqli->insert_id;
+		return self::get_chat($mysqli->insert_id);
+	}
+
+	public function get_chat($chat_id){
+		global $mysqli;
+
+		$stmt_get_chat = $mysqli->prepare("SELECT * FROM chat WHERE chat_id = ?");
+		$stmt_get_chat->bind_param("i", $chat_id);
+		$stmt_get_chat->execute();
+
+		$result = $stmt_get_chat->get_result();
+
+		if($result->num_rows <= 0){
+			return array("ERROR" => "ERR_CHAT_DOESNT_EXIST");
+		} else {
+			return $result->fetch_assoc();
+		}
 	}
 
 	public function can_participate($chat_id, $user_id){
@@ -60,14 +86,36 @@ class ChatModel implements Model{
 
 	}
 
+	public function is_creator($chat_id, $user_id){
+		global $mysqli;
+
+		$stmt_check_creator = $mysqli->prepare("SELECT creator_id FROM chat WHERE chat_id = ?");
+		$stmt_check_creator->bind_param("i", $chat_id);
+		$stmt_check_creator->execute();
+		$result = $stmt_check_creator->get_result();
+
+		if($result->num_rows <= 0){
+			write_log(Logger::ERROR, "Tried to access nonexistent chat!".callinfo());
+			return false;
+		}
+
+		$chat = $result->fetch_assoc();
+
+		return ($chat["creator_id"] == $user_id);
+	}
+
 	public function add_user($chat_id, $user_id){
 		global $mysqli;
+
+		if(self::can_participate($chat_id, $user_id)){
+			return array("ERROR" => "ERR_IS_ALREADY_PARTICIPATOR");
+		}
 
 		$stmt = $mysqli->prepare("INSERT INTO chat_participation(chat_id, participant_id) VALUES(?, ?)");
 		$stmt->bind_param("ii", $chat_id, $user_id);
 
 		if(!$stmt->execute()){
-			return array("ERR" => "ERR_DB_INSERT_FAILED");
+			return array("ERROR" => "ERR_DB_INSERT_FAILED");
 		}
 
 		return true;
@@ -80,11 +128,11 @@ class ChatModel implements Model{
 		$stmt->bind_param("ii", $chat_id, $user_id);
 		
 		if(!$stmt->execute()){
-			return array("ERR" => "ERR_DB_DELETE_FAILED");
+			return array("ERROR" => "ERR_DB_DELETE_FAILED");
 		}
 
 		if($mysqli->affected_rows <= 0){
-			return array("ERR" => "ERR_USER_DOESNT_EXIST");
+			return array("ERROR" => "ERR_USER_DOESNT_EXIST");
 		}
 
 		return true;

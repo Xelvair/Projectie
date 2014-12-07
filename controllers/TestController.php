@@ -39,9 +39,17 @@ class TestController extends Controller{
 		$locale->load("en-us");
 
 		$auth = $this->model("Auth");
+		$chat = $this->model("Chat");
 		$user = $auth->get_current_user();
 
-		$content = $this->view("ChatTest", array("user_id" => $user["id"], "user_name" => $user["username"]));
+		$chat_list = array();
+		if($user){
+			foreach($user["chat_participations"] as $chat_row){
+				array_push($chat_list, $chat->get_chat($chat_row["chat_id"]));
+			}
+		}
+
+		$content = $this->view("ChatTest", array("user_id" => $user["id"], "user_name" => $user["username"], "chat_list" => $chat_list));
 		return $this->view("HtmlBase", array(	"title" => "Chat Test",
 												"body" => $content,
 												"body_padding" => false));

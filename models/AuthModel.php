@@ -221,6 +221,31 @@ class AuthModel implements Model{
 		return $user_participations;
 	}	
 
+	public function get_chat_participations($user_id){
+		global $mysqli;
+
+		$query_get_chat_participations = $mysqli->prepare("
+			SELECT chat_participation_id, chat_id
+			FROM chat_participation
+			WHERE participant_id = ?
+		");
+
+		$query_get_chat_participations->bind_param("i", $user_id);
+		$query_get_chat_participations->execute();
+
+		$result = $query_get_chat_participations->get_result();
+
+		$chat_participations = array();
+
+		while($row = $result->fetch_assoc()){
+			$id = $row["chat_participation_id"];
+			unset($row["chat_participation_id"]);
+			$chat_participations[$id] = $row;
+		}
+
+		return $chat_participations;
+	}
+
 	public function get_user($user_id){
 		global $mysqli;
 		$stmt = $mysqli->prepare("SELECT user_id, create_time, username, email, lang, is_admin FROM user WHERE user_id = ?");
@@ -243,13 +268,15 @@ class AuthModel implements Model{
 			"lang" => $res_lang,
 			"is_admin" => $res_is_admin,
 			"created_projects" => array(),
-			"project_participations" => array()
+			"project_participations" => array(),
+			"chat_participations" => array()
 		);
 
 		$stmt->close();
 
 		$user_obj["created_projects"] = self::get_created_projects($user_id);
 		$user_obj["project_participations"] = self::get_user_participations($user_id);
+		$user_obj["chat_participations"] = self::get_chat_participations($user_id);
 
 		return $user_obj;
 	}

@@ -51,18 +51,21 @@ DROP TABLE IF EXISTS project_participation_request;
 	project_id int NOT NULL,
 	user_id int NOT NULL,
 	requester_type enum("USER", "PROJECT") NOT NULL,
+	chat_id int NOT NULL,
 	PRIMARY KEY(project_participation_request_id)
 );
 
 DROP TABLE IF EXISTS chat;
 CREATE TABLE chat (
 	chat_id int NOT NULL AUTO_INCREMENT,
+	creator_id int NOT NULL,
+	title varchar(256) NOT NULL,
 	access enum("PUBLIC", "PRIVATE") NOT NULL,
 	PRIMARY KEY(chat_id)
 );
 
-INSERT INTO chat (access)
-VALUES ("PUBLIC");
+INSERT INTO chat (creator_id, title, access)
+VALUES (1, "Test Chat", "PUBLIC");
 
 DROP TABLE IF EXISTS chat_participation;
 CREATE TABLE chat_participation (

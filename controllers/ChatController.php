@@ -4,6 +4,89 @@ require_once(abspath_lcl("/core/Controller.php"));
 
 class ChatController extends Controller{
 
+	//$_POST["title"] : the title of the chat
+	public function create_private(){
+		$auth = $this->model("Auth");
+		$user = $auth->get_current_user();
+
+		if(!$user){
+			write_log(Logger::DEBUG, "Tried to create chat without login!");
+			return array("ERROR" => "ERR_NOT_LOGGED_IN");
+		}
+
+		//If the user passed a valid title, use that
+		//Else, set to null and let the chat model decide what title to use
+		$title = (isset($_POST["title"]) && !empty($_POST["title"]) && trim($_POST["title"]) != "") ? $_POST["title"] : null; 
+
+		$chat = $this->model("Chat");
+
+		$chat_obj = $chat->create_private($user["id"], $title);
+
+		$chat->add_user($chat_obj["chat_id"], $user["id"]);
+
+		return json_encode($chat_obj);
+	}
+
+	//$_POST["user_id"] : the user that is to be added
+	//$_POST["chat_id"] : the chat that we add the user to
+	public function add_user(){
+		if(!isset($_POST["user_id"]) ||
+			 !isset($_POST["chat_id"]))
+		{
+			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
+		}
+
+		$auth = $this->model("Auth");
+		
+		$user = $auth->get_current_user();
+
+		if(!$user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		$user_id = $_POST["user_id"];
+		$chat_id = $_POST["chat_id"];
+
+		$chat = $this->model("Chat");
+
+		if($chat->is_creator($chat_id, $user["id"])){
+			return json_encode($chat->add_user($chat_id, $user_id));
+		} else {
+			write_log(Logger::DEBUG, "Tried to add user without rights!");
+			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
+		}
+	}
+
+	//$_POST["user_id"] : the user that is to be removed
+	//$_POST["chat_id"] : the chat that we remove the user from
+	public function remove_user(){
+		if(!isset($_POST["user_id"]) ||
+			 !isset($_POST["chat_id"]))
+		{
+			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
+		}
+
+		$auth = $this->model("Auth");
+		
+		$user = $auth->get_current_user();
+
+		if(!$user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		$user_id = $_POST["user_id"];
+		$chat_id = $_POST["chat_id"];
+
+		$chat = $this->model("Chat");
+
+		if($chat->is_creator($chat_id, $user["id"])){
+			return json_encode($chat->remove_user($chat_id, $user_id));
+		} else {
+			write_log(Logger::DEBUG, "Tried to remove user without rights!");
+			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
+		}
+	}
+
 	public function get($data){
 		// data[0] : chat id
 		// data[1] : number of messages to be preloaded
