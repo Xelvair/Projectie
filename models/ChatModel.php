@@ -189,7 +189,7 @@ class ChatModel implements Model{
 		$_SESSION["chatsessions"][$chat_session_id]["last_msg_id"] = $last_msg_id;
 
 		$result = array("chat_session_id" => $chat_session_id, "messages" => $messages);
-		return $result;
+		return array_merge($result, self::get_chat($chat_id));
 	}
 
 	public function get_new($requester, $chat_session_id){

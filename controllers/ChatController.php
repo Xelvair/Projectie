@@ -37,6 +37,12 @@ class ChatController extends Controller{
 		}
 
 		$auth = $this->model("Auth");
+
+		$user_to_be_added = $auth->get_user($_POST["user_id"]);
+
+		if(isset($user_to_be_added["ERROR"])){
+			return json_encode(array("ERROR" => "ERR_USER_DOESNT_EXIST"));
+		}
 		
 		$user = $auth->get_current_user();
 

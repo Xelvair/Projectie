@@ -1,0 +1,3 @@
+var Projectie = {
+	Messaging : {}
+}

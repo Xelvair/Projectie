@@ -4,7 +4,14 @@
 // msg_obj.user_id : user_id of the sender
 // msg_obj.send_time : timestamp of the message
 
-function Chatbox(url, reader_id, reader_username, chat_id, dispatch_func){
+Projectie.Messaging.create_private_chat = function(chat_title){
+		$.post(
+			Projectie.server_addr + "/chat/create_private",
+			{title : chat_title}
+		).done(function(result){location.reload();});
+}
+
+Projectie.Messaging.Chatbox = function(url, reader_id, reader_username, chat_id, dispatch_func){
 	this.ChatType = {
 		PRELOAD: 1,
 		SELF: 2,
@@ -12,24 +19,51 @@ function Chatbox(url, reader_id, reader_username, chat_id, dispatch_func){
 	}
 
 	this.dispatch_func = dispatch_func;
+	this.chat_creator_id = 0;
 	this.reader_username = reader_username;
 	this.reader_id = reader_id;
 	this.chat_id = chat_id;
 	this.chatsession_id = null;
 	this.is_listen = false;
 	this.url = url;
+	this.timeout_inst = null;
 
 	$.ajax({
 		url : this.url + "/get/" + this.chat_id + "/" + 10,
 		success : function(result){
 			result_obj = JSON.parse(result);
 			this.chatsession_id = result_obj.chat_session_id;
+			this.chat_creator_id = result_obj.creator_id;
 			for(var i = 0; i < result_obj.messages.length; i++){
 				dispatch_func(result_obj.messages[i], this.ChatType.PRELOAD);
 			}
 			this.toggle_listen();
 		}.bind(this)
 	});
+
+	this.is_user_creator = function(){
+		return (this.reader_id == this.chat_creator_id)
+	}
+
+	this.add_user = function(user_id){
+		if(!this.is_user_creator()){
+			alert("You have no rights to do that!");
+			return;
+		}
+
+		$.post(
+			Projectie.server_addr + "/chat/add_user",
+			{chat_id : this.chat_id,
+			 user_id : user_id}
+		).done(function(e){
+			result_obj = JSON.parse(e);
+			if(!!result_obj.ERROR){
+				alert(result_obj.ERROR);
+			} else {
+				alert("User was added!");
+			}
+		});
+	}
 
 	this.load_new_messages = function(){
 		var that = this;
@@ -42,10 +76,15 @@ function Chatbox(url, reader_id, reader_username, chat_id, dispatch_func){
 					that.dispatch_func(result_obj[i], this.ChatType.OTHER);
 				}
 				if(that.is_listen){
-					setTimeout(function(){that.load_new_messages();}, 1000);
+					this.timeout_inst = setTimeout(function(){that.load_new_messages();}, 1000);
 				}
 			}.bind(this)
 		});
+	}
+
+	this.stop_listen = function(){
+		this.is_listen = false;
+		clearTimeout(this.timeout_inst);
 	}
 
 	this.toggle_listen = function(){
