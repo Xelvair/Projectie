@@ -51,6 +51,35 @@ class ProjectModel implements Model{
 
 	}
 
+	public function get_participators($project_id){
+		global $mysqli;
+
+		$stmt_get_participators = $mysqli->prepare("
+			SELECT 
+				project_participation_id,
+				user_id, 
+				can_delete, 
+				can_edit, 
+				can_communicate, 
+				can_add_participants, 
+				can_remove_participants
+			FROM project_participation 
+			WHERE project_id = ?");
+		$stmt_get_participators->bind_param("i", $project_id);
+		$stmt_get_participators->execute();
+
+		$result = $stmt_get_participators->get_result();
+
+		$participations = array();
+		while($row = $result->fetch_assoc()){
+			$id = $row["project_participation_id"];
+			unset($row["project_participation_id"]);
+			$participations[$id] = $row;
+		}
+
+		return $participations;
+	}
+
 	public function get($id){
 		global $mysqli;
 
