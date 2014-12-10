@@ -51,7 +51,8 @@ class ProjectController extends Controller{
 		}
 
 		$auth = $this->model("Auth");
-		$project =$this->model("Project");
+		$project = $this->model("Project");
+		$chat = $this->model("Chat");
 		$current_user = $auth->get_current_user();
 
 		if(!$current_user){
@@ -61,13 +62,13 @@ class ProjectController extends Controller{
 		switch($_POST["request_type"]){
 			case "PROJECT_TO_USER":
 				if($project->user_has_right($_POST["requester_id"], $current_user["id"], "add_participants")){
-					return json_encode($project->request_participation($_POST["requester_id"], $_POST["requestee_id"], "PROJECT"));
+					return json_encode($project->request_participation($chat, $_POST["requester_id"], $_POST["requestee_id"], "PROJECT_TO_USER"));
 				} else {
 					return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
 				}
 				break;
 			case "USER_TO_PROJECT":
-				return json_encode($project->request_participation($_POST["requestee_id"], $_POST["requester_id"], "USER"));
+				return json_encode($project->request_participation($chat, $_POST["requestee_id"], $_POST["requester_id"], "USER_TO_PROJECT"));
 				break;
 			default:
 				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
@@ -86,7 +87,7 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
 		}
 
-		$project->accept_request($_POST["project_participation_request_id"], $current_user["id"]);
+		$project->accept_participation($_POST["project_participation_request_id"], $current_user["id"]);
 	}
 
 	public function tag(){

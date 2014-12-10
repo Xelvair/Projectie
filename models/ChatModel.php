@@ -13,7 +13,7 @@ class ChatModel implements Model{
 		$stmt_create_public_chat->bind_param("is", $creator_id, htmlentities($title));
 
 		if(!$stmt_create_public_chat->execute()){
-			wrtie_log(Logger::ERROR, "Failed to create public project chat instance!");
+			write_log(Logger::ERROR, "Failed to create public project chat instance!");
 			return;
 		}
 
@@ -29,7 +29,7 @@ class ChatModel implements Model{
 		$stmt_create_private_chat->bind_param("is", $creator_id, htmlentities($title));
 
 		if(!$stmt_create_private_chat->execute()){
-			wrtie_log(Logger::ERROR, "Failed to create private project chat instance!");
+			write_log(Logger::ERROR, "Failed to create private project chat instance!");
 			return;
 		}
 
@@ -39,7 +39,20 @@ class ChatModel implements Model{
 	public function get_chat($chat_id){
 		global $mysqli;
 
-		$stmt_get_chat = $mysqli->prepare("SELECT * FROM chat WHERE chat_id = ?");
+		$stmt_get_chat = $mysqli->prepare("
+			SELECT 
+				chat.chat_id AS chat_id,
+				chat.title AS title,
+				chat.creator_id AS creator_id,
+				chat.access AS access,
+				pp.project_participation_request_id,
+				pp.project_id AS participation_project_id,
+				pp.user_id AS participation_user_id
+			FROM chat 
+			LEFT JOIN project_participation_request pp 
+				ON (pp.chat_id = chat.chat_id)
+			WHERE chat.chat_id = ? 
+		");
 		$stmt_get_chat->bind_param("i", $chat_id);
 		$stmt_get_chat->execute();
 

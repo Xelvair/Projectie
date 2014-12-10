@@ -9,6 +9,10 @@ class ChatController extends Controller{
 		$auth = $this->model("Auth");
 		$user = $auth->get_current_user();
 
+		if(json_decode($_POST["title"]) != null){
+			return array("ERROR" => "ERR_TITLE_MUST_NOT_BE_JSON");
+		}
+
 		if(!$user){
 			write_log(Logger::DEBUG, "Tried to create chat without login!");
 			return array("ERROR" => "ERR_NOT_LOGGED_IN");

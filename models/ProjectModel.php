@@ -88,7 +88,7 @@ class ProjectModel implements Model{
 		$stmt->execute();
 		$stmt->bind_result($result["id"], $result["creator_id"], $result["create_time"], $result["title"], $result["subtitle"], $result["description"], $result["public_chat_id"], $result["private_chat_id"]);
 
-		if($stmt->fetch()){
+		if(!$stmt->fetch()){
 			write_log(Logger::WARNING, "Failed to retrieve project #".$id." from databaase!");
 			return array("ERROR" => "ERR_PROJECT_NONEXISTENT");
 		} else {
@@ -141,14 +141,14 @@ class ProjectModel implements Model{
 		}
 	}
 
-	//REQUESTER_TYPE: ENUM["USER", "PROJECT"]
-	public function request_participation($project_id, $user_id, $requester_type){
+	//REQUEST_TYPE: ENUM["USER_TO_PROJECT", "PROJECT_TO_USER"]
+	public function request_participation($chat_obj, $project_id, $user_id, $request_type){
 		global $mysqli;
 
 		//Check parameters
 		if(
-			$requester_type != "USER" &&
-			$requester_type != "PROJECT"
+			$request_type != "USER_TO_PROJECT" &&
+			$request_type != "PROJECT_TO_USER"
 		){
 			write_log(Logger::ERROR, "Invalid parameter for function request_participation!".callinfo());
 			return array("ERROR" => "ERR_INVALID_PARAMETERS");
@@ -164,24 +164,51 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_PARTICIPATION_ALREADY_EXISTS");
 		}
 
-		//If it doesn't exist, insert request into database
+		$project = self::get($project_id);
+
+		$title_obj = array(
+			"type" => "recruitment",
+			"project_id" => $project_id,
+			"user_id" => $user_id
+		);
+
+		$recruitment_chat_title = json_encode($title_obj);
+
+		$recruitment_chat = $chat_obj->create_private(0, $recruitment_chat_title);
+
 		$query_create_request = $mysqli->prepare("
-			INSERT INTO project_participation_request (project_id, user_id, requester_type)
-			VALUES (?, ?, ?)
+			INSERT INTO project_participation_request (project_id, user_id, request_type, chat_id)
+			VALUES (?, ?, ?, ?)
 		");
 
-		$query_create_request->bind_param("iis", $project_id, $user_id, $requester_type);
-		return $query_create_request->execute();
+		$query_create_request->bind_param("iisi", $project_id, $user_id, $request_type, $recruitment_chat["chat_id"]);
+		if(!$query_create_request->execute()){
+			write_log(Logger::DEBUG, $project_id." ".$user_id." ".$request_type." ".print_r($recruitment_chat, true));
+			return array("ERROR" => "ERR_DB_INSERT_FAILED");
+		}
+
+		$chat_obj->add_user($recruitment_chat["chat_id"], $user_id);
+
+		$participators = self::get_participators($project_id);
+		foreach($participators as $participator){
+			if($participator["can_add_participants"] || 
+				 $participator["can_communicate"])
+			{
+				$chat_obj->add_user($recruitment_chat["chat_id"], $participator["user_id"]);
+			}
+		}
+
+		return array();
 	}
 
 	public function accept_participation($participation_req_id, $acceptor_id){
 		global $mysqli;
 
-		$query_check_participation = $mysqli->prepare("SELECT project_id, user_id, requester_type FROM project_participation_request WHERE project_participation_request_id = ?");
+		$query_check_participation = $mysqli->prepare("SELECT project_id, user_id, request_type FROM project_participation_request WHERE project_participation_request_id = ?");
 		$query_check_participation->bind_param("i", $participation_req_id);
 		$query_check_participation->execute();
 		$query_check_participation->store_result();
-		$query_check_participation->bind_result($res_project_id, $res_user_id, $res_requester_type);
+		$query_check_participation->bind_result($res_project_id, $res_user_id, $res_request_type);
 
 		//Check if participation request exists
 		if(!$query_check_participation->fetch()){
@@ -190,14 +217,14 @@ class ProjectModel implements Model{
 		}
 
 		//Determine who originally sent requesst
-		if($res_requester_type == "USER"){
+		if($res_request_type == "USER_TO_PROJECT"){
 			if(self::user_has_right($res_project_id, $acceptor_id, "add_participants")){
 				self::create_participation($participation_req_id);
 			} else {
 				write_log(Logger::WARNING, "User #".$acceptor_id." has no rights to accept participation request #".$participation_req_id."2!");
 				return array("ERROR" => "ERR_NO_RIGHTS");
 			}
-		} else if($res_requester_type == "PROJECT"){
+		} else if($res_request_type == "PROJECT_TO_USER"){
 			//If a project sent the request, check if the asked user is the currently logged in user
 			if($acceptor_id == $res_user_id){
 				self::create_participation($participation_req_id);
@@ -208,6 +235,8 @@ class ProjectModel implements Model{
 		}
 
 		$query_check_participation->close();
+
+		return array();
 
 	}
 

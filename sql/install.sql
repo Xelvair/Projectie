@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS project_participation_request;
 	project_participation_request_id int NOT NULL AUTO_INCREMENT,
 	project_id int NOT NULL,
 	user_id int NOT NULL,
-	requester_type enum("USER", "PROJECT") NOT NULL,
+	request_type enum("USER_TO_PROJECT", "PROJECT_TO_USER") NOT NULL,
 	chat_id int NOT NULL,
 	PRIMARY KEY(project_participation_request_id)
 );
