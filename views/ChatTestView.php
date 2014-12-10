@@ -15,7 +15,7 @@
 $("#chat_list a").on("click", function(e){
 	var chat_id = $(e.target).data("chat-id");
 	chatbox_obj.stop_listen();
-	chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, '<?=$_DATA["user_name"]?>', chat_id, dispatch);
+	chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, '<?=$_DATA["username"]?>', chat_id, dispatch);
 	$("#chatbox").empty();
 });
 $("#create_new_chat").on("click", function(){
@@ -31,14 +31,18 @@ $("#create_new_chat").on("click", function(){
 </ul>
 
 <script>
-function dispatch(msg_obj){
+function chat_dispatch(msg_obj, chat_type){
 	$("#chatbox").append("<li>" + msg_obj.username + ": " + msg_obj.message + "</li>");
+}
+
+function chat_load(chat_obj){
+	//void
 }
 
 var chatbox_obj = null;
 
 $(document).ready(function(){
-	chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, '<?=$_DATA["user_name"]?>', 1, dispatch);
+	chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, '<?=$_DATA["username"]?>', 1, chat_load, chat_dispatch);
 
 	var send_msg = function(){
 		chatbox_obj.send($("#chat_input").val());

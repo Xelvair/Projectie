@@ -146,6 +146,7 @@ class ChatController extends Controller{
 		global $locale;
 		global $CONFIG;
 
+		$chat = $this->model("Chat");
 		$auth = $this->model("Auth");
 		$user = $auth->get_current_user();
 		if($user != null){
@@ -160,8 +161,16 @@ class ChatController extends Controller{
 		
 		$footer_array = array("username" => "");
 		$footer = $this->view("Footer", $footer_array);
+
+		$chat_list = array();
+		array_push($chat_list, $chat->get_chat(1));
+		if($user){
+			foreach($user["chat_participations"] as $chat_row){
+				array_push($chat_list, $chat->get_chat($chat_row["chat_id"]));
+			}
+		}
 		
-		$content = $this->view("Chat", array("footer" => $footer));
+		$content = $this->view("Chat", array("chat_list" => $chat_list, "user_id" => $user["id"], "username" => $user["username"], "footer" => $footer));
 
 		$login_modal = $this->view("LoginModal", "");
 

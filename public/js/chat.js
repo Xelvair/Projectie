@@ -11,13 +11,14 @@ Projectie.Messaging.create_private_chat = function(chat_title){
 		).done(function(result){location.reload();});
 }
 
-Projectie.Messaging.Chatbox = function(url, reader_id, reader_username, chat_id, dispatch_func){
+Projectie.Messaging.Chatbox = function(url, reader_id, reader_username, chat_id, load_func, dispatch_func){
 	this.ChatType = {
 		PRELOAD: 1,
 		SELF: 2,
 		OTHER: 3
 	}
 
+	this.load_func = load_func;
 	this.dispatch_func = dispatch_func;
 	this.chat_creator_id = 0;
 	this.reader_username = reader_username;
@@ -34,6 +35,7 @@ Projectie.Messaging.Chatbox = function(url, reader_id, reader_username, chat_id,
 			result_obj = JSON.parse(result);
 			this.chatsession_id = result_obj.chat_session_id;
 			this.chat_creator_id = result_obj.creator_id;
+			load_func(result_obj);
 			for(var i = 0; i < result_obj.messages.length; i++){
 				dispatch_func(result_obj.messages[i], this.ChatType.PRELOAD);
 			}

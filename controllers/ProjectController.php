@@ -14,11 +14,11 @@ class ProjectController extends Controller{
 			$chat = $this->model("chat");
 
 			//Create public and private chat for project
-			$private_chat_id = $chat->create_public();
-			$public_chat_id = $chat->create_private();
+			$public_chat = $chat->create_public(0, $_POST["title"]." Public Chat");
+			$private_chat = $chat->create_private(0, $_POST["title"]." Private Chat");
 
 			//Add creator to private chat
-			$chat->add_user($private_chat_id, $logged_in_user["id"]);
+			write_log(Logger::DEBUG, print_r($chat->add_user($private_chat["chat_id"], $logged_in_user["id"]), true));
 
 			//Create the project itself
 			$project = $this->model("project");
@@ -28,8 +28,8 @@ class ProjectController extends Controller{
 					"title" => htmlentities($_POST["title"]), 
 					"subtitle" => htmlentities($_POST["subtitle"]), 
 					"description" => htmlentities($_POST["description"]),
-					"private_chat_id" => $private_chat_id,
-					"public_chat_id" => $public_chat_id
+					"private_chat_id" => $private_chat["chat_id"],
+					"public_chat_id" => $public_chat["chat_id"]
 				)
 			);
 			return json_encode($create_result);

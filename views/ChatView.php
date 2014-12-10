@@ -1,5 +1,5 @@
-<div class="row" id="chat-title-wrapper">
-    <div class="col-md-12 text-center" id="chat-title">
+<div class="row" id="chatwindow-title-wrapper">
+    <div class="col-md-12 text-center" id="chatwindow-title">
             <h1>Conversations</h1>
             <hr />
     </div>
@@ -12,47 +12,15 @@
                     <h2><span class="glyphicon glyphicon-comment"></span></h2>
                 </div>
                 <div class="col-xs-10">
-                    <h2 id="chat-partner-name">
-                        Jack Sparrow
+                    <h2 id="chat-title">
+                        &nbsp;
                     </h2>
                 </div>
             </div>
         </div>
     	<div id="chat-box">
         	<ul id="chat">
-            	<li class="left clearfix">
-					<span class="chat-img pull-left">
-						<img src="../public/images/default-profile-pic.png" alt="User Avatar" class="img-rounded" height="50" width="50"/>
-					</span>
-					<div class="chat-body clearfix">
-						<div class="header">
-							<strong class="primary-font">Jack Sparrow</strong>
-							<small class="pull-right text-muted">
-								<span class="glyphicon glyphicon-time"></span>
-								12 mins ago
-							</small>
-						</div>
-						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-							dolor, quis ullamcorper ligula sodales.
-						</p>
-					</div>
-                </li>
-             	<li class="right clearfix">
-					<span class="chat-img pull-right">
-						<img src="../public/images/default-profile-pic.png" alt="User Avatar" class="img-rounded" height="50" width="50"/>
-					</span>
-					<div class="chat-body clearfix">
-						<div class="header">
-							<small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small>
-							<strong class="pull-right primary-font">Bhaumik Patel</strong>
-						</div>
-						<p>
-							Lorem 
-						</p>
-					</div>
-				</li>                 
-            </ul>
+          </ul>
       	</div>
         <div id="chat-footer">
         	<form>
@@ -68,49 +36,70 @@
 			<div class="select-chat-box-head text-center">
 				<h3>Conversations</h3>
 			</div>
-			<ul class="sidebar-nav stacked-list">
-				<li><a onmouseover="curser_style(this);">Jack Sparrow</a></li>
-				<li><a onmouseover="curser_style(this);">Max da Boss</a></li>
-				<li><a onmouseover="curser_style(this);">Admin</a></li>
-				<li><a onmouseover="curser_style(this);">Jack Sparrow</a></li>
-				<li><a onmouseover="curser_style(this);">Max da Boss</a></li>
-				<li><a onmouseover="curser_style(this);">Admin</a></li>
-				<li><a onmouseover="curser_style(this);">Jack Sparrow</a></li>
-				<li><a onmouseover="curser_style(this);">Max da Boss</a></li>
+			<ul id="chat-list" class="sidebar-nav stacked-list">
+				<?php foreach ($_DATA["chat_list"] as $chat){ ?>
+					<li><a data-chat-id="<?=$chat["chat_id"]?>" onmouseover="curser_style(this);"><?=$chat["title"]?></a></li>
+				<?php } ?>
 			</ul>
 		</div>
 	</div>
 </div>
+
+<!-- Hiding a prefab for a message here -->
+<li hidden id='chat-msg-prefab' class="right clearfix">
+	<span class="chat-img pull-right">
+		<img src="../public/images/default-profile-pic.png" alt="User Avatar" class="img-rounded" height="50" width="50"/>
+	</span>
+	<div class="chat-body clearfix">
+		<div class="header">
+			<small class="chat-msg-time-container text-muted"><span class="glyphicon glyphicon-time"></span><span class="chat-msg-time">-Time since message-</span></small>
+			<strong class="chat-msg-sender pull-right primary-font">-Username-</strong>
+		</div>
+		<p class='chat-msg-content'>
+			-Content-
+		</p>
+	</div>
+</li>   
+
 <script>
-function dispatch(msg_obj){
- alert(msg_obj.message);
-	$("#chat").append("<li>"+msg_obj.username + ": " + msg_obj.message + "</li>");
+function dispatch(msg_obj, chat_type){
+	var msg_html = $("#chat-msg-prefab").clone().removeAttr("hidden");
+	msg_html.find(".chat-msg-time").text("null");
+	msg_html.find(".chat-msg-sender").text(msg_obj.username);
+	msg_html.find(".chat-msg-content").text(msg_obj.message);
+
+	if(msg_obj.user_id == <?=$_DATA["user_id"]?>){
+		msg_html.find(".chat-img").removeClass("pull-right").addClass("pull-left");
+		msg_html.find(".chat-msg-sender").removeClass("pull-right");
+		msg_html.find(".chat-msg-time-container").addClass("pull-right");
+	}
+
+	$("#chat").append(msg_html);
+}
+
+function chat_load(chat_obj){
+	$("#chat-title").text(chat_obj.title);
 }
 
 var chatbox_obj = null;
 
 $(document).ready(function(){
-	chatbox_obj = new Chatbox("<?=abspath('/chat/')?>", 2, 1, dispatch);
+	chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, "<?=$_DATA['username']?>", 1, chat_load, dispatch);
 	chatbox_obj.toggle_listen();
 
 	$("#chat_send").on("click", function(){
-		alert($("#chat_input").val());
 		chatbox_obj.send($("#chat_input").val());
 		$("#chat_input").val("");
 	});
-	
-	$('.stacked-list').find('a').on('click', function(){
-		$('.stacked-list').find('a').removeClass('item-active');
-		$(this).addClass('item-active');
-		load_conversation(this);
+
+	$("#chat-list li a").on("click", function(e){
+		var chat_id = $(e.target).data("chat-id");
+		chatbox_obj.stop_listen();
+		$("#chat").empty();
+		chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, "<?=$_DATA['username']?>", chat_id, chat_load, dispatch);
 	});
-});
-
-function load_conversation(element){
-
-$('#chat-partner-name').text($(element).text());
 	
-}
+});
 
 function curser_style(button){
 		button.style.cursor = 'pointer';

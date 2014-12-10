@@ -51,7 +51,7 @@ class TestController extends Controller{
 		}
 
 
-		$content = $this->view("ChatTest", array("user_id" => $user["id"], "user_name" => $user["username"], "chat_list" => $chat_list));
+		$content = $this->view("ChatTest", array("user_id" => $user["id"], "username" => $user["username"], "chat_list" => $chat_list));
 		return $this->view("HtmlBase", array(	"title" => "Chat Test",
 												"body" => $content,
 												"body_padding" => false));

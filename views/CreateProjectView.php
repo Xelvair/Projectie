@@ -37,6 +37,11 @@ global $locale;
 			clearTimeout(tOut);
 			$('#desc').popover('destroy');
 		});	
+
+		$('#create_project_submit').on("click", function(){
+			console.log("pls");
+			$('#create_project_form').submit();
+		});
 	});
 	
 	function hover(element) {
@@ -62,21 +67,21 @@ global $locale;
      </a>
     </div>
     <div class="col-xs-10" style="padding-left: 5%; padding-right: 5%;">
-    <form id="create_project_form">
+    <form id="create_project_form" action="<?=abspath("/project/create")?>&redirect=/index" method="POST">
             <div class="form-group" id="title_group">
-                <input type="text" class="form-control .input-lg" 
+                <input type="text" name="title" class="form-control .input-lg" 
                 id="title" data-toggle="popover" data-placement="bottom" data-trigger="focus" placeholder="Project Title" data-content="<?=$locale['create_title_title']?>"/>
             </div>
             <div class="form-group" id="subtitle_group">
-                <input type="text" class="form-control .input-lg" id="subtitle"
+                <input type="text" name="subtitle" class="form-control .input-lg" id="subtitle"
                  data-toggle="popover" data-placement="bottom" placeholder="Subtitle" data-content="<?=$locale['create_subtitle_title']?>"/>
             </div>
             <div class="form-group" id="description_group">
-                <textarea rows="8" class="form-control" id="desc" data-toggle="popover" data-placement="bottom" placeholder="Description" 
+                <textarea name="description" rows="8" class="form-control" id="desc" data-toggle="popover" data-placement="bottom" placeholder="Description" 
                 data-content="<?=$locale['create_desc_title']?>"></textarea>
             </div>
             <div class="form-group pull-right">
-            <button id="submit" type="button" class="btn btn-default"><?=$locale['create']?></button>        
+            <button id="create_project_submit" type="button" class="btn btn-default"><?=$locale['create']?></button>        
             </div>
      </form>
     </div>
