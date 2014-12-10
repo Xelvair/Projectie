@@ -141,7 +141,7 @@ function delete_skill(element, id){
 <hr style="box-shadow:  2px 2px 5px 0px rgba(50, 48, 50, 0.5);"/>
 <div class="row">
     <div class="col-md-6 col-xs-12 content_list">
-    <h1 align="center" class="content_heading"><?=$locale['projects_created']?></h1>
+    <h2 align="center" class="content_heading"><?=$locale['projects_created']?></h2>
         <?php foreach($_DATA["created_project"] as $entry){ ?>
             <div class="media">
                 <a class="pull-left" href="#">
@@ -155,7 +155,7 @@ function delete_skill(element, id){
          <?php }?> 
     </div><!--col-->
     <div class="col-md-6 col-xs-12 content_list">
-    <h1 align="center" class="content_heading"><?=$locale['projects_involved']?></h1>
+    <h2 align="center" class="content_heading"><?=$locale['projects_involved']?></h2>
         <?php foreach($_DATA["involved_project"] as $entry){ ?>
         <div class="media">
             <a class="pull-left" href="#">

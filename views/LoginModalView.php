@@ -67,25 +67,25 @@ function user_register(){
 								
 								if("ERROR" in result){
 									switch(result.ERROR){
-										case "ERR_INVALID_EMAIL":
-											$('#reg_email').popover('show');
-											$("#reg_email_form_group").addClass("has-error");
+										case "ERR_INVALID_EMAIL":	
+											$('#reg_email').popover({html: true, content:"Invalid Email!"}).popover('show');
+											$("#reg_email_form").addClass("has-error");
 											break;
 										case "ERR_INVALID_PASSWORD":
-											$('#reg_password').popover('show');
+											$('#reg_password').popover({html: true, content:"Invalid password"}).popover('show');
 											$("#reg_password_form_group").addClass("has-error");
 											break;
 										case "ERR_INVALID_USERNAME":
-											$('#reg_username').popover('show');
-											$("#reg_username_form_group").addClass("has-error");
+											$('#reg_username').popover({html: true, content:"Invalid username"}).popover('show');
+											$("#reg_username_form").addClass("has-error");
 											break;									
 										case "ERR_USERNAME_IN_USE":
-											$('#reg_username').popover('show');
-											$("#reg_username_form_group").addClass("has-error");
+											$('#reg_username').popover({html: true, content:"This username is already in use!"}).popover('show');
+											$("#reg_username_form").addClass("has-error");
 											break;
 										case "ERR_EMAIL_IN_USE":
-											$('#reg_email').popover('show');
-											$("#reg_email_form_group").addClass("has-error");
+											$('#reg_email').popover({html: true, content:"This Email is already taken!"}).popover('show');
+											$("#reg_email_form").addClass("has-error");
 											break;
 										}
 									} else {
@@ -127,6 +127,12 @@ $(document).ready(function(){
 	$("#register_btn").on("click", function(){
 		user_register();
 	});	
+	
+	$('#login_form').find('input').on('keypress', function(){
+		$(this).parent().removeClass('has-error');
+		$(this).popover('destroy');
+		
+	});
 });
 
 </script>
@@ -173,18 +179,18 @@ $(document).ready(function(){
 			  <h2 class="text-center"><?=$locale["register"]?></h2>
      	</div>
       <div class="modal-body">
-        <form name="login_form">
+        <form name="login_form" id="login_form">
           <div class="form-group" id="reg_email_form">
-          	<input type="text" class="form-control" placeholder="E-mail" title="E-mail" id="reg_email"  data-placement="bottom"/>
+          	<input type="text" class="form-control" placeholder="E-mail" id="reg_email"  data-placement="bottom" />
          	</div>
         	<div class="form-group" id="reg_username_form">
-          	<input type="text" class="form-control" placeholder="<?=$locale["username"]?>" title="<?=$locale["username"]?>" id="reg_username"  data-placement="bottom"/>
+          	<input type="text" class="form-control" placeholder="<?=$locale["username"]?>" id="reg_username"  data-placement="bottom"/>
           </div>
           <div class="form-group" id="reg_password_form">
-            <input type="password" class="form-control" placeholder="<?=$locale["password"]?>" title="<?=$locale["password"]?>" id="reg_password"  data-placement="bottom"/>
+            <input type="password" class="form-control" placeholder="<?=$locale["password"]?>" id="reg_password"  data-placement="bottom"/>
           </div>
           <div class="form-group" id="reg_retypepassword_form">
-            <input type="password" class="form-control" placeholder="<?=$locale["retype_password"]?>" title="<?=$locale["retype_password"]?>" data-placement="bottom" id="reg_retypepassword"/>
+            <input type="password" class="form-control" placeholder="<?=$locale["retype_password"]?>" data-placement="bottom" id="reg_retypepassword"/>
           </div>
           <div class="form-group" id="reg_language_form">
 						<select name="language" class="form-control" id="reg_language">
