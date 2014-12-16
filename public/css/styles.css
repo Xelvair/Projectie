@@ -289,8 +289,9 @@ hr{
 }
 
 .media-object{
-    max-height:150px;
-    max-width: 150px;
+    height:100px;
+    width: 100px;
+
 }
 
 .content_heading{
@@ -535,5 +536,67 @@ box-shadow:         inset 1px 1px 3px 0px rgba(50, 50, 50, 0.75);
 	float: left;
 	height: 50px;
 	padding-top: 10px;
+	margin-left: -10%;
 	
+}
+
+.user-review{
+	width: 230px;
+	height: 70px;
+	background-color: #FFF;
+	padding: 5px;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+-webkit-box-shadow: 1px 2px 5px 0px rgba(50, 50, 50, 0.75);
+-moz-box-shadow:    1px 2px 5px 0px rgba(50, 50, 50, 0.75);
+box-shadow:         1px 2px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+.user-review p{
+padding-left: 60px;
+}
+
+.user-review-title{
+	margin-top: 0px;
+	margin-left: 60px;
+	margin-bottom: 0px;
+	
+}
+
+#project-title{
+	position: absolute;
+	float: left;
+	text-align: center;
+	top: 30%;
+	left: 0px;
+	padding-left: 10%;
+	padding-right: 10%;
+	width: 100%;
+	font-weight: bolder;
+	opacity: 0.7;
+	font-size: 50px;
+	letter-spacing: 5px;
+	text-shadow: 2px 2px 4px rgba(150, 150, 150, 1);
+	
+	
+}
+
+.fav_btn_container{
+	width: 10%;
+	height: 50px;
+	float: left;
+	padding-top: 10px;
+}
+
+#fav_btn{
+border-style: none;
+background-color: #FFF;
+font-size: 24px;
+color: #D2D2D2;
+
+}
+
+.btn_selected{
+color: #E6E506 ;
 }

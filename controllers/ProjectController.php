@@ -152,7 +152,16 @@ class ProjectController extends Controller{
 		$footer_array = array("username" => "");
 		$footer = $this->view("Footer", $footer_array);
 		
-		$content = $this->view("Project", "");
+		$user_review = $this->view("UserReview", "");
+		
+		$news_feed_content = array("entries" => array(), "list_title" =>  "News Feed");
+		array_push($news_feed_content["entries"], array("title" => "Project Created", "desc" => "Today with created our glorious project", "thumb" => abspath("/public/images/default-profile-pic.png")));
+		array_push($news_feed_content["entries"], array("title" => "Project Created", "desc" => "Today with created our glorious project", "thumb" => abspath("/public/images/default-profile-pic.png")));
+		array_push($news_feed_content["entries"], array("title" => "Project Created", "desc" => "Today with created our glorious project", "thumb" => abspath("/public/images/default-profile-pic.png")));
+		
+		$news_feed = $this->view("TitleDescriptionList", $news_feed_content);
+		
+		$content = $this->view("Project", array("footer" => $footer, "user_review" => $user_review, "news_feed" => $news_feed));
 		
 		$login_modal = $this->view("LoginModal", "");
 
@@ -168,6 +177,8 @@ class ProjectController extends Controller{
 		
 		return $html;
 	}
+	
+
 }
 
 ?>
