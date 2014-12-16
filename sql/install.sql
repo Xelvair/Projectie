@@ -21,7 +21,7 @@ CREATE TABLE project (
 	creator_id int NOT NULL,
 	create_time int NOT NULL,
 	title varchar(256) NOT NULL,
-	subtitle varchar(512) NOT NULL,
+	subtitle varchar(124) NOT NULL,
 	description text NOT NULL,
 	public_chat_id int NOT NULL,
 	private_chat_id int NOT NULL,
