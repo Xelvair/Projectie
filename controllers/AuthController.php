@@ -31,6 +31,17 @@ class AuthController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 	}
+	
+	//data[0] : id of the requested user
+	public function get_user($data){
+		$auth = $this->model("Auth");
+
+		if(isset($data[0]) && !empty($data[0])){
+			return json_encode($auth->get_user($data[0]));
+		} else {
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+	}
 }
 
 ?>
