@@ -18,7 +18,7 @@ class TestController extends Controller{
 		}
 
 		$content = $this->view("LoginTest", array("login" => $login_name));
-		return $this->view("HtmlBase", array("title" => "Login Test", "body" => $content, "body_padding" => false));
+		return $this->view("HtmlBase", array("title" => "Login Test", "body" => $content, "body_padding" => false, "current_user" => $logged_in_user));
 	}
 
 	public function project(){

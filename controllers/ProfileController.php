@@ -43,7 +43,8 @@ class ProfileController extends Controller{
 
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 
-												"body_padding" => true));
+												"body_padding" => true,
+												"current_user" => $user));
 		
 		
 		return $html;

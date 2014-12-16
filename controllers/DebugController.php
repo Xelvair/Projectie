@@ -3,11 +3,15 @@ require_once("../core/Controller.php");
 
 class DebugController extends Controller{
 	function index(){
+		$auth = $this->model("Auth");
+		$user = $auth->get_current_user();
+
 		$content = $this->view("Debug");
 
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $content, 
-												"body_padding" => false));
+												"body_padding" => false,
+												"current_user" => $user));
 
 		return $html;
 	}

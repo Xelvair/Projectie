@@ -3,6 +3,7 @@
 //title : title of the webpage
 //body : body of the page
 //body_padding : whether to add padding to the navbar
+//current_user : assoc array of all information about the current user
 ?>
 
 <!DOCTYPE HTML>
@@ -18,6 +19,9 @@
         <link rel="stylesheet" type="text/css" href="<?=abspath("public/css/fileinput.css")?>">
     <script src='<?=abspath("public/js/Projectie.js")?>'></script>
     <script>Projectie.server_addr = "<?=abspath("")?>"</script>
+    <?php if(isset($_DATA["current_user"])){ ?>
+        <script>Projectie.current_user = <?=json_encode($_DATA["current_user"])?></script>
+    <?php } ?>
     <script src='<?=abspath("public/js/chat.js")?>'></script>
     <script src="<?=abspath("public/js/fileinput.js")?>"></script>
     <title><?=$_DATA["title"];?></title>

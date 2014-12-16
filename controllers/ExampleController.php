@@ -3,7 +3,12 @@ require_once("../core/Controller.php");
 
 class ExampleController extends Controller{
 	function index(){
-		return "This is the index page of the ExampleController class.";
+		$auth = $this->model("Auth");
+		$user = $auth->get_current_user();
+		return $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+										"body" => "fagit", 
+										"body_padding" => true,
+										"current_user" => $user));
 	}
 
 	function ExampleFunction($data){
@@ -24,6 +29,7 @@ class ExampleController extends Controller{
 
 		$html .= $model->test();
 		$html .= var_dump($_SERVER);
+
 		$html .= $this->view("ExampleView", ["examplestring" => "ExampleView Test String!"]);
 
 		return $html;

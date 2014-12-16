@@ -246,6 +246,21 @@ class AuthModel implements Model{
 		return $chat_participations;
 	}
 
+	public function exists($user_id){
+		global $mysqli;
+
+		$stmt_check_user = $mysqli->prepare("SELECT user_id FROM user WHERE user_id = ?");
+		$stmt_check_user->bind_param("i", $user_id);
+		$stmt_check_user->execute();
+		$stmt_check_user->store_result();
+
+		$result = $stmt_check_user->num_rows;
+
+		$stmt_check_user->close();
+
+		return ($result > 0);
+	}
+
 	public function get_user($user_id){
 		global $mysqli;
 		$stmt = $mysqli->prepare("SELECT user_id, create_time, username, email, lang, is_admin FROM user WHERE user_id = ?");
@@ -279,6 +294,91 @@ class AuthModel implements Model{
 		$user_obj["chat_participations"] = self::get_chat_participations($user_id);
 
 		return $user_obj;
+	}
+
+	public function tag($tag_model, $user_id, $tag){
+		global $mysqli;
+
+		if(!self::exists($user_id)){
+			return array("ERROR" => "ERR_USER_NONEXISTENT");
+		}
+
+		if(gettype($tag) != "integer" && gettype($tag) != "string"){
+			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
+		}
+
+		//Get tag from database
+		$tag_entry = $tag_model->request_tag($tag);
+
+		if(sizeof($tag_entry) <= 0){
+			return array("ERROR" => "ERR_TAG_NONEXISTENT");
+		}
+
+		if(self::is_tagged($tag_model, $user_id, $tag)){
+			return array("ERROR" => "ERR_PROJECT_ALREADY_TAGGED");
+		}
+
+		$tag_id = $tag_entry["tag_id"];
+
+		$query_tag_project = $mysqli->prepare("INSERT INTO user_tag (user_id, tag_id) VALUES (?, ?)");
+		$query_tag_project->bind_param("ii", $user_id, $tag_id);
+		$query_tag_project->execute();
+	
+		return array();
+	}
+
+	public function is_tagged($tag_model, $user_id, $tag){
+		global $mysqli;
+
+		if(gettype($tag) != "integer" && gettype($tag) != "string"){
+			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
+		}
+
+		$tag_entry = $tag_model->get_tag($tag);
+
+		if(sizeof($tag_entry) <= 0){
+			throw new InvalidArgumentException("request_tag function cannot find '".$tag."' in database!");
+		}
+
+		$tag_id = $tag_entry["tag_id"];
+
+		$query_check_tag = $mysqli->prepare("SELECT user_tag_id FROM user_tag WHERE user_id = ? AND tag_id = ?");
+		$query_check_tag->bind_param("ii", $user_id, $tag_id);
+		$query_check_tag->execute();
+		$query_check_tag->store_result();
+
+		$result = $query_check_tag->num_rows;
+
+		$query_check_tag->close();
+
+		return ($result > 0);
+	}
+
+	public function untag($tag_model, $user_id, $tag){
+		global $mysqli;
+
+		$tag_entry = $tag_model->get_tag($tag);
+
+		$tag_id = $tag_entry["tag_id"];
+
+		$query_untag_project = $mysqli->prepare("DELETE FROM user_tag WHERE user_id = ? AND tag_id = ?");
+		$query_untag_project->bind_param("ii", $user_id, $tag_id);
+		$query_untag_project->execute();
+
+		return array();
+	}
+
+	public function get_tags($user_id){
+		global $mysqli;
+
+		$query_get_tags = $mysqli->prepare("SELECT t.tag_id AS tag_id, t.name AS name FROM user_tag ut LEFT JOIN tag t ON(ut.tag_id = t.tag_id) WHERE ut.user_id = ?");
+		$query_get_tags->bind_param("i", $user_id);
+		$query_get_tags->execute();
+		$result = $query_get_tags->get_result();
+
+		$query_get_tags->close();
+
+		return $result->fetch_all(MYSQLI_ASSOC);
 	}
 }
 

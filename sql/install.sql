@@ -100,3 +100,11 @@ CREATE TABLE project_tag (
 	tag_id int NOT NULL,
 	PRIMARY KEY(project_tag_id)
 );
+
+DROP TABLE IF EXISTS user_tag;
+CREATE TABLE user_tag (
+	user_tag_id int NOT NULL AUTO_INCREMENT,
+	user_id int NOT NULL,
+	tag_id int NOT NULL,
+	PRIMARY KEY(user_tag_id)
+);
