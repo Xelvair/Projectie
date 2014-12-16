@@ -1,13 +1,8 @@
 <?php
 
 #PARAMETERS
-#profile_pic : Profil pic
-#username : username
-#sum_projects_created : Sum projects created
-#sum_projects_involved : sum projects involved
-#skill : array skills
-#created_project : created porjects
-#involved_project : involved projects
+#footer : site footer
+#user : user
 global $locale;
 ?>
 
@@ -15,123 +10,109 @@ global $locale;
 var popover = "hidden";
 
 $(document).ready(function(){
-	/*$('.tag').on('mouseenter', function(){
-		$(this).find('.tag_delete').animate({width:'toggle'},200);
-	});
-	
-	$('.tag').on('mouseleave',function(){
-		$(this).find('.tag_delete').animate({width:'toggle'},200);
-	});
-	*/
 	var tOut;
 	
-	$('.tag').hover(function(){
-		var element = $(this);
-		tOut = setTimeout(function(){
-					$(element).find('.tag_delete').show().animate({width: '20px'},200);
-				},500);
-		
-			
-		
-			
-		},function(){
+	$('.tag').hover(
+		//onHover
+		function(){
+			var element = $(this);
+			tOut = setTimeout(function(){
+				$(element).find('.tag_delete').show().animate({width: '20px'},200);
+			}, 500);
+		},
+		//onUnhover
+		function(){
 			clearTimeout(tOut);
 			$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
-			
-			});
+		}
+	);
 	
 	
-	$('#addskill').click(function(){
-		if(popover=="shown"){
-			$('#addskill').popover('hide');
+	$('#addtag').click(function(){
+		if (popover=="shown"){
+			$('#addtag').popover('hide');
 			popover="hidden";
-		}else if(popover == "hidden"){
-			$('#addskill').popover('show');
+		} else if (popover == "hidden"){
+			$('#addtag').popover('show');
 			popover = "shown";
 		}
-		
 	});
 	
 });
 
-function submit_skill(event){
-	
-	$('#skill_input_group').removeClass('has-error');
+function submit_tag(event){
+	$('#tag_input_group').removeClass('has-error');
 	
 	if (event.which == 13 || event.keyCode == 13) {
-		
-			var new_skill = document.getElementById('input_newskill').value;
+		var new_tag = document.getElementById('input_newtag').value;
 			
-			if(new_skill == ""){
-				
-				$('#skill_input_group').addClass('has-error');
-				
-			}else{
+		if(new_tag == ""){
+			$('#tag_input_group').addClass('has-error');
+		} else {
 				
 			var id = 23;
-			
-            $('#addskill').popover('hide');
-			$('#skill-list').append('<li class="tag" id="skill'+id+'">'+new_skill+'<div class="tag_delete"><a onclick="delete_skill(this, '+id+');" class="skill_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>');
+
+            $('#addtag').popover('hide');
+			$('#tag-list').append('<li class="tag" id="tag'+id+'">'+new_tag+'<div class="tag_delete"><a onclick="delete_tag(this, '+id+');" class="tag_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>');
 			
 			var tOut;
 	
-	$('.tag').hover(function(){
-		var element = $(this);
-		tOut = setTimeout(function(){
-					$(element).find('.tag_delete').show().animate({width: '20px'},200);
-				},500);
-		
-			
-		
-			
-		},function(){
-			clearTimeout(tOut);
-			$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
-			
-			});
-			
-			}
-            return false;
-        }
-        return true;
+			$('.tag').hover(
+				function(){
+					var element = $(this);
+					tOut = setTimeout(function(){
+						$(element).find('.tag_delete').show().animate({width: '20px'},200);
+					},500);			
+				},
+				function(){
+					clearTimeout(tOut);
+					$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
+				}
+			);	
+		}
+        return false;
+	}
+    return true;
 }
 
-function delete_skill(element, id){
-
-		$('#skill'+id).remove();
-	
+function delete_tag(element, id){
+	$('#tag'+id).remove();
 }
 
 </script>
 
 <div class="row">
     <div class="col-md-3 col-xs-3" style="padding-top:20px;">
-        <img src="<?=$_DATA['profile_pic']?>" class="img-responsive img-rounded">
+        <img src="<?=abspath("/public/images/default-profile-pic.png")?>" class="img-responsive img-rounded profile-pic">
     </div>
     <div class="col-md-5 col-xs-9">          
-         <h1><?=$_DATA['username']?></h1>
+         <h1><?=$_DATA['user']["username"]?></h1>
                  <dl class="dl-horizontal">
                   <dt><?=$locale['projects_created']?>:</dt>
-                  <dd><?=$_DATA['sum_projects_created']?></dd>
+                  <dd><?=sizeof($_DATA['user']["created_projects"])?></dd>
                   <dt><?=$locale['projects_involved']?>:</dt>
-                  <dd><?=$_DATA['sum_projects_involved']?></dd>
+                  <dd><?=sizeof($_DATA['user']["project_participations"])?></dd>
                 </dl>     
     </div>
     <div class="col-md-4">
         <div class="row">
-            <div class="skill_box">
-            <h1 align="center" style="margin-top:0px;"><small><?=$locale['skills']?></small></h1>
-                <ul class="list-inline" id="skill-list">
-                    <?php foreach($_DATA["skill"] as $entry){ 
-							$skill = explode('|',$entry);
-								?>
-                         <li class="tag" id="skill<?=$skill[1]?>"><?=$skill[0]?><div class="tag_delete"><a onclick="delete_skill(this, <?=$skill[1]?>);" class="skill_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>
+            <div class="tag_box">
+            <h1 align="center" style="margin-top:0px;"><small><?=$locale['tags']?></small></h1>
+                <ul class="list-inline" id="tag-list">
+                    <?php foreach($_DATA["user"]["tags"] as $entry){ ?>
+                         <li class="tag" id="tag<?=$entry['tag_id']?>"><?=$entry['name']?>
+	                         <div class="tag_delete">
+		                         <a onclick="delete_tag(this, <?=$entry["tag_id"]?>);" class="tag_a">
+		                         	<span class="glyphicon glyphicon-remove"></span>
+		                         </a>
+	                         </div>
+                         </li>
                     <?php 
 					}?>
                 </ul>
-            	<div class="skill_box_bottom">
-                <button class="skill_btn" id="addskill"  data-toggle="popover" data-html="true" data-content="<div id='skill_input_group'><input type='text' class='form-control' placeholder='New skill...' id='input_newskill' onkeypress='submit_skill(event);'/></div>" data-placement="left">             
-                                <span class="glyphicon glyphicon-plus"></span><strong>Skill</strong>
+            	<div class="tag_box_bottom">
+                <button class="tag_btn" id="addtag"  data-toggle="popover" data-html="true" data-content="<div id='tag_input_group'><input type='text' class='form-control' placeholder='New tag...' id='input_newtag' onkeypress='submit_tag(event);'/></div>" data-placement="left">             
+                                <span class="glyphicon glyphicon-plus"></span><strong>tag</strong>
                 </button>
                </div>
             </div>
@@ -142,7 +123,7 @@ function delete_skill(element, id){
 <div class="row">
     <div class="col-md-6 col-xs-12 content_list">
     <h2 align="center" class="content_heading"><?=$locale['projects_created']?></h2>
-        <?php foreach($_DATA["created_project"] as $entry){ ?>
+        <?php foreach($_DATA["user"]["created_projects"] as $entry){ ?>
             <div class="media">
                 <a class="pull-left" href="#">
                     <img class="media-object img-rounded" src="<?=$entry['thumb']?>" alt="...">
@@ -156,7 +137,7 @@ function delete_skill(element, id){
     </div><!--col-->
     <div class="col-md-6 col-xs-12 content_list">
     <h2 align="center" class="content_heading"><?=$locale['projects_involved']?></h2>
-        <?php foreach($_DATA["involved_project"] as $entry){ ?>
+        <?php foreach($_DATA["user"]["project_participations"] as $entry){ ?>
         <div class="media">
             <a class="pull-left" href="#">
                 <img class="media-object img-rounded" src="<?=$entry['thumb']?>" alt="...">
@@ -169,4 +150,4 @@ function delete_skill(element, id){
         <?php }?>
     </div><!--col-->
 </div>
- <?=$_DATA['footer']?>
+<?=$_DATA['footer']?>

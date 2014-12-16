@@ -284,7 +284,8 @@ class AuthModel implements Model{
 			"is_admin" => $res_is_admin,
 			"created_projects" => array(),
 			"project_participations" => array(),
-			"chat_participations" => array()
+			"chat_participations" => array(),
+			"tags" => array()
 		);
 
 		$stmt->close();
@@ -292,6 +293,7 @@ class AuthModel implements Model{
 		$user_obj["created_projects"] = self::get_created_projects($user_id);
 		$user_obj["project_participations"] = self::get_user_participations($user_id);
 		$user_obj["chat_participations"] = self::get_chat_participations($user_id);
+		$user_obj["tags"] = self::get_tags($user_id);
 
 		return $user_obj;
 	}

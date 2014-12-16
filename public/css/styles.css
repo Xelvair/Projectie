@@ -267,7 +267,7 @@ hr{
     margin-top: 100px;
 }
 
-.skill_box{
+.tag_box{
     width:100%;
     height: 100%;
     min-height: 100px;
@@ -346,29 +346,29 @@ width: 100%;
 	height:100%;
 }
 
-.skill_btn{
+.tag_btn{
 	color: #AAAAAA;
 	border:none;
 	background-color: #FFF;
 }
 
-.skill_btn:hover{
+.tag_btn:hover{
 	color: #5B8600;
 	border:none;
 	background-color: #FFF;
 }
 
-.skill_a{
+.tag_a{
 	color: #AAAAAA;
 }
 
-.skill_a:hover{
+.tag_a:hover{
 	color: #5B8600;
 	text-decoration:none;
 }
 
 
-.skill_box_bottom{
+.tag_box_bottom{
 	height: 30px;
 	bottom: 0px;
 	text-align:right;
@@ -599,4 +599,9 @@ color: #D2D2D2;
 
 .btn_selected{
 color: #E6E506 ;
+}
+
+.profile-pic{
+    max-width: 250px;
+    max-height: 250px;
 }

@@ -2,11 +2,14 @@
 require_once("../core/Controller.php");
 
 class ProfileController extends Controller{
-	
-	
-	function index(){
+	function show($data){
 		global $locale;
 		global $CONFIG;
+
+		if(!isset($data[0]) || !filter_var($data[0], FILTER_VALIDATE_INT)){
+			header("Location: /home");
+			return;
+		}
 
 		$auth = $this->model("Auth");
 		$user = $auth->get_current_user();
@@ -20,19 +23,21 @@ class ProfileController extends Controller{
 			$locale->load("en-us");
 		}
 		
+		$viewed_user = $auth->get_user($data[0]);
+
 		$footer_array = array("username" => "");
 		$footer = $this->view("Footer", $footer_array);
 		
-		$profile_content = array("footer" => $footer, "profile_pic" => abspath("/public/images/question_mark_big.png"), "username" => "Max da Boss", "sum_projects_created" => "123", "sum_projects_involved" => "34", "skill" => array("PHP|1","CSS|2", "JAVASCRIPT|3", "BOOTSTRAP|4", "C#|5"), "created_project" => array(), "involved_project" => array());
-		
-		array_push($profile_content["created_project"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
-		array_push($profile_content["created_project"], array("title" => "Trending Project 2", "desc" => "Test Desc 2", "thumb" => abspath("/public/images/question_mark_small.png")));
-		array_push($profile_content["created_project"], array("title" => "Trending Project 3", "desc" => "Test Desc 3", "thumb" => abspath("/public/images/question_mark_small.png")));
-		
-		array_push($profile_content["involved_project"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
-		array_push($profile_content["involved_project"], array("title" => "Trending Project 2", "desc" => "Test Desc 2", "thumb" => abspath("/public/images/question_mark_small.png")));
-		array_push($profile_content["involved_project"], array("title" => "Trending Project 3", "desc" => "Test Desc 3", "thumb" => abspath("/public/images/question_mark_small.png")));
-		
+		$profile_content = array(
+			"footer" => $footer, 
+			"user" => $viewed_user
+		);
+
+		if(isset($viewed_user["ERROR"])){
+			header("Location: /home");
+			return;
+		}
+
 		$content = $this->view("Profile", $profile_content);
 		
 		$login_modal = $this->view("LoginModal", "");

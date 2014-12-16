@@ -29,7 +29,7 @@
 	"login_pw_err" : "Your password is not correct!",
 	"projects_created" : "Projects created",
 	"projects_involved" : "Projects Involved",
-	"skills" : "Skills",
+	"tags" : "Tags",
 	"create" : "Create",
 	"create_desc_title" : "Descripe what you are targeting with your project and what your intentions are.",
 	"create_subtitle_title" : "This should be a short description what your project is about.",
