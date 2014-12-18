@@ -69,9 +69,18 @@ class AuthModel implements Model{
 
 		$password_hash = md5($password.$password_salt);
 
-		$stmt = $mysqli->prepare("INSERT INTO user (create_time, email, username, lang, is_admin, password_salt, password_hash, active) VALUES(?, ?, ?, ?, false, ?, ?, true)");
-		$stmt->bind_param("isssss", time(), $email, $username, $lang, $password_salt, $password_hash);
-		if($stmt->execute()){
+		$result = $this->dbez->insert("user", [
+			"create_time" => time(), 
+			"email" => $email, 
+			"username" => $username, 
+			"lang" => $lang, 
+			"is_admin" => 0, 
+			"password_salt" => $password_salt, 
+			"password_hash" => $password_hash, 
+			"active" => 1
+		]);
+
+		if($result){
 			write_log(Logger::DEBUG, "Registered account '".$username."'!");
 			return array();
 		} else {
@@ -83,18 +92,15 @@ class AuthModel implements Model{
 	public function login($email, $password){
 		global $mysqli;
 
-		//Load user from database
-		$stmt = $mysqli->prepare("SELECT user_id, password_hash, password_salt FROM user WHERE email = ? AND active = true");
-		$stmt->bind_param("s", $email);
-		$stmt->execute();
-		$stmt->store_result();
-		$stmt->bind_result($res_user_id, $res_password_hash, $res_password_salt);
-		if(!$stmt->fetch()){
-			$stmt->close();
+		$result = $this->dbez->find("user", ["email" => $email, "active" => 1], ["user_id", "password_hash", "password_salt"]);
+
+		if(empty($result)){
 			write_log(Logger::WARNING, "Failed to login, email '".$email."' not found!");
 			return array("ERROR" => "ERR_USER_NOT_FOUND");
 		}
-		
+
+		extract($result[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
+
 		//Check the password
 		$password_hash = md5($password.$res_password_salt);
 		if($password_hash != $res_password_hash){
@@ -103,9 +109,6 @@ class AuthModel implements Model{
 
 			write_log(Logger::DEBUG, "Failed login: incorrect password.");
 
-			$stmt->close();
-
-			$stmt->close();
 			return array("ERROR" => "ERR_INCORRECT_PASSWORD");
 		} else {
 			//If login succeeded, write to the session and set values
@@ -114,7 +117,6 @@ class AuthModel implements Model{
 
 			write_log(Logger::DEBUG, "User #".$res_user_id." logged in.");
 
-			$stmt->close();
 			return array();
 		}
 	}
@@ -131,7 +133,7 @@ class AuthModel implements Model{
 	public function email_exists($email){
 		global $mysqli;
 
-		$result = $this->dbez->find("user", ["email" => $email, "active" => true], ["user_id"]);
+		$result = $this->dbez->find("user", ["email" => $email, "active" => 1], ["user_id"]);
 
 		return !empty($result);
 	}
@@ -139,7 +141,7 @@ class AuthModel implements Model{
 	public function username_exists($username){
 		global $mysqli;
 
-		$result = $this->dbez->find("user", ["username" => $username, "active" => true], ["user_id"]);
+		$result = $this->dbez->find("user", ["username" => $username, "active" => 1], ["user_id"]);
 
 		return !empty($result);
 	}
@@ -158,7 +160,7 @@ class AuthModel implements Model{
 	}
 
 	public function get_created_projects($user_id){
-		return $this->dbez->find("project", ["creator_id" => $user_id, "active" => true], ["project_id", "create_time", "title", "subtitle"], true);
+		return $this->dbez->find("project", ["creator_id" => $user_id, "active" => 1], ["project_id", "create_time", "title", "subtitle"], true);
 	}
 
 	public function get_user_participations($user_id){
@@ -190,7 +192,7 @@ class AuthModel implements Model{
 		while($row = $result->fetch_assoc()){
 			$id = $row["project_id"];
 			unset($row["project_id"]);
-			$user_participations[$id] = array_values($row);
+			$user_participations[$id] = $row;
 		}
 
 		$query_get_projects->close();
@@ -209,7 +211,10 @@ class AuthModel implements Model{
 	}
 
 	public function get_user($user_id){
-		$result = $this->dbez->find("user", ["user_id" => $user_id, "active" => true], ["user_id", "create_time", "username", "email", "lang", "is_admin"], true);
+		$result = $this->dbez->find("user", ["user_id" => $user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "is_admin"])[0];
+
+		//fixing compatibility issue with lots of stuff
+		$result["id"] = $result["user_id"];
 
 		$result += array(
 			"created_projects" => self::get_created_projects($user_id),
@@ -217,6 +222,8 @@ class AuthModel implements Model{
 			"chat_participations" => self::get_chat_participations($user_id),
 			"tags" => self::get_tags($user_id)
 		);
+
+		write_log(Logger::DEBUG, print_r($result, true));
 
 		return $result;
 	}

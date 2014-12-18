@@ -19,6 +19,28 @@ require_once("../core/Model.php");
 
 class DBEZModel implements Model{
 
+	public function insert($table, $data){
+		global $mysqli;
+
+		if(empty($table)){
+			throw new Exception("Invalid parameter sent to DBEZ::insert()!");
+		}
+
+		if(empty($data)){
+			throw new Exception("Invalid parameter sent to DBEZ::insert()!");
+		}
+
+		$query = self::generate_insert_query_string($table, $data);
+
+		$result = $mysqli->query($query);
+
+		if(!$result){
+			throw new Exception("Query '".$query."' failed!");
+		}
+
+		return true;
+	}
+
 	public function find($table, $search, $result_fields, $key_as_index = false){
 		if(empty($table)){
 			throw new Exception("Invalid parameter sent to DBEZ::find()!");
@@ -45,13 +67,19 @@ class DBEZModel implements Model{
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
-		return self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_fields, $key_as_index);
+		$result = self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_fields, $key_as_index);
+
+		if(empty($result)){
+			return array();
+		} else {
+			return $result[0];
+		}
 	}
 
 	public function find_by_array($table, $search_array, $result_fields, $key_as_index){
 		global $mysqli;
 
-		$query = self::generate_query_string($table, $search_array, $result_fields);
+		$query = self::generate_select_query_string($table, $search_array, $result_fields);
 
 		$result = $mysqli->query($query);
 		$result_arr = $result->fetch_all(MYSQLI_ASSOC);
@@ -60,12 +88,13 @@ class DBEZModel implements Model{
 			throw new Exception("Query '".$query."' failed!");
 		}
 
+
+		$table_meta = self::load_table_meta($table);
 		//If the caller choose to have the primary key as index in the result array,
 		//we need to create and populate a new array and assign this to the original array
 		if($key_as_index){
 			$temp_arr = array();
 
-			$table_meta = self::load_table_meta($table);
 			$primary_key_field = self::find_primary_key($table_meta)["Field"];
 
 			for($i = 0; $i < sizeof($result_arr); $i++){
@@ -74,6 +103,8 @@ class DBEZModel implements Model{
 
 			$result_arr = $temp_arr;
 		}
+
+		self::fix_types($result_arr, $table_meta);
 
 		return $result_arr;
 	}
@@ -102,13 +133,35 @@ class DBEZModel implements Model{
 		} else if (strpos($field_meta["Type"], "bigint") === 0){
 			return "integer";
 		} else if (strpos($field_meta["Type"], "tinyint(1)") === 0){
-			return "boolean";
+			return "integer";
 		} else if (strpos($field_meta["Type"], "bit") === 0){
 			return "boolean";
 		} else if (strpos($field_meta["Type"], "enum") === 0){
 			return "string";
 		} else {
 			throw new Exception("Failed to find type of field: ".$field_meta["Type"]);
+		}
+	}
+
+	//turns anything that shouldn't be a string into a not-string
+	//dammit, mysqli.
+	public function fix_types(&$result_array, $table_meta){
+		foreach($result_array as &$result_entry){
+			foreach($result_entry as $field_key => &$field_value){
+				$field_meta = self::find_field($table_meta, $field_key);
+				$field_type = self::get_field_type($field_meta);
+
+				switch($field_type){
+					case "integer":
+						$field_value = (int)$field_value;
+						break;
+					case "boolean":
+						$field_value = (boolean)$field_value;
+						break;
+					default:
+						break;
+				}
+			}		
 		}
 	}
 
@@ -132,7 +185,16 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function generate_query_string($table, $search_array, $result_array){
+	public function find_field($table_meta, $field){
+		foreach($table_meta as $field_meta){
+			if($field_meta["Field"] == $field){
+				return $field_meta;
+			}
+		}
+		throw new Exception("Field not found!");
+	}
+
+	public function generate_select_query_string($table, $search_array, $result_array){
 		global $mysqli;
 
 		$query_str = "SELECT ".implode(", ", $result_array)." FROM ".$table;
@@ -149,7 +211,7 @@ class DBEZModel implements Model{
 				$field_type = self::get_field_type($field_meta);
 
 				if(gettype($search_entry_value) != $field_type){
-					throw new Exception("Type mismatch! ".$field_type." required but ".gettype($search_entry_value)." given!");
+					throw new Exception("Type mismatch! ".$field_type." required but ".gettype($search_entry_value)." given for field '".$field_meta["Field"]."'!");
 				}
 
 				//on every entry but the first, add a semicolon
@@ -166,6 +228,40 @@ class DBEZModel implements Model{
 					$query_str .= '"';
 			}
 		}	
+		return $query_str;
+	}
+
+	public function generate_insert_query_string($table, $data){
+		global $mysqli;
+
+		$table_meta = self::load_table_meta($table);
+
+		$query_str = "INSERT INTO ".$table." (".implode(", ", array_keys($data)).")";
+
+		$query_str .= " VALUES (";
+
+		$is_first = true;
+		foreach($data as $field => $value){
+			$field_meta = self::find_field($table_meta, $field);
+			$field_type = self::get_field_type($field_meta);
+
+			if(gettype($value) != $field_type){
+				throw new Exception("Type mismatch! ".$field_type." required but ".gettype($value)." given for field '".$field_meta["Field"]."'!");
+			}
+
+			$is_first ? $is_first = false : $query_str .= ", ";
+
+			if($field_type == "string")
+				$query_str .= '"';
+
+			$query_str .= $mysqli->real_escape_string($value);
+
+			if($field_type == "string")
+				$query_str .= '"';
+		}
+
+		$query_str .= ")";
+
 		return $query_str;
 	}
 }
