@@ -3,7 +3,8 @@ require_once("../core/Controller.php");
 
 class ProjectController extends Controller{
 	public function create(){
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$logged_in_user = $auth->get_current_user();
 
 		if($logged_in_user == null){
@@ -50,7 +51,8 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$project = $this->model("Project");
 		$chat = $this->model("Chat");
 		$current_user = $auth->get_current_user();
@@ -78,8 +80,9 @@ class ProjectController extends Controller{
 
 	//$_POST["project_participation_request_id"]
 	public function accept_participation(){
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$project = $this->model("Project");
-		$user = $this->model("User");
 
 		$current_user = $user->get_current_user();
 
@@ -112,7 +115,8 @@ class ProjectController extends Controller{
 			}
 		}
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$project = $this->model("Project");
 		$tag = $this->model("Tag");
 
@@ -137,7 +141,8 @@ class ProjectController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user->get_lang());

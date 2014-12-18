@@ -6,7 +6,8 @@ class ChatController extends Controller{
 
 	//$_POST["title"] : the title of the chat
 	public function create_private(){
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 
 		if(json_decode($_POST["title"]) != null){
@@ -40,7 +41,8 @@ class ChatController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
 		}
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 
 		$user_to_be_added = $auth->get_user($_POST["user_id"]);
 
@@ -76,7 +78,8 @@ class ChatController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
 		}
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		
 		$user = $auth->get_current_user();
 
@@ -106,7 +109,8 @@ class ChatController extends Controller{
 
 		$chat = $this->model("Chat");
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$logged_in_user = $auth->get_current_user();
 
 		$requester_id = $logged_in_user ? $logged_in_user["id"] : null;
@@ -117,7 +121,8 @@ class ChatController extends Controller{
 	public function get_new($data){
 		// data[0] : chatsession id
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$chat = $this->model("Chat");
 
 		$logged_in_user = $auth->get_current_user();
@@ -132,7 +137,8 @@ class ChatController extends Controller{
 			return;
 		}
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$chat = $this->model("Chat");
 
 		$logged_in_user = $auth->get_current_user();
@@ -147,7 +153,8 @@ class ChatController extends Controller{
 		global $CONFIG;
 
 		$chat = $this->model("Chat");
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);

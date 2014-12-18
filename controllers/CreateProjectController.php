@@ -6,7 +6,8 @@ class CreateProjectController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);

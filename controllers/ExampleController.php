@@ -3,7 +3,8 @@ require_once("../core/Controller.php");
 
 class ExampleController extends Controller{
 	function index(){
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		return $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 										"body" => "fagit", 

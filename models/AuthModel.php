@@ -4,9 +4,13 @@ require_once("../core/Model.php");
 
 class AuthModel implements Model{
 	private $loggedInUser;
+	private $dbez;
 
-	function __construct(){
+	function __construct(DBEZModel $dbez){
 		global $mysqli;
+
+		$this->dbez = $dbez;
+
 		if(isset($_SESSION["login_user_id"])){
 
 			$user = self::get_user($_SESSION["login_user_id"]);
@@ -23,6 +27,7 @@ class AuthModel implements Model{
 		} else {
 			write_log(Logger::DEBUG, "Auth not fully constructed - guest visit.");
 		}
+
 	}
 
 	public function register($email, $username, $lang, $password /*blahblah*/){ 
@@ -126,23 +131,17 @@ class AuthModel implements Model{
 	public function email_exists($email){
 		global $mysqli;
 
-		$stmt = $mysqli->prepare("SELECT user_id FROM user WHERE email = ? AND active = true");
-		$stmt->bind_param("s", $email);
-		$stmt->execute();
-		$mail_exists = $stmt->fetch() ? true : false;
-		$stmt->close();
-		return $mail_exists;
+		$result = $this->dbez->find("user", ["email" => $email, "active" => true], ["user_id"]);
+
+		return !empty($result);
 	}
 
 	public function username_exists($username){
 		global $mysqli;
 
-		$stmt = $mysqli->prepare("SELECT user_id FROM user WHERE username = ? AND active = true");
-		$stmt->bind_param("s", $username);
-		$stmt->execute();
-		$username_exists = $stmt->fetch() ? true : false;
-		$stmt->close();
-		return $username_exists;
+		$result = $this->dbez->find("user", ["username" => $username, "active" => true], ["user_id"]);
+
+		return !empty($result);
 	}
 
 	public function get_current_user(){
@@ -159,30 +158,7 @@ class AuthModel implements Model{
 	}
 
 	public function get_created_projects($user_id){
-		global $mysqli;
-
-		$query_get_projects = $mysqli->prepare("SELECT project_id, create_time, title, subtitle FROM project WHERE creator_id = ? and active = true");
-		$query_get_projects->bind_param("i", $user_id);
-		$query_get_projects->execute();
-
-		$result = $query_get_projects->get_result();
-
-		$created_projects = array();
-
-		// currently, the result array looks like this:
-		// [n] -> [project_id, create_time, title, ...]
-		// we want to change it to such a format:
-		// [project_id] -> [create_time, title, ...]
-		// so we extract the id from the array, and rebuild a new one with the project_id as index
-		while($row = $result->fetch_assoc()){
-			$id = $row["project_id"];
-			unset($row["project_id"]);
-			$created_projects[$id] = array_values($row);
-		}
-
-		$query_get_projects->close();
-
-		return $created_projects;
+		return $this->dbez->find("project", ["creator_id" => $user_id, "active" => true], ["project_id", "create_time", "title", "subtitle"], true);
 	}
 
 	public function get_user_participations($user_id){
@@ -210,6 +186,7 @@ class AuthModel implements Model{
 		// we want to change it to such a format:
 		// [project_id] -> [create_time, title, ...]
 		// so we extract the id from the array, and rebuild a new one with the project_id as index
+
 		while($row = $result->fetch_assoc()){
 			$id = $row["project_id"];
 			unset($row["project_id"]);
@@ -222,80 +199,26 @@ class AuthModel implements Model{
 	}	
 
 	public function get_chat_participations($user_id){
-		global $mysqli;
-
-		$query_get_chat_participations = $mysqli->prepare("
-			SELECT chat_participation_id, chat_id
-			FROM chat_participation
-			WHERE participant_id = ?
-		");
-
-		$query_get_chat_participations->bind_param("i", $user_id);
-		$query_get_chat_participations->execute();
-
-		$result = $query_get_chat_participations->get_result();
-
-		$chat_participations = array();
-
-		while($row = $result->fetch_assoc()){
-			$id = $row["chat_participation_id"];
-			unset($row["chat_participation_id"]);
-			$chat_participations[$id] = $row;
-		}
-
-		return $chat_participations;
+		return $this->dbez->find("chat_participation", ["participant_id" => $user_id], ["chat_participation_id", "chat_id"], true);
 	}
 
 	public function exists($user_id){
-		global $mysqli;
+		$result = $this->dbez->find("user", $user_id, ["user_id"]);
 
-		$stmt_check_user = $mysqli->prepare("SELECT user_id FROM user WHERE user_id = ?");
-		$stmt_check_user->bind_param("i", $user_id);
-		$stmt_check_user->execute();
-		$stmt_check_user->store_result();
-
-		$result = $stmt_check_user->num_rows;
-
-		$stmt_check_user->close();
-
-		return ($result > 0);
+		return !empty($result);
 	}
 
 	public function get_user($user_id){
-		global $mysqli;
-		$stmt = $mysqli->prepare("SELECT user_id, create_time, username, email, lang, is_admin FROM user WHERE user_id = ?");
-		$stmt->bind_param("i", $user_id);
-		$stmt->execute();
-		$stmt->store_result();
+		$result = $this->dbez->find("user", ["user_id" => $user_id, "active" => true], ["user_id", "create_time", "username", "email", "lang", "is_admin"], true);
 
-		$stmt->bind_result($res_user_id, $res_create_time, $res_username, $res_email, $res_lang, $res_is_admin);
-
-		if(!$stmt->fetch()){
-			write_log(Logger::WARNING, "User #".$user_id." doesn't exist!");
-			return array("ERROR" => "ERR_USER_NOT_FOUND");
-		}
-
-		$user_obj = array(
-			"id" => $res_user_id,
-			"create_time" => $res_create_time,
-			"username" => $res_username,
-			"email" => $res_email,
-			"lang" => $res_lang,
-			"is_admin" => $res_is_admin,
-			"created_projects" => array(),
-			"project_participations" => array(),
-			"chat_participations" => array(),
-			"tags" => array()
+		$result += array(
+			"created_projects" => self::get_created_projects($user_id),
+			"project_participations" => self::get_user_participations($user_id),
+			"chat_participations" => self::get_chat_participations($user_id),
+			"tags" => self::get_tags($user_id)
 		);
 
-		$stmt->close();
-
-		$user_obj["created_projects"] = self::get_created_projects($user_id);
-		$user_obj["project_participations"] = self::get_user_participations($user_id);
-		$user_obj["chat_participations"] = self::get_chat_participations($user_id);
-		$user_obj["tags"] = self::get_tags($user_id);
-
-		return $user_obj;
+		return $result;
 	}
 
 	public function tag($tag_model, $user_id, $tag){
@@ -344,16 +267,9 @@ class AuthModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		$query_check_tag = $mysqli->prepare("SELECT user_tag_id FROM user_tag WHERE user_id = ? AND tag_id = ?");
-		$query_check_tag->bind_param("ii", $user_id, $tag_id);
-		$query_check_tag->execute();
-		$query_check_tag->store_result();
+		$result = $this->dbez->find("user_tag", ["user_id" => $user_id, "tag_id" => $tag_id], ["user_tag_id"]);
 
-		$result = $query_check_tag->num_rows;
-
-		$query_check_tag->close();
-
-		return ($result > 0);
+		return !empty($result);
 	}
 
 	public function untag($tag_model, $user_id, $tag){

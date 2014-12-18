@@ -18,13 +18,22 @@
 require_once("../core/Model.php");
 
 class DBEZModel implements Model{
-	public function find($table, $search, $result_fields){
+
+	public function find($table, $search, $result_fields, $key_as_index = false){
+		if(empty($table)){
+			throw new Exception("Invalid parameter sent to DBEZ::find()!");
+		}
+
+		if(empty($result_fields)){
+			throw new Exception("Invalid parameter sent to DBEZ::find()!");
+		}
+
 		switch(gettype($search)){
 			case "integer":
-				return self::find_by_id($table, $search, $result_fields);
+				return self::find_by_id($table, $search, $result_fields, $key_as_index);
 				break;
 			case "array":
-				return self::find_by_array($table, $search, $result_fields);
+				return self::find_by_array($table, $search, $result_fields, $key_as_index);
 				break;
 			default:
 				throw new Exception("Invalid parameter sent to DBEZ::find()!");
@@ -32,25 +41,41 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_by_id($table, $search_id, $result_fields){
+	public function find_by_id($table, $search_id, $result_fields, $key_as_index){
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
-		return self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_fields);
+		return self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_fields, $key_as_index);
 	}
 
-	public function find_by_array($table, $search_array, $result_fields){
+	public function find_by_array($table, $search_array, $result_fields, $key_as_index){
 		global $mysqli;
 
 		$query = self::generate_query_string($table, $search_array, $result_fields);
 
 		$result = $mysqli->query($query);
+		$result_arr = $result->fetch_all(MYSQLI_ASSOC);
 
 		if(!$result){
 			throw new Exception("Query '".$query."' failed!");
 		}
 
-		return $result->fetch_all(MYSQLI_ASSOC);
+		//If the caller choose to have the primary key as index in the result array,
+		//we need to create and populate a new array and assign this to the original array
+		if($key_as_index){
+			$temp_arr = array();
+
+			$table_meta = self::load_table_meta($table);
+			$primary_key_field = self::find_primary_key($table_meta)["Field"];
+
+			for($i = 0; $i < sizeof($result_arr); $i++){
+				$temp_arr[$result_arr[$i][$primary_key_field]] = $result_arr[$i];
+			}
+
+			$result_arr = $temp_arr;
+		}
+
+		return $result_arr;
 	}
 
 	public function load_table_meta($table){
@@ -74,7 +99,11 @@ class DBEZModel implements Model{
 			return "string";
 		} else if (strpos($field_meta["Type"], "int") === 0){
 			return "integer";
-		} else if (strpos($field_meta["Type"], "tinyint") === 0){
+		} else if (strpos($field_meta["Type"], "bigint") === 0){
+			return "integer";
+		} else if (strpos($field_meta["Type"], "tinyint(1)") === 0){
+			return "boolean";
+		} else if (strpos($field_meta["Type"], "bit") === 0){
 			return "boolean";
 		} else if (strpos($field_meta["Type"], "enum") === 0){
 			return "string";
@@ -106,19 +135,7 @@ class DBEZModel implements Model{
 	public function generate_query_string($table, $search_array, $result_array){
 		global $mysqli;
 
-		$query_str = "SELECT";
-
-		//add all requested fields to query
-		$is_first = true;
-		foreach ($result_array as $result_entry){
-
-			//on every entry but the first, add a semicolon
-			$is_first ? $is_first = false : $query_str .= ",";
-
-			$query_str .= " ".$result_entry;
-		}
-
-		$query_str .= " FROM ".$table;
+		$query_str = "SELECT ".implode(", ", $result_array)." FROM ".$table;
 
 		if(sizeof($search_array) > 0){
 

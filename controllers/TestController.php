@@ -9,7 +9,8 @@ class TestController extends Controller{
 
 		$locale->load("en-us");
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$logged_in_user = $auth->get_current_user();
 		if($logged_in_user){
 			$login_name = $logged_in_user["username"];
@@ -38,7 +39,8 @@ class TestController extends Controller{
 
 		$locale->load("en-us");
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$chat = $this->model("Chat");
 		$user = $auth->get_current_user();
 
