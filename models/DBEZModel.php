@@ -76,6 +76,8 @@ class DBEZModel implements Model{
 			return "integer";
 		} else if (strpos($field_meta["Type"], "tinyint") === 0){
 			return "boolean";
+		} else if (strpos($field_meta["Type"], "enum") === 0){
+			return "string";
 		} else {
 			throw new Exception("Failed to find type of field: ".$field_meta["Type"]);
 		}
@@ -118,33 +120,35 @@ class DBEZModel implements Model{
 
 		$query_str .= " FROM ".$table;
 
-		$query_str .= " WHERE";
+		if(sizeof($search_array) > 0){
 
-		$table_meta = self::load_table_meta($table);
+			$query_str .= " WHERE";
 
-		$is_first = true;
-		foreach($search_array as $search_entry_key => $search_entry_value){
-			$field_meta = self::get_field_meta($table_meta, $search_entry_key);
-			$field_type = self::get_field_type($field_meta);
+			$table_meta = self::load_table_meta($table);
 
-			if(gettype($search_entry_value) != $field_type){
-				throw new Exception("Type mismatch! ".$field_type." required but ".gettype($search_entry_value)." given!");
+			$is_first = true;
+			foreach($search_array as $search_entry_key => $search_entry_value){
+				$field_meta = self::get_field_meta($table_meta, $search_entry_key);
+				$field_type = self::get_field_type($field_meta);
+
+				if(gettype($search_entry_value) != $field_type){
+					throw new Exception("Type mismatch! ".$field_type." required but ".gettype($search_entry_value)." given!");
+				}
+
+				//on every entry but the first, add a semicolon
+				$is_first ? $is_first = false : $query_str .= " AND";
+
+				$query_str .= " ".$search_entry_key." = ";
+
+				if($field_type == "string")
+					$query_str .= '"';
+
+				$query_str .= $mysqli->real_escape_string($search_entry_value);
+
+				if($field_type == "string")
+					$query_str .= '"';
 			}
-
-			//on every entry but the first, add a semicolon
-			$is_first ? $is_first = false : $query_str .= " AND";
-
-			$query_str .= " ".$search_entry_key." = ";
-
-			if($field_type == "string")
-				$query_str .= '"';
-
-			$query_str .= $mysqli->real_escape_string($search_entry_value);
-
-			if($field_type == "string")
-				$query_str .= '"';
-		}
-
+		}	
 		return $query_str;
 	}
 }

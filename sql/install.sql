@@ -108,3 +108,11 @@ CREATE TABLE user_tag (
 	tag_id int NOT NULL,
 	PRIMARY KEY(user_tag_id)
 );
+
+DROP TABLE IF EXISTS project_fav;
+CREATE TABLE project_fav (
+	project_fav_id int NOT NULL AUTO_INCREMENT,
+	project_id int NOT NULL,
+	user_id int NOT NULL,
+	PRIMARY KEY(project_fav_id)
+);
