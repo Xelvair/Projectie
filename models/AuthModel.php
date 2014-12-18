@@ -211,16 +211,16 @@ class AuthModel implements Model{
 	}
 
 	public function get_user($user_id){
-		$result = $this->dbez->find("user", ["user_id" => $user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "is_admin"])[0];
+		$result = $this->dbez->find("user", ["user_id" => (int)$user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "is_admin"])[0];
 
 		//fixing compatibility issue with lots of stuff
 		$result["id"] = $result["user_id"];
 
 		$result += array(
-			"created_projects" => self::get_created_projects($user_id),
-			"project_participations" => self::get_user_participations($user_id),
-			"chat_participations" => self::get_chat_participations($user_id),
-			"tags" => self::get_tags($user_id)
+			"created_projects" => self::get_created_projects((int)$user_id),
+			"project_participations" => self::get_user_participations((int)$user_id),
+			"chat_participations" => self::get_chat_participations((int)$user_id),
+			"tags" => self::get_tags((int)$user_id)
 		);
 
 		write_log(Logger::DEBUG, print_r($result, true));
