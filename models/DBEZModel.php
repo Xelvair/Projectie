@@ -43,7 +43,7 @@ class DBEZModel implements Model{
 		return $mysqli->insert_id;
 	}
 
-	public function find($table, $search, $result_format, $flags){
+	public function find($table, $search, $result_format, $flags = 0){
 		if(!$table){
 			throw new Exception("Invalid parameter sent to DBEZ::find()!");
 		}
@@ -65,7 +65,7 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_by_id($table, $search_id, $result_format, $flags){
+	public function find_by_id($table, $search_id, $result_format, $flags = 0){
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
@@ -78,7 +78,7 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_by_array($table, $search_array, $result_format, $flags){
+	public function find_by_array($table, $search_array, $result_format, $flags = 0){
 		global $mysqli;
 
 		$query = self::generate_select_query_string($table, $search_array, $result_format);
