@@ -185,13 +185,13 @@ class ProjectModel implements Model{
 
 		$result = $this->dbez->find("project_participation_request", ["project_participation_request_id" => $participation_req_id], ["project_id", "user_id", "request_type"]);
 
-		extract($result[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
-
 		//Check if participation request exists
-		if(!$query_check_participation->fetch()){
+		if(!$result){
 			write_log(Logger::WARNING, "Tried to accept non-existent participation request!".callinfo());
 			return array("ERROR" => "ERR_PARTICIPATION_REQUEST_NONEXISTENT");
 		}
+
+		extract($result[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
 
 		//Determine who originally sent requesst
 		if($res_request_type == "USER_TO_PROJECT"){
@@ -232,39 +232,34 @@ class ProjectModel implements Model{
 	}
 
 	public function create_participation($participation_req_id){
-		global $mysqli;
+		$result = $this->dbez->find("project_participation_request", $participation_req_id, ["project_id", "user_id"]);
 
-		$stmt_get_participation_req = $mysqli->prepare("SELECT project_id, user_id FROM project_participation_request WHERE project_participation_request_id = ?");
-		$stmt_get_participation_req->bind_param("i", $participation_req_id);
-		$stmt_get_participation_req->execute();
-		$stmt_get_participation_req->store_result();
-		$stmt_get_participation_req->bind_result($res_project_id, $res_user_id);
-
-		if(!$stmt_get_participation_req->fetch()){
-			$stmt_get_participation_req->close();
+		if(!$result){
 			write_log(Logger::ERROR, "Participation request #".$participation_req_id."doesn't exist!");
 			return array("ERROR" => "ERR_NO_SUCH_PARTICIPATION_REQUEST");
 		}
 
+		extract($result, EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
+
 		if(self::exists_participation($res_project_id, $res_user_id)){
-			$stmt_get_participation_req->close();
 			write_log(Logger::ERROR, "User #".$res_user_id." is already participating in project #".$res_project_id."!".callinfo());
 			return array("ERROR" => "ERR_PARTICIPATION_ALREADY_EXISTS");
 		}
-
-		$stmt_get_participation_req->close();
 
 		//Remove entry in participation request table, since we're going to create the real deal now
 		$stmt_remove_participation_req = $mysqli->prepare("DELETE FROM project_participation_request WHERE project_participation_request_id = ?");
 		$stmt_remove_participation_req->bind_param("i", $participation_req_id);
 		$stmt_remove_participation_req->execute();
 
-		$stmt_create_participation = $mysqli->prepare("
-			INSERT INTO project_participation (project_id, user_id, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants)
-			VALUES(?, ?, false, false, false, false, false)
-		");
-		$stmt_create_participation->bind_param("ii", $res_project_id, $res_user_id);
-		$stmt_create_participation->execute();
+		$this->dbez->insert("project_participation", [
+			"project_id" => $res_project_id,
+			"user_id" => $res_user_id,
+			"can_delete" => 0,
+			"can_edit" => 0,
+			"can_communicate" => 0,
+			"can_add_participants" => 0,
+			"can_remove_participants" => 0
+		]);
 	}
 
 	public function get_all_projects(){
@@ -280,8 +275,6 @@ class ProjectModel implements Model{
 	}
 
 	public function tag($tag_model, $project_id, $tag){
-		global $mysqli;
-
 		if(!self::exists($project_id)){
 			return array("ERROR" => "ERR_PROJECT_NONEXISTENT");
 		}
