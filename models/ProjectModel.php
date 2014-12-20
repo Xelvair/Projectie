@@ -69,7 +69,7 @@ class ProjectModel implements Model{
 			"project_participation", 
 			["project_id" => $project_id], 
 			["project_participation_id", "user_id", "can_delete", "can_edit", "can_communicate", "can_add_participants", "can_remove_participants"],
-			true
+			DBEZ_KEY_AS_INDEX
 		);
 	}
 
@@ -183,11 +183,9 @@ class ProjectModel implements Model{
 	public function accept_participation($participation_req_id, $acceptor_id){
 		global $mysqli;
 
-		$query_check_participation = $mysqli->prepare("SELECT project_id, user_id, request_type FROM project_participation_request WHERE project_participation_request_id = ?");
-		$query_check_participation->bind_param("i", $participation_req_id);
-		$query_check_participation->execute();
-		$query_check_participation->store_result();
-		$query_check_participation->bind_result($res_project_id, $res_user_id, $res_request_type);
+		$result = $this->dbez->find("project_participation_request", ["project_participation_request_id" => $participation_req_id], ["project_id", "user_id", "request_type"]);
+
+		extract($result[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
 
 		//Check if participation request exists
 		if(!$query_check_participation->fetch()){
@@ -213,34 +211,24 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_CORRUPT_DB_ENTRY");
 		}
 
-		$query_check_participation->close();
-
 		return array();
 
 	}
 
 	public function user_has_right($project_id, $user_id, $right){
-		global $mysqli;
+		$result = $this->dbez->find("project_participation", ["project_id" => $project_id, "user_id" => $user_id], "*");
 
-		$stmt_get_rights = $mysqli->prepare("SELECT * FROM project_participation WHERE project_id = ? AND user_id = ?");
-		$stmt_get_rights->bind_param("ii", $project_id, $user_id);
-		$stmt_get_rights->execute();
-
-		$result = $stmt_get_rights->get_result();
-
-		if($result->num_rows <= 0){
+		if(!$result){
 			return false;
 		}
 
-		$row = $result->fetch_all(MYSQLI_ASSOC)[0];
-
-		$stmt_get_rights->close();
+		$row = $result[0];
 
 		if(isset($row["can_".$right])){
 			return (boolean)$row["can_".$right];
+		} else {
+			throw new Exception("No entry found for 'can_".$right."' in database!");
 		}
-
-		return false;
 	}
 
 	public function create_participation($participation_req_id){

@@ -17,6 +17,8 @@
 
 require_once("../core/Model.php");
 
+define("DBEZ_KEY_AS_INDEX", 1 << 0);
+
 class DBEZModel implements Model{
 
 	public function insert($table, $data){
@@ -41,7 +43,7 @@ class DBEZModel implements Model{
 		return $mysqli->insert_id;
 	}
 
-	public function find($table, $search, $result_format, $key_as_index = false){
+	public function find($table, $search, $result_format, $flags){
 		if(!$table){
 			throw new Exception("Invalid parameter sent to DBEZ::find()!");
 		}
@@ -52,10 +54,10 @@ class DBEZModel implements Model{
 
 		switch(gettype($search)){
 			case "integer":
-				return self::find_by_id($table, $search, $result_format, $key_as_index);
+				return self::find_by_id($table, $search, $result_format, $flags);
 				break;
 			case "array":
-				return self::find_by_array($table, $search, $result_format, $key_as_index);
+				return self::find_by_array($table, $search, $result_format, $flags);
 				break;
 			default:
 				throw new Exception("Invalid parameter sent to DBEZ::find()!");
@@ -63,11 +65,11 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_by_id($table, $search_id, $result_format, $key_as_index){
+	public function find_by_id($table, $search_id, $result_format, $flags){
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
-		$result = self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_format, $key_as_index);
+		$result = self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_format, $flags);
 
 		if(empty($result)){
 			return array();
@@ -76,7 +78,7 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_by_array($table, $search_array, $result_format, $key_as_index){
+	public function find_by_array($table, $search_array, $result_format, $flags){
 		global $mysqli;
 
 		$query = self::generate_select_query_string($table, $search_array, $result_format);
@@ -92,7 +94,7 @@ class DBEZModel implements Model{
 		$table_meta = self::load_table_meta($table);
 		//If the caller choose to have the primary key as index in the result array,
 		//we need to create and populate a new array and assign this to the original array
-		if($key_as_index){
+		if($flags & DBEZ_KEY_AS_INDEX){
 			$temp_arr = array();
 
 			$primary_key_field = self::find_primary_key($table_meta)["Field"];
