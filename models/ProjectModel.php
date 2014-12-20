@@ -4,6 +4,12 @@ require_once("../core/Debug.php");
 require_once("../core/Model.php");
 
 class ProjectModel implements Model{
+	private $dbez = null;
+
+	public function __construct(DBEZModel $dbez){
+		$this->dbez = $dbez;
+	}
+
 	public function create($creator_id, $info){
 		// $info PARAMETERS
 		// [title]: Title of the Project
@@ -23,97 +29,65 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$stmt_create_proj = $mysqli->prepare("INSERT INTO project (creator_id, create_time, title, subtitle, description, public_chat_id, private_chat_id, active) VALUES (?, ?, ?, ?, ?, ?, ?, true)");
-		$stmt_create_proj->bind_param("iisssii", $creator_id, time(), $info["title"], $info["subtitle"], $info["description"], $info["public_chat_id"], $info["private_chat_id"]);
+		$project_id = $this->dbez->insert("project", [
+			"creator_id" => $creator_id,
+			"create_time" => time(),
+			"title" => $info["title"],
+			"subtitle" => $info["subtitle"],
+			"description" => $info["description"],
+			"public_chat_id" => $info["public_chat_id"],
+			"private_chat_id" => $info["private_chat_id"],
+			"active" => 1
+		]);
 
-		//If we failed, exit
-		if(!$stmt_create_proj->execute()){
+		if(!$project_id){
 			write_log(Logger::ERROR, "Creation of project '".$info["title"]."' failed, query error!");
 			return array("ERROR" => "ERR_DB_INSERT_FAILED");
 		}
 
-		//Save project ID for participation entry
-		$project_id = $mysqli->insert_id;
-
-		$stmt_create_proj->free_result();
-
 		//If successful, create the participation entry for the creator
-		$stmt_create_participation = $mysqli->prepare("
-			INSERT INTO project_participation (project_id, user_id, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants)
-			VALUES(?, ?, true, true, true, true, true)
-		");
-		$stmt_create_participation->bind_param("ii", $project_id, $creator_id);
-		if($stmt_create_participation->execute()){
-			return array();
-		} else {
-			return array("ERROR" => "ERR_DB_INSERT_FAILED");
-		}
+		$project_participation_id = $this->dbez->insert("project_participation", [
+			"project_id" => $project_id,
+			"user_id" => $creator_id,
+			"can_delete" => 0,
+			"can_edit" => 0,
+			"can_communicate" => 0,
+			"can_add_participants" => 0,
+			"can_remove_participants" => 0
+		]);
 
+		if(!$project_participation_id){
+			write_log(Logger::ERROR, "Creation of project participation for project'".$info["title"]."' and user #".$creator_id." failed, query error!");
+			return array("ERROR" => "ERR_DB_INSERT_FAILED");
+		} else {
+			return array();
+		}
 	}
 
 	public function get_participators($project_id){
-		global $mysqli;
-
-		$stmt_get_participators = $mysqli->prepare("
-			SELECT 
-				project_participation_id,
-				user_id, 
-				can_delete, 
-				can_edit, 
-				can_communicate, 
-				can_add_participants, 
-				can_remove_participants
-			FROM project_participation 
-			WHERE project_id = ?");
-		$stmt_get_participators->bind_param("i", $project_id);
-		$stmt_get_participators->execute();
-
-		$result = $stmt_get_participators->get_result();
-
-		$participations = array();
-		while($row = $result->fetch_assoc()){
-			$id = $row["project_participation_id"];
-			unset($row["project_participation_id"]);
-			$participations[$id] = $row;
-		}
-
-		return $participations;
+		return $this->dbez->find(
+			"project_participation", 
+			["project_id" => $project_id], 
+			["project_participation_id", "user_id", "can_delete", "can_edit", "can_communicate", "can_add_participants", "can_remove_participants"],
+			true
+		);
 	}
 
 	public function get($id){
-		global $mysqli;
+		$project = $this->dbez->find("project", $id, ["project_id", "creator_id", "create_time", "title", "subtitle", "description", "public_chat_id", "private_chat_id"]);
 
-		$stmt = $mysqli->prepare("SELECT project_id, creator_id, create_time, title, subtitle, description, public_chat_id, private_chat_Id FROM project WHERE project_id = ?");
-		$stmt->bind_param("i", $id);
-		$stmt->execute();
-		$result = $stmt->get_result();
-
-		if($result->num_rows <= 0){
+		if(!$project){
 			write_log(Logger::WARNING, "Failed to retrieve project #".$id." from databaase!");
 			return array("ERROR" => "ERR_PROJECT_NONEXISTENT");
 		}
 
-		$result_arr = $result->fetch_assoc();
+		$project["participators"] = self::get_participators($id);
 
-		$result_arr["participators"] = self::get_participators($id);
-
-		return $result_arr;
-
+		return $project;
 	}
 
 	public function exists($project_id){
-		global $mysqli;
-
-		$stmt_check_project = $mysqli->prepare("SELECT project_id FROM project WHERE project_id = ?");
-		$stmt_check_project->bind_param("i", $project_id);
-		$stmt_check_project->execute();
-		$stmt_check_project->store_result();
-
-		$result = $stmt_check_project->num_rows;
-
-		$stmt_check_project->close();
-
-		return ($result > 0);
+		return !!$this->dbez->find("project", $project_id, ["project_id"]);
 	}
 
 	public function set($creator_id, $id, $info){
@@ -180,13 +154,14 @@ class ProjectModel implements Model{
 
 		$recruitment_chat = $chat_obj->create_private(0, $recruitment_chat_title);
 
-		$query_create_request = $mysqli->prepare("
-			INSERT INTO project_participation_request (project_id, user_id, request_type, chat_id)
-			VALUES (?, ?, ?, ?)
-		");
+		$project_participation_id = $this->dbez->insert("project_participation_request", [
+			"project_id" => $project_id,
+			"user_id" => $user_id,
+			"request_type" => $request_type,
+			"chat_id" => $recruitment_chat["chat_id"]
+		]);
 
-		$query_create_request->bind_param("iisi", $project_id, $user_id, $request_type, $recruitment_chat["chat_id"]);
-		if(!$query_create_request->execute()){
+		if(!$project_participation_id){
 			write_log(Logger::DEBUG, $project_id." ".$user_id." ".$request_type." ".print_r($recruitment_chat, true));
 			return array("ERROR" => "ERR_DB_INSERT_FAILED");
 		}
@@ -305,39 +280,15 @@ class ProjectModel implements Model{
 	}
 
 	public function get_all_projects(){
-		global $mysqli;
-
-		$result = $mysqli->query("SELECT * FROM project");
-		return $result->fetch_all(MYSQLI_ASSOC);
+		return $this->dbez->find("project", [], "*");
 	}
 
 	public function exists_participation_request($project_id, $user_id){
-		global $mysqli;
-
-		//Check whether this request already exists
-		$query_check_req_existence = $mysqli->prepare("SELECT project_participation_request_id FROM project_participation_request WHERE project_id = ? AND user_id = ?");
-		$query_check_req_existence->bind_param("ii", $project_id, $user_id);
-		$query_check_req_existence->execute();
-
-		$result = $query_check_req_existence->fetch() ? true : false;
-
-		$query_check_req_existence->close();
-
-		return $result;
+		return !!$this->dbez->find("project_participation_request", ["project_id" => $project_id, "user_id" => $user_id], ["project_participation_request_id"]);
 	}
 
 	public function exists_participation($project_id, $user_id){
-		global $mysqli;
-
-		$query_check_participation = $mysqli->prepare("SELECT project_participation_id FROM project_participation WHERE project_id = ? and user_id = ?");
-		$query_check_participation->bind_param("ii", $project_id, $user_id);
-		$query_check_participation->execute();
-
-		$result = $query_check_participation->fetch() ? true : false;
-
-		$query_check_participation->close();
-
-		return $result;
+		return !!$this->dbez->find("project_participation", ["project_id" => $project_id, "user_id" => $user_id], ["project_participation_id"]);
 	}
 
 	public function tag($tag_model, $project_id, $tag){
@@ -364,9 +315,7 @@ class ProjectModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		$query_tag_project = $mysqli->prepare("INSERT INTO project_tag (project_id, tag_id) VALUES (?, ?)");
-		$query_tag_project->bind_param("ii", $project_id, $tag_id);
-		$query_tag_project->execute();
+		$this->dbez->insert("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id]);
 	
 		return array();
 	}
@@ -386,16 +335,7 @@ class ProjectModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		$query_check_tag = $mysqli->prepare("SELECT project_tag_id FROM project_tag WHERE project_id = ? AND tag_id = ?");
-		$query_check_tag->bind_param("ii", $project_id, $tag_id);
-		$query_check_tag->execute();
-		$query_check_tag->store_result();
-
-		$result = $query_check_tag->num_rows;
-
-		$query_check_tag->close();
-
-		return ($result > 0);
+		return !!$this->dbez->find("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id], ["project_tag_id"]);
 	}
 
 	public function untag($tag_model, $project_id, $tag){

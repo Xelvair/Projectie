@@ -38,24 +38,24 @@ class DBEZModel implements Model{
 			throw new Exception("Query '".$query."' failed!");
 		}
 
-		return true;
+		return $mysqli->insert_id;
 	}
 
-	public function find($table, $search, $result_fields, $key_as_index = false){
-		if(empty($table)){
+	public function find($table, $search, $result_format, $key_as_index = false){
+		if(!$table){
 			throw new Exception("Invalid parameter sent to DBEZ::find()!");
 		}
 
-		if(empty($result_fields)){
+		if(!$result_format){
 			throw new Exception("Invalid parameter sent to DBEZ::find()!");
 		}
 
 		switch(gettype($search)){
 			case "integer":
-				return self::find_by_id($table, $search, $result_fields, $key_as_index);
+				return self::find_by_id($table, $search, $result_format, $key_as_index);
 				break;
 			case "array":
-				return self::find_by_array($table, $search, $result_fields, $key_as_index);
+				return self::find_by_array($table, $search, $result_format, $key_as_index);
 				break;
 			default:
 				throw new Exception("Invalid parameter sent to DBEZ::find()!");
@@ -63,11 +63,11 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_by_id($table, $search_id, $result_fields, $key_as_index){
+	public function find_by_id($table, $search_id, $result_format, $key_as_index){
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
-		$result = self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_fields, $key_as_index);
+		$result = self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_format, $key_as_index);
 
 		if(empty($result)){
 			return array();
@@ -76,10 +76,10 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_by_array($table, $search_array, $result_fields, $key_as_index){
+	public function find_by_array($table, $search_array, $result_format, $key_as_index){
 		global $mysqli;
 
-		$query = self::generate_select_query_string($table, $search_array, $result_fields);
+		$query = self::generate_select_query_string($table, $search_array, $result_format);
 
 		$result = $mysqli->query($query);
 		$result_arr = $result->fetch_all(MYSQLI_ASSOC);
@@ -128,11 +128,13 @@ class DBEZModel implements Model{
 	public function get_field_type($field_meta){
 		if(strpos($field_meta["Type"], "varchar") === 0){
 			return "string";
+		} else if (strpos($field_meta["Type"], "text") === 0){
+			return "string";
 		} else if (strpos($field_meta["Type"], "int") === 0){
 			return "integer";
 		} else if (strpos($field_meta["Type"], "bigint") === 0){
 			return "integer";
-		} else if (strpos($field_meta["Type"], "tinyint(1)") === 0){
+		} else if (strpos($field_meta["Type"], "tinyint") === 0){
 			return "integer";
 		} else if (strpos($field_meta["Type"], "bit") === 0){
 			return "boolean";
@@ -194,10 +196,17 @@ class DBEZModel implements Model{
 		throw new Exception("Field not found!");
 	}
 
-	public function generate_select_query_string($table, $search_array, $result_array){
+	public function generate_select_query_string($table, $search_array, $result_format){
 		global $mysqli;
 
-		$query_str = "SELECT ".implode(", ", $result_array)." FROM ".$table;
+		if(gettype($result_format) == "array"){
+			$query_str = "SELECT ".implode(", ", $result_format)." FROM ".$table;
+		} else if (gettype($result_format) == "string" && $result_format == "*"){
+			$query_str = "SELECT * FROM ".$table;
+		} else {
+			throw new Exception("Parameter $result_format is of invalid type".gettype($result_format)."!");
+		}
+
 
 		if(sizeof($search_array) > 0){
 

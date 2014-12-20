@@ -30,7 +30,7 @@ class AuthModel implements Model{
 
 	}
 
-	public function register($email, $username, $lang, $password /*blahblah*/){ 
+	public function register($email, $username, $lang, $password){ 
 		global $mysqli;
 
 		//All kinds of checks on the parameters
@@ -94,7 +94,7 @@ class AuthModel implements Model{
 
 		$result = $this->dbez->find("user", ["email" => $email, "active" => 1], ["user_id", "password_hash", "password_salt"]);
 
-		if(empty($result)){
+		if(!$result){
 			write_log(Logger::WARNING, "Failed to login, email '".$email."' not found!");
 			return array("ERROR" => "ERR_USER_NOT_FOUND");
 		}
@@ -133,17 +133,13 @@ class AuthModel implements Model{
 	public function email_exists($email){
 		global $mysqli;
 
-		$result = $this->dbez->find("user", ["email" => $email, "active" => 1], ["user_id"]);
-
-		return !empty($result);
+		return !!$this->dbez->find("user", ["email" => $email, "active" => 1], ["user_id"]);
 	}
 
 	public function username_exists($username){
 		global $mysqli;
 
-		$result = $this->dbez->find("user", ["username" => $username, "active" => 1], ["user_id"]);
-
-		return !empty($result);
+		return !!$this->dbez->find("user", ["username" => $username, "active" => 1], ["user_id"]);
 	}
 
 	public function get_current_user(){
@@ -160,7 +156,7 @@ class AuthModel implements Model{
 	}
 
 	public function get_created_projects($user_id){
-		return $this->dbez->find("project", ["creator_id" => $user_id, "active" => 1], ["project_id", "create_time", "title", "subtitle"], true);
+		return $this->dbez->find("project", ["creator_id" => (int)$user_id, "active" => 1], ["project_id", "create_time", "title", "subtitle"], true);
 	}
 
 	public function get_user_participations($user_id){
@@ -201,13 +197,11 @@ class AuthModel implements Model{
 	}	
 
 	public function get_chat_participations($user_id){
-		return $this->dbez->find("chat_participation", ["participant_id" => $user_id], ["chat_participation_id", "chat_id"], true);
+		return $this->dbez->find("chat_participation", ["participant_id" => (int)$user_id], ["chat_participation_id", "chat_id"], true);
 	}
 
 	public function exists($user_id){
-		$result = $this->dbez->find("user", $user_id, ["user_id"]);
-
-		return !empty($result);
+		return !!$this->dbez->find("user", $user_id, ["user_id"]);
 	}
 
 	public function get_user($user_id){
@@ -217,10 +211,10 @@ class AuthModel implements Model{
 		$result["id"] = $result["user_id"];
 
 		$result += array(
-			"created_projects" => self::get_created_projects((int)$user_id),
-			"project_participations" => self::get_user_participations((int)$user_id),
-			"chat_participations" => self::get_chat_participations((int)$user_id),
-			"tags" => self::get_tags((int)$user_id)
+			"created_projects" => self::get_created_projects($user_id),
+			"project_participations" => self::get_user_participations($user_id),
+			"chat_participations" => self::get_chat_participations($user_id),
+			"tags" => self::get_tags($user_id)
 		);
 
 		write_log(Logger::DEBUG, print_r($result, true));
@@ -231,30 +225,24 @@ class AuthModel implements Model{
 	public function tag($tag_model, $user_id, $tag){
 		global $mysqli;
 
-		if(!self::exists($user_id)){
+		if(!self::exists($user_id))
 			return array("ERROR" => "ERR_USER_NONEXISTENT");
-		}
 
-		if(gettype($tag) != "integer" && gettype($tag) != "string"){
+		if(gettype($tag) != "integer" && gettype($tag) != "string")
 			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
-		}
 
 		//Get tag from database
 		$tag_entry = $tag_model->request_tag($tag);
 
-		if(sizeof($tag_entry) <= 0){
+		if(sizeof($tag_entry) <= 0)
 			return array("ERROR" => "ERR_TAG_NONEXISTENT");
-		}
 
-		if(self::is_tagged($tag_model, $user_id, $tag)){
+		if(self::is_tagged($tag_model, $user_id, $tag))
 			return array("ERROR" => "ERR_PROJECT_ALREADY_TAGGED");
-		}
 
 		$tag_id = $tag_entry["tag_id"];
 
-		$query_tag_project = $mysqli->prepare("INSERT INTO user_tag (user_id, tag_id) VALUES (?, ?)");
-		$query_tag_project->bind_param("ii", $user_id, $tag_id);
-		$query_tag_project->execute();
+		$this->dbez->insert("user_tag", ["user_id" => $user_id, "tag_id" => $tag_id]);
 	
 		return array();
 	}
@@ -274,9 +262,7 @@ class AuthModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		$result = $this->dbez->find("user_tag", ["user_id" => $user_id, "tag_id" => $tag_id], ["user_tag_id"]);
-
-		return !empty($result);
+		return !!$this->dbez->find("user_tag", ["user_id" => $user_id, "tag_id" => $tag_id], ["user_tag_id"]);
 	}
 
 	public function untag($tag_model, $user_id, $tag){

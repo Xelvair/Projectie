@@ -40,7 +40,7 @@ class AuthController extends Controller{
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
 
-		if(isset($data[0]) && !empty($data[0])){
+		if(isset($data[0]) && !!$data[0]){
 			return json_encode($auth->get_user($data[0]));
 		} else {
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));

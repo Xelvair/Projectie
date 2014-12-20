@@ -3,9 +3,7 @@
 #news_feed
 #project_title
 
-$globale['locale'];
-
-
+global $locale;
 ?>
 
 <script>

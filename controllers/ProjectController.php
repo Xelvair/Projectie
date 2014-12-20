@@ -13,6 +13,7 @@ class ProjectController extends Controller{
 
 		if(isset($_POST["title"]) && isset($_POST["subtitle"]) && isset($_POST["description"])){
 			$chat = $this->model("chat");
+			$project = $this->model("project", $dbez);
 
 			//Create public and private chat for project
 			$public_chat = $chat->create_public(0, $_POST["title"]." Public Chat");
@@ -22,7 +23,6 @@ class ProjectController extends Controller{
 			write_log(Logger::DEBUG, print_r($chat->add_user($private_chat["chat_id"], $logged_in_user["id"]), true));
 
 			//Create the project itself
-			$project = $this->model("project");
 			$create_result = $project->create(
 				$logged_in_user["id"], 
 				array(
@@ -53,7 +53,7 @@ class ProjectController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project");
+		$project = $this->model("Project", $dbez);
 		$chat = $this->model("Chat");
 		$current_user = $auth->get_current_user();
 
@@ -82,7 +82,7 @@ class ProjectController extends Controller{
 	public function accept_participation(){
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project");
+		$project = $this->model("Project", $dbez);
 
 		$current_user = $user->get_current_user();
 
@@ -117,7 +117,7 @@ class ProjectController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project");
+		$project = $this->model("Project", $dbez);
 		$tag = $this->model("Tag");
 
 		$project_id = $_POST["project_id"];
@@ -145,7 +145,7 @@ class ProjectController extends Controller{
 		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		if($user != null){
-			$locale_load_result = $locale->load($user->get_lang());
+			$locale_load_result = $locale->load($user["lang"]);
 
 			if($locale_load_result == false){
 				$locale->load("en-us");
@@ -171,7 +171,7 @@ class ProjectController extends Controller{
 		$login_modal = $this->view("LoginModal", "");
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user->get_name()),
+															"user" => ($user == null ? null : $user["username"]),
 															"login_modal" => $login_modal));
 
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 

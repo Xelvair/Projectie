@@ -23,7 +23,8 @@ class TestController extends Controller{
 	}
 
 	public function project(){
-		$project = $this->model("Project");
+		$dbez = $this->model("dbez");
+		$project = $this->model("Project", $dbez);
 	
 		$project_list = $project->get_all_projects();
 
