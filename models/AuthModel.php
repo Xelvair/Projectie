@@ -15,7 +15,7 @@ class AuthModel implements Model{
 
 			$user = self::get_user($_SESSION["login_user_id"]);
 
-			if(isset($user["ERROR"])){
+			if(!$user){
 				write_log(Logger::WARNING, "Logged out user ".$_SESSION["login_user_id"]." - id doesn't exist in database!");
 				unset($_SESSION["login_user_id"]);
 				return;
@@ -205,21 +205,24 @@ class AuthModel implements Model{
 	}
 
 	public function get_user($user_id){
-		$result = $this->dbez->find("user", ["user_id" => (int)$user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "is_admin"])[0];
+		$result = $this->dbez->find("user", ["user_id" => (int)$user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "is_admin"]);
+
+		if(!$result)
+			return array();
+
+		$user = $result[0];
 
 		//fixing compatibility issue with lots of stuff
-		$result["id"] = $result["user_id"];
+		$user["id"] = $user["user_id"];
 
-		$result += array(
+		$user += array(
 			"created_projects" => self::get_created_projects($user_id),
 			"project_participations" => self::get_user_participations($user_id),
 			"chat_participations" => self::get_chat_participations($user_id),
 			"tags" => self::get_tags($user_id)
 		);
 
-		write_log(Logger::DEBUG, print_r($result, true));
-
-		return $result;
+		return $user;
 	}
 
 	public function tag($tag_model, $user_id, $tag){
