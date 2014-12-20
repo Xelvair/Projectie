@@ -27,42 +27,52 @@ class AuthModel implements Model{
 		} else {
 			write_log(Logger::DEBUG, "Auth not fully constructed - guest visit.");
 		}
+	}
 
+	public function validate_email($email){
+		if(!preg_match("/^[a-zA-Z0-9-.]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}$/", $email)){
+			write_log(Logger::DEBUG, "Tried to register malformed email <".$email.">!");
+			throw new Exception("ERR_INVALID_EMAIL");
+		}
+
+		if(self::email_exists($email)){
+			write_log(Logger::DEBUG, "Tried to register already existing email <".$email.">!");
+			throw new Exception("ERR_EMAIL_ALREADY_EXISTS");
+		}
+	}
+
+	public function validate_username($username){
+		if(!preg_match("/^[a-zA-Z0-9.-]+$/", $username)){
+			write_log(Logger::DEBUG, "Tried to register malformed username '".$username.">!");
+			throw new Exception("ERR_INVALID_USERNAME");
+		}
+
+		if(self::username_exists($username)){
+			write_log(Logger::DEBUG, "Tried to register already existing username '".$username.">!");
+			throw new Exception("ERR_USERNAME_IN_USE");
+		}
+	}
+
+	public function validate_password($password){
+		if(strlen($password) < 7){
+			throw new Exception("ERR_INVALID_PASSWORD");
+		}
+	}
+
+	public function validate_lang($lang){
+		if(!file_exists(abspath_lcl("/locale/".$lang.".locale"))){
+			throw new Exception("ERR_INVALID_LANG");
+		}
 	}
 
 	public function register($email, $username, $lang, $password){ 
-		global $mysqli;
-
-		//All kinds of checks on the parameters
-		if(!preg_match("/^[a-zA-Z0-9-.]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}$/", $email)){
-			return array("ERROR" => "ERR_INVALID_EMAIL");
-		}
-
-		//Check pw length
-		if(strlen($password) < 7){
-			return array("ERROR" => "ERR_INVALID_PASSWORD");
-		}
-
-		//Check if username has no special chars
-		if(!preg_match("/^[a-zA-Z0-9.-]+$/", $username)){
-			return array("ERROR" => "ERR_INVALID_USERNAME");
-		}
-
-		//Check if file for chosen locale exists
-		if(!file_exists(abspath_lcl("/locale/".$lang.".locale"))){
-			return array("ERROR" => "ERR_INVALID_LANG");
-		}
-
-		//Check if email already exists
-		if(self::email_exists($email)){
-			write_log(Logger::DEBUG, "Tried to register already existing email <".$email.">!");
-			return array("ERROR" => "ERR_EMAIL_IN_USE");
-		}
-
-		//Check if username already exists
-		if(self::username_exists($username)){
-			write_log(Logger::DEBUG, "Tried to register already existing username '".$$username.">!");
-			return array("ERROR" => "ERR_USERNAME_IN_USE");
+		try {
+			self::validate_email($email);
+			self::validate_username($username);
+			self::validate_lang($lang);
+			self::validate_password($password);
+		} catch (Exception $e){
+			return array("ERROR" => $e->getMessage());
 		}
 
 		$password_salt = substr(md5(time()), 0, 8);
@@ -89,6 +99,10 @@ class AuthModel implements Model{
 		}
 	}
 
+	public function password_check($password, $hash, $salt){
+		return ($hash == md5($password.$salt));
+	}
+
 	public function login($email, $password){
 		global $mysqli;
 
@@ -101,24 +115,20 @@ class AuthModel implements Model{
 
 		extract($result[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
 
-		//Check the password
-		$password_hash = md5($password.$res_password_salt);
-		if($password_hash != $res_password_hash){
-			//If login failed, unset all values and exit
+		if(!self::password_check($password, $res_password_hash, $res_password_salt)){
 			$this->logout();
 
 			write_log(Logger::DEBUG, "Failed login: incorrect password.");
 
 			return array("ERROR" => "ERR_INCORRECT_PASSWORD");
-		} else {
-			//If login succeeded, write to the session and set values
-			$_SESSION["login_user_id"] = $res_user_id;
-			$loggedInUser = self::get_user($res_user_id);
-
-			write_log(Logger::DEBUG, "User #".$res_user_id." logged in.");
-
-			return array();
 		}
+
+		$_SESSION["login_user_id"] = $res_user_id;
+		$loggedInUser = self::get_user($res_user_id);
+
+		write_log(Logger::DEBUG, "User #".$res_user_id." logged in.");
+
+		return array();
 	}
 
 	public function logout(){
@@ -131,14 +141,10 @@ class AuthModel implements Model{
 	}
 
 	public function email_exists($email){
-		global $mysqli;
-
 		return !!$this->dbez->find("user", ["email" => $email, "active" => 1], ["user_id"]);
 	}
 
 	public function username_exists($username){
-		global $mysqli;
-
 		return !!$this->dbez->find("user", ["username" => $username, "active" => 1], ["user_id"]);
 	}
 
@@ -187,7 +193,6 @@ class AuthModel implements Model{
 
 		while($row = $result->fetch_assoc()){
 			$id = $row["project_id"];
-			unset($row["project_id"]);
 			$user_participations[$id] = $row;
 		}
 
@@ -251,8 +256,6 @@ class AuthModel implements Model{
 	}
 
 	public function is_tagged($tag_model, $user_id, $tag){
-		global $mysqli;
-
 		if(gettype($tag) != "integer" && gettype($tag) != "string"){
 			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
 		}

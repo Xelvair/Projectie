@@ -17,7 +17,6 @@ class ProjectModel implements Model{
 		// [description]: Description of the Project
 		// [public_chat_id]: ID of public chat
 		// [private_chat_id]: ID of private chat 
-		global $mysqli;
 
 		if(	$info["title"] == "" ||
 			$info["subtitle"] == "" ||
@@ -59,9 +58,9 @@ class ProjectModel implements Model{
 		if(!$project_participation_id){
 			write_log(Logger::ERROR, "Creation of project participation for project'".$info["title"]."' and user #".$creator_id." failed, query error!");
 			return array("ERROR" => "ERR_DB_INSERT_FAILED");
-		} else {
-			return array();
 		}
+		
+		return array();
 	}
 
 	public function get_participators($project_id){
@@ -247,9 +246,7 @@ class ProjectModel implements Model{
 		}
 
 		//Remove entry in participation request table, since we're going to create the real deal now
-		$stmt_remove_participation_req = $mysqli->prepare("DELETE FROM project_participation_request WHERE project_participation_request_id = ?");
-		$stmt_remove_participation_req->bind_param("i", $participation_req_id);
-		$stmt_remove_participation_req->execute();
+		$this->dbez->delete("project_participation_request", $participation_req_id);
 
 		$this->dbez->insert("project_participation", [
 			"project_id" => $res_project_id,

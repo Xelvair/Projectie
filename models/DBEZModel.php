@@ -24,11 +24,7 @@ class DBEZModel implements Model{
 	public function insert($table, $data){
 		global $mysqli;
 
-		if(empty($table)){
-			throw new Exception("Invalid parameter sent to DBEZ::insert()!");
-		}
-
-		if(empty($data)){
+		if(!$table || !$data){
 			throw new Exception("Invalid parameter sent to DBEZ::insert()!");
 		}
 
@@ -44,11 +40,7 @@ class DBEZModel implements Model{
 	}
 
 	public function find($table, $search, $result_format, $flags = 0){
-		if(!$table){
-			throw new Exception("Invalid parameter sent to DBEZ::find()!");
-		}
-
-		if(!$result_format){
+		if(!$table || !$result_format){
 			throw new Exception("Invalid parameter sent to DBEZ::find()!");
 		}
 
@@ -65,17 +57,29 @@ class DBEZModel implements Model{
 		}
 	}
 
+	public function delete($table, $search){
+		if(!$table || !$search){
+			throw new Exception("Invalid parameter sent to DBEZ::find()!");
+		}
+
+		switch(gettype($search)){
+			case "integer":
+				return self::delete_by_id($table, $search);
+				break;
+			case "array":
+				return self::delete_by_array($table, $search);
+				break;
+			default:
+				throw new Exception("Invalid parameter sent to DBEZ::delete()!");
+				break;
+		}
+	}
+
 	public function find_by_id($table, $search_id, $result_format, $flags = 0){
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
-		$result = self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_format, $flags);
-
-		if(empty($result)){
-			return array();
-		} else {
-			return $result[0];
-		}
+		return self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_format, $flags);
 	}
 
 	public function find_by_array($table, $search_array, $result_format, $flags = 0){
@@ -90,8 +94,8 @@ class DBEZModel implements Model{
 			throw new Exception("Query '".$query."' failed!");
 		}
 
-
 		$table_meta = self::load_table_meta($table);
+		
 		//If the caller choose to have the primary key as index in the result array,
 		//we need to create and populate a new array and assign this to the original array
 		if($flags & DBEZ_KEY_AS_INDEX){
@@ -109,6 +113,31 @@ class DBEZModel implements Model{
 		self::fix_types($result_arr, $table_meta);
 
 		return $result_arr;
+	}
+
+	public function delete_by_id($table, $search_id){
+		$table_meta = self::load_table_meta($table);
+		$primary_key_field = self::find_primary_key($table_meta);
+
+		return self::delete_by_array($table, [$primary_key_field["Field"] => $search_id]);
+	}
+
+	public function delete_by_array($table, $search_array){
+		global $mysqli;
+
+		if(!$table || !$search_array){
+			throw new Exception("Invalid parameter sent to DBEZ::insert()!");
+		}
+
+		$query = self::generate_delete_query_string($table, $search_array);
+
+		$result = $mysqli->query($query);
+
+		if(!$result){
+			throw new Exception("Query '".$query."' failed!");
+		}
+
+		return true;
 	}
 
 	public function load_table_meta($table){
@@ -272,6 +301,41 @@ class DBEZModel implements Model{
 		}
 
 		$query_str .= ")";
+
+		return $query_str;
+	}
+
+	public function generate_delete_query_string($table, $search){
+		global $mysqli;
+
+		$table_meta = self::load_table_meta($table);
+
+		$query_str = "DELETE FROM ".$table;
+
+		$query_str .= " WHERE";
+
+		$is_first = true;
+		foreach($search as $field => $value){
+			$field_meta = self::get_field_meta($table_meta, $field);
+			$field_type = self::get_field_type($field_meta);
+
+			if(gettype($value) != $field_type){
+				throw new Exception("Type mismatch! ".$field_type." required but ".gettype($value)." given for field '".$field_meta["Field"]."'!");
+			}
+
+			$is_first ? $is_first = false : $query_str .= " AND";
+
+			$query_str .= " ".$field." = ";
+
+			if($field_type == "string")
+				$query_str .= '"';
+
+			$query_str .= $mysqli->real_escape_string($value);
+
+			if($field_type == "string")
+				$query_str .= '"';
+
+		}
 
 		return $query_str;
 	}
