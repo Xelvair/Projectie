@@ -70,6 +70,7 @@ class ProjectModel implements Model{
 		}
 
 		$project["participators"] = self::get_participators($id);
+		$project["fav_count"] = self::get_fav_count($id);
 
 		return $project;
 	}
@@ -323,6 +324,45 @@ class ProjectModel implements Model{
 		$query_get_tags->close();
 
 		return $result->fetch_all(MYSQLI_ASSOC);
+	}
+
+	public function favourite($project_id, $user_id){
+		$is_faved_already = !!$this->dbez->find("project_fav", ["project_id" => $project_id, "user_id" => $user_id], ["project_fav_id"]);
+
+		if($is_faved_already)
+			return array("ERROR" => "ERR_PROJECT_ALREADY_FAVED");
+
+		$project = self::get($project_id);
+
+		if(isset($project["ERROR"]))
+			return array("ERROR" => "ERR_PROJECT_NONEXISTENT");
+
+		return !!$this->dbez->insert("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
+	}
+
+	public function unfavourite($project_id, $user_id){
+		return $this->dbez->delete("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
+	}
+
+	public function get_fav_count($project_id){
+		global $mysqli;
+
+		$stmt_fav_count = $mysqli->prepare("
+			SELECT COUNT(project_id) AS fav_count 
+			FROM project_fav 
+			WHERE project_id = ? 
+			GROUP BY project_id"
+		);
+		$stmt_fav_count->bind_param("i", $project_id);
+		$stmt_fav_count->execute();
+		$stmt_fav_count->bind_result($res_fav_count);
+		
+		if(!$stmt_fav_count->fetch())
+			return 0;
+
+		$stmt_fav_count->close();
+
+		return $res_fav_count;
 	}
 
 	public function add_picture($id, $picture_id){}

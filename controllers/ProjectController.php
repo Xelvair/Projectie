@@ -137,6 +137,31 @@ class ProjectController extends Controller{
 	}
 
 	public function untag(){}
+
+	//$_POST["project_id"] : id of the project to fav
+	public function favourite(){
+		if(!filter_var($_POST["project_id"], FILTER_VALIDATE_INT)){
+				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
+		}
+
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+
+		$user = $auth->get_current_user();
+
+		if(!$user)
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+
+		$project_id = (int)$_POST["project_id"];
+
+		return json_encode($project->favourite($project_id, $user["user_id"]));
+	}
+
+	//$_POST["project_id"] : id of the project to unfav
+	public function unfavorite(){
+
+	}
 	
 	public function index(){
 	
