@@ -42,7 +42,7 @@ class TestController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat");
+		$chat = $this->model("Chat", $dbez);
 		$user = $auth->get_current_user();
 
 		$chat_list = array();

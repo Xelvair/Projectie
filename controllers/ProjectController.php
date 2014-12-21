@@ -5,6 +5,8 @@ class ProjectController extends Controller{
 	public function create(){
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
+		$chat = $this->model("Chat", $dbez);
+
 		$logged_in_user = $auth->get_current_user();
 
 		if($logged_in_user == null){
@@ -12,7 +14,6 @@ class ProjectController extends Controller{
 		}
 
 		if(isset($_POST["title"]) && isset($_POST["subtitle"]) && isset($_POST["description"])){
-			$chat = $this->model("chat");
 			$project = $this->model("project", $dbez);
 
 			//Create public and private chat for project
@@ -53,8 +54,9 @@ class ProjectController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
+		$chat = $this->model("Chat", $dbez);
+		
 		$project = $this->model("Project", $dbez);
-		$chat = $this->model("Chat");
 		$current_user = $auth->get_current_user();
 
 		if(!$current_user){

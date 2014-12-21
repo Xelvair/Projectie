@@ -4,36 +4,20 @@ require_once(abspath_lcl("/core/Model.php"));
 
 class ChatModel implements Model{
 
-	public function create_public($creator_id, $title = null){
-		global $mysqli;
+	private $dbez;
 
+	public function __construct($dbez){
+		$this->dbez = $dbez;
+	}
+
+	public function create_public($creator_id, $title = null){
 		$title = ($title ? $title : "New Public Chat");
 
-		$stmt_create_public_chat = $mysqli->prepare("INSERT INTO chat (creator_id, title, access) VALUES (?, ?, 'PUBLIC')");
-		$stmt_create_public_chat->bind_param("is", $creator_id, htmlentities($title));
-
-		if(!$stmt_create_public_chat->execute()){
-			write_log(Logger::ERROR, "Failed to create public project chat instance!");
-			return;
-		}
-
-		return self::get_chat($mysqli->insert_id);
+		return $this->dbez->insert("chat", ["creator_id" => $creator_id, "title" => htmlentities($title), "access" => "PUBLIC"], DBEZ_INSRT_RETURN_ROW);
 	}
 
 	public function create_private($creator_id, $title = null){
-		global $mysqli;
-
-		$title = ($title ? $title : "New Private Chat");
-
-		$stmt_create_private_chat = $mysqli->prepare("INSERT INTO chat (creator_id, title, access) VALUES (?, ?, 'PRIVATE')");
-		$stmt_create_private_chat->bind_param("is", $creator_id, htmlentities($title));
-
-		if(!$stmt_create_private_chat->execute()){
-			write_log(Logger::ERROR, "Failed to create private project chat instance!");
-			return;
-		}
-
-		return self::get_chat($mysqli->insert_id);
+		return $this->dbez->insert("chat", ["creator_id" => $creator_id, "title" => htmlentities($title), "access" => "PRIVATE"], DBEZ_INSRT_RETURN_ROW);
 	}
 
 	public function get_chat($chat_id){
@@ -66,94 +50,38 @@ class ChatModel implements Model{
 	}
 
 	public function can_participate($chat_id, $user_id){
-		global $mysqli;
+		$chat = $this->dbez->find("chat", $chat_id, ["access"]);
 
-		//Check if it's a public chat
-		$stmt_check_public = $mysqli->prepare("SELECT access FROM chat WHERE chat_id = ?");
-		$stmt_check_public->bind_param("i", $chat_id);
-		$stmt_check_public->execute();
-
-		$stmt_check_public->bind_result($res_access);
-
-		if(!$stmt_check_public->fetch()){
+		if(!$chat)
 			return false;
-		}
 
 		//If public, return true right away
-		if($res_access == "PUBLIC"){
+		if($chat["access"] == "PUBLIC")
 			return true;
-		}
-
-		$stmt_check_public->close();
 
 		//Else, check participation table
-		$stmt_check_participation = $mysqli->prepare("SELECT chat_participation_id FROM chat_participation WHERE chat_id = ? AND participant_id = ?");
-		$stmt_check_participation->bind_param("ii", $chat_id, $user_id);
-		$stmt_check_participation->execute();
-
-		$got_result = $stmt_check_participation->fetch() != null;
-
-		$stmt_check_participation->close();
-
-		return $got_result;
-
+		return !!$this->dbez->find("chat_participation", ["chat_id" => $chat_id, "participant_id" => $user_id], ["chat_participation_id"]);
 	}
 
 	public function is_creator($chat_id, $user_id){
-		global $mysqli;
+		$chat = $this->dbez->find("chat", $chat_id, ["creator_id"]);
 
-		$stmt_check_creator = $mysqli->prepare("SELECT creator_id FROM chat WHERE chat_id = ?");
-		$stmt_check_creator->bind_param("i", $chat_id);
-		$stmt_check_creator->execute();
-		$result = $stmt_check_creator->get_result();
-
-		if($result->num_rows <= 0){
-			write_log(Logger::ERROR, "Tried to access nonexistent chat!".callinfo());
-			return false;
-		}
-
-		$chat = $result->fetch_assoc();
-
-		return ($chat["creator_id"] == $user_id);
+		return $chat["creator_id"] == $user_id;
 	}
 
 	public function add_user($chat_id, $user_id){
-		global $mysqli;
-
 		if(self::can_participate($chat_id, $user_id)){
 			return array("ERROR" => "ERR_IS_ALREADY_PARTICIPATOR");
 		}
 
-		$stmt = $mysqli->prepare("INSERT INTO chat_participation(chat_id, participant_id) VALUES(?, ?)");
-		$stmt->bind_param("ii", $chat_id, $user_id);
-
-		if(!$stmt->execute()){
-			return array("ERROR" => "ERR_DB_INSERT_FAILED");
-		}
-
-		return true;
+		return !!$this->dbez->insert("chat_participation", ["chat_id" => $chat_id, "participant_id" => $user_id]);
 	}
 
 	public function remove_user($chat_id, $user_id){
-		global $mysqli;
-
-		$stmt = $mysqli->prepare("DELETE FROM chat_participation WHERE chat_id = ? AND participant_id = ?");
-		$stmt->bind_param("ii", $chat_id, $user_id);
-		
-		if(!$stmt->execute()){
-			return array("ERROR" => "ERR_DB_DELETE_FAILED");
-		}
-
-		if($mysqli->affected_rows <= 0){
-			return array("ERROR" => "ERR_USER_DOESNT_EXIST");
-		}
-
-		return true;
+		return !!$this->dbez->delete("chat_participation", ["chat_id" => $chat_id, "user_id" => $user_id]);
 	}
 
 	public function send($sender_id, $chat_session_id, $message){
-		global $mysqli;
-
 		if(!isset($_SESSION["chatsessions"][$chat_session_id])){
 			write_log(Logger::ERROR, "User #".$sender_id." sent message with invalid chatsession #".$chat_session_id."!");
 			return array("ERROR" => "ERR_NO_CHATSESSION");
@@ -166,9 +94,13 @@ class ChatModel implements Model{
 			return;
 		}
 
-		$stmt_send_msg = $mysqli->prepare("INSERT INTO chat_message(chat_id, user_id, chat_session_id, send_time, message) VALUES (?, ?, ?, ?, ?)");
-		$stmt_send_msg->bind_param("iiiis", $chat_id, $sender_id, $chat_session_id, time(), htmlentities($message));
-		return $stmt_send_msg->execute();
+		return $this->dbez->insert("chat_message", [
+			"chat_id" => $chat_id, 
+			"user_id" => $sender_id, 
+			"chat_session_id" => $chat_session_id, 
+			"send_time" => time(), 
+			"message" => htmlentities($message)
+		]);
 	}
 
 	public function get($requester, $chat_id, $count){

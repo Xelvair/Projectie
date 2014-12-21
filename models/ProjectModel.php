@@ -68,7 +68,7 @@ class ProjectModel implements Model{
 			"project_participation", 
 			["project_id" => $project_id], 
 			["project_participation_id", "user_id", "can_delete", "can_edit", "can_communicate", "can_add_participants", "can_remove_participants"],
-			DBEZ_KEY_AS_INDEX
+			DBEZ_SLCT_KEY_AS_INDEX
 		);
 	}
 

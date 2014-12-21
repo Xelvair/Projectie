@@ -8,6 +8,8 @@ class ChatController extends Controller{
 	public function create_private(){
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
+		$chat = $this->model("Chat", $dbez);
+		
 		$user = $auth->get_current_user();
 
 		if(json_decode($_POST["title"]) != null){
@@ -22,8 +24,6 @@ class ChatController extends Controller{
 		//If the user passed a valid title, use that
 		//Else, set to null and let the chat model decide what title to use
 		$title = (isset($_POST["title"]) && !empty($_POST["title"]) && trim($_POST["title"]) != "") ? $_POST["title"] : null; 
-
-		$chat = $this->model("Chat");
 
 		$chat_obj = $chat->create_private($user["id"], $title);
 
@@ -43,6 +43,7 @@ class ChatController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
+		$chat = $this->model("Chat", $dbez);
 
 		$user_to_be_added = $auth->get_user($_POST["user_id"]);
 
@@ -56,10 +57,8 @@ class ChatController extends Controller{
 			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
 		}
 
-		$user_id = $_POST["user_id"];
-		$chat_id = $_POST["chat_id"];
-
-		$chat = $this->model("Chat");
+		$user_id = (int)$_POST["user_id"];
+		$chat_id = (int)$_POST["chat_id"];
 
 		if($chat->is_creator($chat_id, $user["id"])){
 			return json_encode($chat->add_user($chat_id, $user_id));
@@ -80,6 +79,7 @@ class ChatController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
+		$chat = $this->model("Chat", $dbez);
 		
 		$user = $auth->get_current_user();
 
@@ -87,10 +87,8 @@ class ChatController extends Controller{
 			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
 		}
 
-		$user_id = $_POST["user_id"];
-		$chat_id = $_POST["chat_id"];
-
-		$chat = $this->model("Chat");
+		$user_id = (int)$_POST["user_id"];
+		$chat_id = (int)$_POST["chat_id"];
 
 		if($chat->is_creator($chat_id, $user["id"])){
 			return json_encode($chat->remove_user($chat_id, $user_id));
@@ -107,15 +105,15 @@ class ChatController extends Controller{
 			return json_encode(array());
 		}
 
-		$chat = $this->model("Chat");
-
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
+		$chat = $this->model("Chat", $dbez);
+
 		$logged_in_user = $auth->get_current_user();
 
 		$requester_id = $logged_in_user ? $logged_in_user["id"] : null;
 
-		return json_encode($chat->get($requester_id, $data[0], $data[1]));
+		return json_encode($chat->get($requester_id, (int)$data[0], (int)$data[1]));
 	}
 
 	public function get_new($data){
@@ -123,12 +121,12 @@ class ChatController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat");
+		$chat = $this->model("Chat", $dbez);
 
 		$logged_in_user = $auth->get_current_user();
 		$requester_id = $logged_in_user ? $logged_in_user["id"] : null;
 
-		return json_encode($chat->get_new($requester_id, $data[0]));
+		return json_encode($chat->get_new($requester_id, (int)$data[0]));
 	}
 
 	public function send($data){
@@ -139,22 +137,22 @@ class ChatController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat");
+		$chat = $this->model("Chat", $dbez);
 
 		$logged_in_user = $auth->get_current_user();
 
 		$sender_id = $logged_in_user ? $logged_in_user["id"] : null;
-		$chat->send($sender_id, $data[0], $_POST["message"]);
+		$chat->send($sender_id, (int)$data[0], $_POST["message"]);
 	}
 	
 	function index(){
-		
 		global $locale;
 		global $CONFIG;
 
-		$chat = $this->model("Chat");
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
+		$chat = $this->model("Chat", $dbez);
+
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);

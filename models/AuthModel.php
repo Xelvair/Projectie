@@ -162,7 +162,7 @@ class AuthModel implements Model{
 	}
 
 	public function get_created_projects($user_id){
-		return $this->dbez->find("project", ["creator_id" => (int)$user_id, "active" => 1], ["project_id", "create_time", "title", "subtitle"], DBEZ_KEY_AS_INDEX);
+		return $this->dbez->find("project", ["creator_id" => (int)$user_id, "active" => 1], ["project_id", "create_time", "title", "subtitle"], DBEZ_SLCT_KEY_AS_INDEX);
 	}
 
 	public function get_user_participations($user_id){
@@ -202,7 +202,7 @@ class AuthModel implements Model{
 	}	
 
 	public function get_chat_participations($user_id){
-		return $this->dbez->find("chat_participation", ["participant_id" => (int)$user_id], ["chat_participation_id", "chat_id"], DBEZ_KEY_AS_INDEX);
+		return $this->dbez->find("chat_participation", ["participant_id" => (int)$user_id], ["chat_participation_id", "chat_id"], DBEZ_SLCT_KEY_AS_INDEX);
 	}
 
 	public function exists($user_id){
