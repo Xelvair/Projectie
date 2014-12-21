@@ -39,12 +39,6 @@ class ProjectModel implements Model{
 			"active" => 1
 		]);
 
-		if(!$project_id){
-			write_log(Logger::ERROR, "Creation of project '".$info["title"]."' failed, query error!");
-			return array("ERROR" => "ERR_DB_INSERT_FAILED");
-		}
-
-		//If successful, create the participation entry for the creator
 		$project_participation_id = $this->dbez->insert("project_participation", [
 			"project_id" => $project_id,
 			"user_id" => $creator_id,
@@ -54,11 +48,6 @@ class ProjectModel implements Model{
 			"can_add_participants" => 0,
 			"can_remove_participants" => 0
 		]);
-
-		if(!$project_participation_id){
-			write_log(Logger::ERROR, "Creation of project participation for project'".$info["title"]."' and user #".$creator_id." failed, query error!");
-			return array("ERROR" => "ERR_DB_INSERT_FAILED");
-		}
 		
 		return array();
 	}
@@ -111,6 +100,7 @@ class ProjectModel implements Model{
 				
 				if($stmt->execute()){
 					write_log(Logger::ERROR, "Execution of query failed!".callinfo());
+					throw new Exception("Execution of query failed!");
 				}
 			} else {
 				write_log(Logger::WARNING, "Invalid attribute in info structure: '".$attr_name."'!".callinfo());
@@ -299,8 +289,6 @@ class ProjectModel implements Model{
 	}
 
 	public function is_tagged($tag_model, $project_id, $tag){
-		global $mysqli;
-
 		if(gettype($tag) != "integer" && gettype($tag) != "string"){
 			throw new InvalidArgumentException("request_tag function expects integer or string. ".gettype($tag)." given");
 		}
@@ -317,17 +305,11 @@ class ProjectModel implements Model{
 	}
 
 	public function untag($tag_model, $project_id, $tag){
-		global $mysqli;
-
 		$tag_entry = $tag_model->get_tag($tag);
 
 		$tag_id = $tag_entry["tag_id"];
 
-		$query_untag_project = $mysqli->prepare("DELETE FROM project_tag WHERE project_id = ? AND tag_id = ?");
-		$query_untag_project->bind_param("ii", $project_id, $tag_id);
-		$query_untag_project->execute();
-
-		return array();
+		return !!$this->dbez->delete("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id]);
 	}
 
 	public function get_tags($project_id){

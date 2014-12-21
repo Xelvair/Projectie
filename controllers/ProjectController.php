@@ -55,7 +55,7 @@ class ProjectController extends Controller{
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
 		$chat = $this->model("Chat", $dbez);
-		
+
 		$project = $this->model("Project", $dbez);
 		$current_user = $auth->get_current_user();
 
@@ -120,7 +120,7 @@ class ProjectController extends Controller{
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
 		$project = $this->model("Project", $dbez);
-		$tag = $this->model("Tag");
+		$tag = $this->model("Tag", $dbez);
 
 		$project_id = $_POST["project_id"];
 

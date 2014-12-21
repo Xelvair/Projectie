@@ -3,6 +3,12 @@
 require_once("../core/Model.php");
 
 class TagModel implements Model{
+	private $dbez = null;
+
+	public function __construct(DBEZModel $dbez){
+		$this->dbez = $dbez;
+	}
+
 	public function create_tag($name){
 		global $mysqli;
 
@@ -21,7 +27,7 @@ class TagModel implements Model{
 		}
 	}
 
-	public function autocomplete_tag($name){
+	public function autocomplete_tag($name){ 
 		global $mysqli;
 
 		$autocomplete_term = $name."%";
@@ -47,35 +53,18 @@ class TagModel implements Model{
 	//or an int, in which case it is searched by id instead
 	//any other types will throw an exception 
 	public function get_tag($tag){
-		global $mysqli;
-
-		switch (gettype($tag)){
+		switch(gettype($tag)){
 			case "integer":
-				$stmt_check_existence = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE tag_id = ?");
-				$stmt_check_existence->bind_param("i", $tag);
+				return $this->dbez->find("tag", $tag, ["tag_id", "name"]);
 				break;
 			case "string":
-				$stmt_check_existence = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE name = ?");
-				$stmt_check_existence->bind_param("s", $tag);
+				$result = $this->dbez->find("tag", ["name" => $tag], ["tag_id", "name"]);
+				return $result ? $result[0] : array();
 				break;
 			default:
 				throw new InvalidArgumentException("get_tag function expects integer or string. ".gettype($tag)." given.");
 				break;
 		}
-
-		$stmt_check_existence->execute();
-		$stmt_check_existence->bind_result($res_tag_id, $res_name);
-
-		$result = array();
-
-		if($stmt_check_existence->fetch()){
-			$result["tag_id"] = $res_tag_id;
-			$result["name"] = $res_name;
-		}
-
-		$stmt_check_existence->close();
-
-		return $result;
 	}
 
 	//similar to get_tag, except that if a string is passed, it will create the tag if it doesn't already exists
@@ -116,11 +105,11 @@ class TagModel implements Model{
 
 		$tag_entry = self::get_tag($tag);
 
-		if(sizeof($tag_entry) > 0){
-			$stmt_delete_tag = $mysqli->prepare("DELETE FROM tag WHERE tag_id = ?");
-			$stmt_delete_tag->bind_param("i", $tag_entry);
-			$stmt_delete_tag->execute();
+		if($tag_entry){
+			return $this->dbez->delete("tag", $tag_entry["tag_id"]);
 		}
+
+		return false;
 	}
 }
 

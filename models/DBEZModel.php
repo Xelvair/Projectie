@@ -84,7 +84,8 @@ class DBEZModel implements Model{
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
-		return self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_format, $flags)[0];
+		$result = self::find_by_array($table, [$primary_key_field["Field"] => $search_id], $result_format, $flags);
+		return $result ? $result[0] : array();
 	}
 
 	public function find_by_array($table, $search_array, $result_format, $flags = 0){
