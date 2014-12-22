@@ -34,5 +34,7 @@
 	"create_desc_title" : "Descripe what you are targeting with your project and what your intentions are.",
 	"create_subtitle_title" : "This should be a short description what your project is about.",
 	"create_title_title" : "Select a matching project tilte.",
-	"upload_pic" : "Upload Picture"
+	"upload_pic" : "Upload Picture",
+	"email_taken" : "This Email is incorrect or taken.",
+	"forwarding" : "You will be redirected shortly."
 }

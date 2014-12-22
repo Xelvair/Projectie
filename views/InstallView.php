@@ -13,7 +13,11 @@ global $locale;
     </form>
     <?php switch($_DATA["action"]){
 			case "success":
-			?><p class="text-success"><?=$locale["db_init_succ"]?></p><?php
+			?>
+				<p class="text-success"><?=$locale["db_init_succ"]?></p>
+				<p class="text-success"><?=$locale["forwarding"]?></p>
+				<script>setTimeout(function(){window.location = "/home";}, 1000);</script>
+			<?php
 	    break;
 	    case "failure":
 	    ?><p class="text-danger"><?=$locale["db_init_fail"]?></p><?php

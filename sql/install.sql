@@ -45,6 +45,9 @@ CREATE TABLE project_participation (
 	PRIMARY KEY(project_participation_id)
 );
 
+INSERT INTO project_participation (project_id, user_id, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants)
+VALUES(1, 1, 1, 1, 1, 1, 1);
+
 DROP TABLE IF EXISTS project_participation_request;
 	CREATE TABLE project_participation_request (
 	project_participation_request_id int NOT NULL AUTO_INCREMENT,
@@ -115,4 +118,14 @@ CREATE TABLE project_fav (
 	project_id int NOT NULL,
 	user_id int NOT NULL,
 	PRIMARY KEY(project_fav_id)
+);
+
+DROP TABLE IF EXISTS project_news;
+CREATE TABLE project_news (
+	project_news_id int NOT NULL AUTO_INCREMENT,
+	project_id int NOT NULL,
+	author_id int NOT NULL,
+	post_time int NOT NULL,
+	content text NOT NULL,
+	PRIMARY KEY(project_news_id)
 );

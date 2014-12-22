@@ -56,7 +56,13 @@ $(document).ready(function(){
 
 <h1>PHP Debugging</h1>
 <form>
-	<textarea id="code"></textarea><br>
+	<textarea rows="20" cols="120" id="code">
+$dbez = $this->model("DBEZ");
+$auth = $this->model("Auth", $dbez);
+$chat = $this->model("Chat", $dbez);
+$project = $this->model("Project", $dbez);
+$tag = $this->model("Tag", $dbez);
+	</textarea><br>
 	<input type="button" id="code_submit" value="Debug">
 </form>
 <div id="result">

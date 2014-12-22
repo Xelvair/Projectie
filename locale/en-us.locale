@@ -35,6 +35,7 @@
 	"create_subtitle_title" : "This should be a short description what your project is about.",
 	"create_title_title" : "Select a matching project tilte.",
 	"upload_pic" : "Upload Picture",
-	"email_taken" : "This Email is incorrect or taken."
+	"email_taken" : "This Email is incorrect or taken.",
+	"forwarding" : "You will be redirected shortly."
 	
 }

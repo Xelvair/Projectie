@@ -365,6 +365,31 @@ class ProjectModel implements Model{
 		return $res_fav_count;
 	}
 
+	//$info["project_id"] : id of the project the news belong to
+	//$info["author_id"] : id of the author
+	//$info["content"] : content of the news
+	public function post_news($info){
+		if(!isset($info["project_id"]) ||
+			 !isset($info["author_id"]) ||
+			 !isset($info["content"]))
+		{
+			throw new InvalidArgumentException();
+		}
+
+		extract($info);
+
+		if(!self::user_has_right($project_id, $author_id, "communicate")){
+			return array("ERROR" => "ERR_NO_RIGHTS");
+		}
+
+		return $this->dbez->insert("project_news", [
+			"project_id" => $project_id, 
+			"author_id" => $author_id, 
+			"post_time" => time(), 
+			"content" => htmlentities($content)
+		]);
+	}
+
 	public function add_picture($id, $picture_id){}
 	public function remove_picture($id){}
 
