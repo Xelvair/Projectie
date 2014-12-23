@@ -139,7 +139,7 @@ class ProjectController extends Controller{
 	public function untag(){}
 
 	//$_POST["project_id"] : id of the project to fav
-	public function favourite(){
+	public function favorite(){
 		if(!filter_var($_POST["project_id"], FILTER_VALIDATE_INT)){
 				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
 		}
@@ -155,16 +155,95 @@ class ProjectController extends Controller{
 
 		$project_id = (int)$_POST["project_id"];
 
-		return json_encode($project->favourite($project_id, $user["user_id"]));
+		return json_encode($project->favorite($project_id, $user["user_id"]));
 	}
 
 	//$_POST["project_id"] : id of the project to unfav
 	public function unfavorite(){
+		if(!filter_var($_POST["project_id"], FILTER_VALIDATE_INT)){
+				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
+		}
 
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+
+		$user = $auth->get_current_user();
+
+		if(!$user)
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+
+		$project_id = (int)$_POST["project_id"];
+
+		return json_encode($project->unfavorite($project_id, $user["user_id"]));
+	}
+
+	//$_POST["project_id"] : project to post the news to
+	//$_POST["content"] : content of the news post
+	public function post_news(){
+		if(!isset($_POST["project_id"]) ||
+			 !isset($_POST["content"]))
+		{
+			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
+		}
+
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+
+		$user = $auth->get_current_user();
+
+		if(!$user)
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+
+		return json_encode($project->post_news([
+			"author_id" => (int)$user["user_id"],
+			"project_id" => (int)$_POST["project_id"],
+			"content" => $_POST["content"]
+		]));
+	}
+
+	//$_POST["project_news_id"] : id of the news to edit
+	//$_POST["content"] : content of the new post
+	public function edit_news(){
+		if(!isset($_POST["project_news_id"]) ||
+			 !isset($_POST["content"]))
+		{
+			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
+		}
+
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+
+		$user = $auth->get_current_user();
+
+		return json_encode($project->edit_news([
+			"project_news_id" => (int)$_POST["project_news_id"],
+			"editor_id" => (int)$user["user_id"],
+			"content" => $_POST["content"]
+		]));
+	}
+
+	//$_POST["project_news_id"] : id of the news to remove
+	public function remove_news(){
+		if(!isset($_POST["project_news_id"])){
+			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
+		}
+
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+
+		$user = $auth->get_current_user();
+
+		return json_encode($project->remove_news([
+			"project_news_id" => (int)$_POST["project_news_id"],
+			"remover_id" => (int)$user["user_id"]
+		]));
 	}
 	
 	public function index(){
-	
 		global $locale;
 		global $CONFIG;
 

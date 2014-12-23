@@ -326,7 +326,7 @@ class ProjectModel implements Model{
 		return $result->fetch_all(MYSQLI_ASSOC);
 	}
 
-	public function favourite($project_id, $user_id){
+	public function favorite($project_id, $user_id){
 		$is_faved_already = !!$this->dbez->find("project_fav", ["project_id" => $project_id, "user_id" => $user_id], ["project_fav_id"]);
 
 		if($is_faved_already)
@@ -340,7 +340,7 @@ class ProjectModel implements Model{
 		return !!$this->dbez->insert("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
 	}
 
-	public function unfavourite($project_id, $user_id){
+	public function unfavorite($project_id, $user_id){
 		return $this->dbez->delete("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
 	}
 
@@ -365,6 +365,10 @@ class ProjectModel implements Model{
 		return $res_fav_count;
 	}
 
+	public function get_news($project_news_id){
+		return $this->dbez->find("project_news", $project_news_id, "*");
+	}
+
 	//$info["project_id"] : id of the project the news belong to
 	//$info["author_id"] : id of the author
 	//$info["content"] : content of the news
@@ -373,6 +377,7 @@ class ProjectModel implements Model{
 			 !isset($info["author_id"]) ||
 			 !isset($info["content"]))
 		{
+			print_r(json_encode($info));
 			throw new InvalidArgumentException();
 		}
 
@@ -387,7 +392,76 @@ class ProjectModel implements Model{
 			"author_id" => $author_id, 
 			"post_time" => time(), 
 			"content" => htmlentities($content)
-		]);
+		], DBEZ_INSRT_RETURN_ROW);
+	}
+
+	//$info["project_news_id"] : id of the news entry
+	//$info["editor_id"] : id of the editor
+	//$info["content"] : content of the news
+	public function edit_news($info){
+		global $mysqli;
+
+		if(!isset($info["project_news_id"]) ||
+			 !isset($info["editor_id"]) ||
+			 !isset($info["content"]))
+		{
+			throw new InvalidArgumentException();
+		}
+
+		$news = $this->dbez->find("project_news", (int)$info["project_news_id"], "*");
+
+		if(!$news){
+			return array("ERROR" => "ERR_NEWS_NONEXISTENT");
+		}
+
+		extract($info);
+
+		if(!self::user_has_right($news["project_id"], $editor_id, "communicate")){
+			return array("ERROR" => "ERR_NO_RIGHTS");
+		}
+
+		$edit_time = time();
+		$escaped_content = htmlentities($content);
+
+		$query_edit_news = $mysqli->prepare("UPDATE project_news SET content = ?, last_editor = ?, last_edit_time = ? WHERE project_news_id = ?");
+		$query_edit_news->bind_param("siii", $escaped_content, $editor_id, $edit_time, $info["project_news_id"]);
+		if(!$query_edit_news->execute()){
+			return array("ERROR" => "ERR_DB_UPDATE_FAILED");
+		}
+
+		return self::get_news($info["project_news_id"]);
+	}
+
+	//$info["project_news_id"] : id of the news entry
+	//$info["remover_id"] : id of the remover
+	public function remove_news($info){
+		global $mysqli;
+
+		if(!isset($info["project_news_id"]) ||
+			 !isset($info["remover_id"]))
+		{
+			throw new InvalidArgumentException();
+		}
+
+		$news = $this->dbez->find("project_news", (int)$info["project_news_id"], "*");
+
+		if(!$news){
+			return array("ERROR" => "ERR_NEWS_NONEXISTENT");
+		}
+
+		extract($info);
+
+		if(!self::user_has_right($news["project_id"], $remover_id, "communicate")){
+			return array("ERROR" => "ERR_NO_RIGHTS");
+		}
+
+		$stmt_remove_news = $mysqli->prepare("UPDATE project_news SET active = 0 WHERE project_news_id = ?");
+		$stmt_remove_news->bind_param("i", $info["project_news_id"]);
+		if(!$stmt_remove_news->execute()){
+			return array("ERROR" => "ERR_DB_DELETE_FAILED");
+		}
+
+		return array();
 	}
 
 	public function add_picture($id, $picture_id){}

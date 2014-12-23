@@ -20,7 +20,9 @@ global $locale;
 			<?php
 	    break;
 	    case "failure":
-	    ?><p class="text-danger"><?=$locale["db_init_fail"]?></p><?php
+	    ?>
+	    	<p class="text-danger"><?=$locale["db_init_fail"]?></p>
+	    <?php
 	   	break;
  		}?>
   </div>

@@ -7,7 +7,7 @@ CREATE TABLE user (
 	lang varchar(10) NOT NULL,
 	password_salt varchar(8) NOT NULL,
 	password_hash varchar(32) NOT NULL,
-	is_admin boolean NOT NULL,
+	is_admin boolean NOT NULL DEFAULT 0,
 	active boolean NOT NULL,
 	PRIMARY KEY (user_id)
 );
@@ -25,7 +25,7 @@ CREATE TABLE project (
 	description text NOT NULL,
 	public_chat_id int NOT NULL,
 	private_chat_id int NOT NULL,
-	active boolean NOT NULL,
+	active boolean NOT NULL DEFAULT 1,
 	PRIMARY KEY(project_id)
 );
 
@@ -127,5 +127,8 @@ CREATE TABLE project_news (
 	author_id int NOT NULL,
 	post_time int NOT NULL,
 	content text NOT NULL,
+	last_editor int DEFAULT NULL,
+	last_edit_time int DEFAULT NULL,
+	active boolean NOT NULL DEFAULT 1,
 	PRIMARY KEY(project_news_id)
 );
