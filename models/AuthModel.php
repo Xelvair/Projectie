@@ -224,7 +224,8 @@ class AuthModel implements Model{
 			"created_projects" => self::get_created_projects($user_id),
 			"project_participations" => self::get_user_participations($user_id),
 			"chat_participations" => self::get_chat_participations($user_id),
-			"tags" => self::get_tags($user_id)
+			"tags" => self::get_tags($user_id),
+			"fav_projects" => self::get_fav_projects($user_id)
 		);
 
 		return $user;
@@ -296,6 +297,10 @@ class AuthModel implements Model{
 		$query_get_tags->close();
 
 		return $result->fetch_all(MYSQLI_ASSOC);
+	}
+
+	public function get_fav_projects($user_id){
+		return $this->dbez->find("project_fav", ["user_id" => $user_id], "*");
 	}
 }
 
