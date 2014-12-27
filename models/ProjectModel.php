@@ -464,6 +464,31 @@ class ProjectModel implements Model{
 		return array();
 	}
 
+	public function get_tag_matches($project_id, $search_tags){
+		$project_tags_raw = self::get_tags($project_id);
+
+		$project_tags = array_map(function($entry){
+			return $entry["name"];
+		}, $project_tags_raw);
+
+		$matches = array_intersect($project_tags, $search_tags);
+
+		return sizeof($matches);
+
+	}
+
+	public function find_related($search_tags){
+		$projects = $this->dbez->find("project", [], ["project_id"]);
+
+		foreach ($projects as &$project){
+			$project["tag_matches"] = self::get_tag_matches($project["project_id"], $search_tags);
+			$project["fav_count"] = self::get_fav_count($project["project_id"]);
+			$project["relevance"] = $project["tag_matches"] * (log($project["fav_count"] + 1) * 5 + 1); //5: GAIN value, needs to be lower for more users
+		}
+
+		return $projects;
+	}
+
 	public function add_picture($id, $picture_id){}
 	public function remove_picture($id){}
 
