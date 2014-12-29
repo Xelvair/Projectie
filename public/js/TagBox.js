@@ -15,12 +15,12 @@ Projectie.Tagging.TagBox = function(data){
 		var check_completion = function(){
 			if(data_result_obj && template_result_obj){
 				$("head").append($(template_result_obj).find("script"));
-				/*html_elem = this.assembly_func({
+				html_elem = window[this.assembly_func]({
 					editable : data_result_obj.editable,
 					tags : data_result_obj.tags,
 					template : template_result_obj
 				});
-				this.container_elem.append(html_elem);*/
+				this.container_elem.append(html_elem);
 			}
 		}.bind(this);
 
