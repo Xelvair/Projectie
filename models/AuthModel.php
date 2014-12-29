@@ -300,7 +300,7 @@ class AuthModel implements Model{
 	}
 
 	public function get_fav_projects($user_id){
-		return $this->dbez->find("project_fav", ["user_id" => $user_id], "*");
+		return $this->dbez->find("project_fav", ["user_id" => (int)$user_id], "*");
 	}
 }
 

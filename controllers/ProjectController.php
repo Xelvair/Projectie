@@ -242,6 +242,25 @@ class ProjectController extends Controller{
 			"remover_id" => (int)$user["user_id"]
 		]));
 	}
+
+	public function get_tag_meta($project_id){
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+
+		$user = $auth->get_current_user();
+
+		$can_edit_tags = false;
+
+		if($user){
+			$can_edit_tags = $project->user_has_right((int)$project_id, $user["user_id"], "edit");
+		}
+
+		return json_encode(array(
+			"editable" => $can_edit_tags,
+			"tags" => $project->get_tags($project_id)
+		));
+	}
 	
 	public function index(){
 		global $locale;

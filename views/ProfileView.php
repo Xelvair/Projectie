@@ -27,7 +27,6 @@ $(document).ready(function(){
 		}
 	);
 	
-	
 	$('#addtag').click(function(){
 		if (popover=="shown"){
 			$('#addtag').popover('hide');
@@ -37,7 +36,6 @@ $(document).ready(function(){
 			popover = "shown";
 		}
 	});
-	
 });
 
 function submit_tag(event){
@@ -52,7 +50,7 @@ function submit_tag(event){
 				
 			var id = 23;
 
-            $('#addtag').popover('hide');
+			$('#addtag').popover('hide');
 			$('#tag-list').append('<li class="tag" id="tag'+id+'">'+new_tag+'<div class="tag_delete"><a onclick="delete_tag(this, '+id+');" class="tag_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>');
 			
 			var tOut;
@@ -97,7 +95,7 @@ function delete_tag(element, id){
     <div class="col-md-4">
         <div class="row">
             <div class="tag_box">
-            <h1 align="center" style="margin-top:0px;"><small><?=$locale['tags']?></small></h1>
+            	<h1 align="center" style="margin-top:0px;"><small><?=$locale['tags']?></small></h1>
                 <ul class="list-inline" id="tag-list">
                     <?php foreach($_DATA["user"]["tags"] as $entry){ ?>
                          <li class="tag" id="tag<?=$entry['tag_id']?>"><?=$entry['name']?>
@@ -111,10 +109,10 @@ function delete_tag(element, id){
 					}?>
                 </ul>
             	<div class="tag_box_bottom">
-                <button class="tag_btn" id="addtag"  data-toggle="popover" data-html="true" data-content="<div id='tag_input_group'><input type='text' class='form-control' placeholder='New tag...' id='input_newtag' onkeypress='submit_tag(event);'/></div>" data-placement="left">             
-                                <span class="glyphicon glyphicon-plus"></span><strong>tag</strong>
-                </button>
-               </div>
+					<button class="tag_btn" id="addtag" data-toggle="popover" data-html="true" data-content="<div id='tag_input_group'><input type='text' class='form-control' placeholder='New tag...' id='input_newtag' onkeypress='submit_tag(event);'/></div>" data-placement="left">             
+						<span class="glyphicon glyphicon-plus"></span><strong>tag</strong>
+					</button>
+				</div>
             </div>
         </div>
     </div>

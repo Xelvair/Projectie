@@ -35,6 +35,16 @@ class TestController extends Controller{
 																					"body_padding" => false));
 	}
 
+	public function tagbox(){
+		$content = $this->view("TagBoxTest");
+
+		return $this->view("HtmlBase", [ 
+			"title" => "Tagbox Test",
+			"body" => $content,
+			"body_padding" => false
+		]);
+	}
+
 	public function chat(){
 		global $locale;
 
