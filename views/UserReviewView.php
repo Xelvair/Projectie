@@ -26,13 +26,7 @@ $(document).ready(function(){
 					$('#user-review-username').text(result.username);
 					$('.user-review').fadeIn();
 					
-					});
-					
-					
-			
-						
-				
-					
+					});					
 				},1000);
 		},function(){
 			clearTimeout(tOut);

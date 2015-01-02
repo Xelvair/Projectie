@@ -35,6 +35,20 @@
 	"create_subtitle_title" : "This should be a short description what your project is about.",
 	"create_title_title" : "Select a matching project tilte.",
 	"upload_pic" : "Upload Picture",
-	"email_taken" : "This Email is incorrect or taken."
+	"email_taken" : "This Email is incorrect or taken.",
+	"project_desc" : "Project Description",
+	"created_on" : "Created on",
+	"write_something" : "Write something...",
+	"send" : "Send",
+	"add_fav" :  "Ad to favorities",
+	"create_a_project" : "Create a project",
+	"advanced_search" : "Advanced Search",
+	"projects" : "Projects",
+	"tags" : "Tags",
+	"users" : "Users",
+	"chronological" : "Chronological",
+	"alphabetical" : "Alphabetical",
+	"placeholder_search" : "Search..."
+	
 	
 }

@@ -141,32 +141,11 @@ function delete_skill(element, id){
 <hr style="box-shadow:  2px 2px 5px 0px rgba(50, 48, 50, 0.5);"/>
 <div class="row">
     <div class="col-md-6 col-xs-12 content_list">
-    <h2 align="center" class="content_heading"><?=$locale['projects_created']?></h2>
-        <?php foreach($_DATA["created_project"] as $entry){ ?>
-            <div class="media">
-                <a class="pull-left" href="#">
-                    <img class="media-object img-rounded" src="<?=$entry['thumb']?>" alt="...">
-                </a>
-                <div class="media-body">
-                    <h4 class="media-heading"><?=$entry['title']?> 1</h4>
-                    <?=$entry['desc']?>
-                </div>
-            </div><hr style="margin:15px;"/><!--media--> 
-         <?php }?> 
+		<?=$_DATA['projects_involved']?>
     </div><!--col-->
     <div class="col-md-6 col-xs-12 content_list">
-    <h2 align="center" class="content_heading"><?=$locale['projects_involved']?></h2>
-        <?php foreach($_DATA["involved_project"] as $entry){ ?>
-        <div class="media">
-            <a class="pull-left" href="#">
-                <img class="media-object img-rounded" src="<?=$entry['thumb']?>" alt="...">
-            </a>
-            <div class="media-body">
-                <h4 class="media-heading"><?=$entry['title']?></h4>
-                <?=$entry['desc']?>
-            </div>
-        </div><hr style="margin:15px;"/><!--media--> 
-        <?php }?>
+		<?=$_DATA['projects_created']?>
     </div><!--col-->
 </div>
  <?=$_DATA['footer']?>
+ <?=$_DATA['user_review']?>

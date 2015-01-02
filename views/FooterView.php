@@ -24,15 +24,15 @@ global $locale;
     <div class="col-md-4 col-xs-4 text-right">
     
         <ul class="list-inline">
-        	<li><?php echo $locale['logged_in_as'].": ";  if(isset($_DATA['username']) && $_DATA['username'] != ""){ 
-			echo $_DATA['username']; 
+        	<li><?php echo $locale['logged_in_as'].": ";  if($_DATA['user'] != null){ 
+			echo $_DATA['user']; 
 			
 			}else{
 				echo $locale['guest'];
 			}?></li>
             
             <?php
-			if(!isset($_DATA['username']) || $_DATA['username'] == ""){ 
+			if($_DATA['user'] == null){ 
            		echo "<li><a  href='#registerModal' data-toggle='modal'>".$locale["register"]."?</a></li>";
 			}
 				?>

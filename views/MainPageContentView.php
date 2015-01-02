@@ -82,4 +82,5 @@
                         </div><!--col-md-4-->
                     </div><!--row-->
                      <?=$_DATA['footer']?>
+					 <?=$_DATA['user_review']?>
                 </div>

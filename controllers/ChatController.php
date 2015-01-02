@@ -159,7 +159,7 @@ class ChatController extends Controller{
 			$locale->load("en-us");
 		}
 		
-		$footer_array = array("username" => "");
+		$footer_array = array("user" => ($user == null ? null : $user["username"]));
 		$footer = $this->view("Footer", $footer_array);
 
 		$chat_list = array();

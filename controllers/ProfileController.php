@@ -20,18 +20,26 @@ class ProfileController extends Controller{
 			$locale->load("en-us");
 		}
 		
-		$footer_array = array("username" => "");
+		$footer_array = array("user" => ($user == null ? null : $user["username"]));
 		$footer = $this->view("Footer", $footer_array);
 		
-		$profile_content = array("footer" => $footer, "profile_pic" => abspath("/public/images/question_mark_big.png"), "username" => "Max da Boss", "sum_projects_created" => "123", "sum_projects_involved" => "34", "skill" => array("PHP|1","CSS|2", "JAVASCRIPT|3", "BOOTSTRAP|4", "C#|5"), "created_project" => array(), "involved_project" => array());
+		$projects_involved = array("entries" => array(), "list_title" => $locale["projects_involved"]);
+		array_push($projects_involved["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		$projects_involved_list = $this->view("TitleDescriptionList", $projects_involved);
 		
-		array_push($profile_content["created_project"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
-		array_push($profile_content["created_project"], array("title" => "Trending Project 2", "desc" => "Test Desc 2", "thumb" => abspath("/public/images/question_mark_small.png")));
-		array_push($profile_content["created_project"], array("title" => "Trending Project 3", "desc" => "Test Desc 3", "thumb" => abspath("/public/images/question_mark_small.png")));
+		$projects_created = array("entries" => array(), "list_title" => $locale["projects_created"]);
+		array_push($projects_created["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($projects_created["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($projects_created["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
 		
-		array_push($profile_content["involved_project"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/question_mark_small.png")));
-		array_push($profile_content["involved_project"], array("title" => "Trending Project 2", "desc" => "Test Desc 2", "thumb" => abspath("/public/images/question_mark_small.png")));
-		array_push($profile_content["involved_project"], array("title" => "Trending Project 3", "desc" => "Test Desc 3", "thumb" => abspath("/public/images/question_mark_small.png")));
+		$projects_created_list = $this->view("TitleDescriptionList", $projects_created);
+		
+		$user_review = $this->view('UserReview', "");
+		
+		
+		$profile_content = array("footer" => $footer, "profile_pic" => abspath("/public/images/question_mark_big.png"), "username" => "Max da Boss", "sum_projects_created" => "123", "sum_projects_involved" => "34", "skill" => array("PHP|1","CSS|2", "JAVASCRIPT|3", "BOOTSTRAP|4", "C#|5"), "projects_created" => $projects_created_list, "projects_involved" => $projects_involved_list, "user_review" => $user_review);
+		
+		
 		
 		$content = $this->view("Profile", $profile_content);
 		
