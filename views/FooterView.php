@@ -16,15 +16,17 @@ global $locale;
     </div>
     <div class="col-md-4 col-xs-4 text-right">
         <ul class="list-inline">
-        	<li><?php echo $locale['logged_in_as'].": ";  if(isset($_DATA['username']) && $_DATA['username'] != ""){ 
-                echo $_DATA['username']; 
-			
-			}else{
-				echo $locale['guest'];
-			}?></li>
+        	<li><?php echo $locale['logged_in_as'].": ";  
+                if(isset($_DATA['username']) && $_DATA['username'] != ""){ 
+                    echo $_DATA['username']; 
+    			
+    			}else{
+    				echo $locale['guest'];
+    			}?>
+            </li>
             
             <?php
-			if(!isset($_DATA['username']) || $_DATA['username'] == ""){ 
+			if($_DATA['user'] == null){ 
            		echo "<li><a  href='#registerModal' data-toggle='modal'>".$locale["register"]."?</a></li>";
 			}
 				?>

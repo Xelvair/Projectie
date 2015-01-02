@@ -15,11 +15,76 @@ global $locale;
 			 window.location.href="<?=abspath("")?>";
 			});
 		});
+		
+		
 	});
 </script>
 
 
 <?=$_DATA['login_modal']?>
+
+<div id="AdvancedSearchModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+   <div class="modal-dialog">
+       <div class="modal-content">
+           <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
+              <h2 class="text-center"><?=$locale["advanced_search"]?></h2>
+          </div>
+          <div class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<form>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="<?=$locale['placeholder_search']?>"/>
+						</div>
+						<div class="row text-center">
+							<div class="col-xs-12">
+								<h3>Search for...</h3>
+								<div class="form-group">
+									<div class="btn-group" data-toggle="buttons">
+									  <label class="btn btn-default active">
+										<input type="radio" name="options" id="opt_projects" autocomplete="off" checked><?=$locale['projects']?>
+									  </label>
+									  <label class="btn btn-default">
+										<input type="radio" name="options" id="opt_users" autocomplete="off"><?=$locale['users']?>
+									  </label>
+									  <label class="btn btn-default">
+										<input type="radio" name="options" id="opt_tags" autocomplete="off"><?=$locale['tags']?>
+									  </label>
+									  <label class="btn btn-default">
+										<input type="radio" name="options" id="opt_skills" autocomplete="off"><?=$locale['skills']?>
+									  </label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row  text-center">
+							<div class="col-xs-12">
+								<h3>Sorted...</h3>
+								<div class="form-group">
+									<div class="btn-group" data-toggle="buttons">
+										<label class="btn btn-default active">
+											<input type="radio" name="options" id="opt_alphabetical" autocomplete="off" checked><?=$locale['alphabetical']?>
+										</label>
+										<label class="btn btn-default">
+											<input type="radio" name="options" id="opt_chronological" autocomplete="off"><?=$locale['chronological']?>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row">     
+				  <div class="col-md-12 text-right">
+					<button id="login_btn" type="button" class="btn btn-default"><?=$locale["search"]?></button>
+				  </div>
+			</div>
+          </div>
+       </div>
+   </div>
+</div>
 
 
 <nav class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -41,15 +106,15 @@ global $locale;
        <li><a href="#toggle-menue" style="font-size:20px; height:50px;" id="menu-toggle"><span class="glyphicon glyphicon-list"></span></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li style="margin-right:50px;"></li>
         <form class="navbar-form navbar-left" role="search">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Suche...">
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-default"><?=$locale["search"];?></button>
-            <button type="button" class="btn btn-default"><?=$locale["advanced"] ?></button>
-          </div>
+			<a href="<?=abspath("CreateProject")?>" class="btn btn-create-project" id="btn_create_project"><span class="glyphicon glyphicon-plus" style="margin-right: 5px;"></span><?=$locale["create_a_project"]?></a>
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="<?=$locale['placeholder_search']?>">
+			</div>
+			<div class="btn-group">
+				<button type="button" class="btn btn-default"><?=$locale["search"];?></button>
+				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#AdvancedSearchModal"><?=$locale["advanced"] ?></button>
+			</div>
         </form>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$locale["more"]?><span class="caret"></span></a>
@@ -73,10 +138,10 @@ global $locale;
         <a href="<?=abspath("profile")?>"><?=$locale["profile"]?></a>
       </li>
       <li>
-        <a href="#"><?=$locale["my_projects"]?></a>
+        <a href="<?=abspath("MyProjects")?>"><?=$locale["my_projects"]?></a>
       </li>
       <li>
-        <a href="#"><?=$locale["favorites"]?></a>
+        <a href="<?=abspath("favorites")?>"><?=$locale["favorites"]?></a>
       </li>
       <li>
         <a href="<?=abspath("chat")?>"><?=$locale["conversations"]?></a>

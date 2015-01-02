@@ -25,7 +25,7 @@
         <div id="chat-footer">
         	<form>
            	  <div class="input-group">
-                <textarea class="form-control custom-control" placeholder="Write something..."rows="3" style="resize:none" id="chat_input"></textarea>     
+                <textarea class="form-control custom-control no_right_border" placeholder="Write something..."rows="3" style="resize:none" id="chat_input"></textarea>     
  			   <span class="input-group-addon btn btn-default" id="chat_send">Send</span>
                 </div>
           </form>
@@ -75,6 +75,9 @@ function dispatch(msg_obj, chat_type){
 	}
 
 	$("#chat").append(msg_html);
+	
+	//if scroll height != current scroll
+	$("#chat-box").animate({ scrollTop: $('#chat-box')[0].scrollHeight}, 500);
 }
 
 function chat_load(chat_obj){

@@ -279,19 +279,25 @@ class ProjectController extends Controller{
 			$locale->load("en-us");
 		}
 		
-		$footer_array = array("username" => "");
+		$footer_array = array("user" => ($user == null ? null : $user["username"]));
 		$footer = $this->view("Footer", $footer_array);
 		
 		$user_review = $this->view("UserReview", "");
 		
+		$project = array("participators" => array(), "desc" => "hello guys :)", "subtitle" => "This is a test project", "title" => "test_project", "header" => abspath("/public/images/default-banner.png"), "time" => "14. 08. 2013 10:23", "fav_count" => "234");
+		array_push($project["participators"], array("id" => "1", "username" => "admin"));
+		
+		
 		$news_feed_content = array("entries" => array(), "list_title" =>  "News Feed");
-		array_push($news_feed_content["entries"], array("title" => "Project Created", "desc" => "Today with created our glorious project", "thumb" => abspath("/public/images/default-profile-pic.png")));
-		array_push($news_feed_content["entries"], array("title" => "Project Created", "desc" => "Today with created our glorious project", "thumb" => abspath("/public/images/default-profile-pic.png")));
-		array_push($news_feed_content["entries"], array("title" => "Project Created", "desc" => "Today with created our glorious project", "thumb" => abspath("/public/images/default-profile-pic.png")));
+		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
 		
 		$news_feed = $this->view("TitleDescriptionList", $news_feed_content);
 		
-		$content = $this->view("Project", array("footer" => $footer, "user_review" => $user_review, "news_feed" => $news_feed));
+		
+		
+		$content = $this->view("Project", array("footer" => $footer, "user_review" => $user_review, "news_feed" => $news_feed, "project" => $project));
 		
 		$login_modal = $this->view("LoginModal", "");
 

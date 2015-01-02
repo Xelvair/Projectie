@@ -21,7 +21,7 @@ class CreateProjectController extends Controller{
 	
 		
 		
-		$footer_array = array("username" => "");
+		$footer_array = array("user" => ($user == null ? null : $user["username"]));
 		$footer = $this->view("Footer", $footer_array);
 		
 		$upload_picture_modal = $this->view("UploadPictureModal", "");
