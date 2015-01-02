@@ -60,12 +60,15 @@ function TagBox_tag_add_name_retrieval_callback(){
 	return $("#input_newtag").val();
 }
 
-function TagBox_tag_add_callback(){
+function TagBox_tag_add_callback(data){
+	var tag_elem = $("<li>").attr("id", "tag_" + data.tag_id);
+	tag_elem.find(".tag_name").text(data.name);
 
+	$(data.tagbox).find(".tag_list").append();
 }
 
-function TagBox_tag_removal_callback(){
-
+function TagBox_tag_removal_callback(data){
+	$(data.tagbox).find("#tag_" + data.tag_id).remove();
 }
 </script>
 </div>

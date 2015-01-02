@@ -3,6 +3,7 @@ Projectie.Tagging.TagBox = function(data){
 	if(!this.container_elem || !(this.container_elem instanceof jQuery)){
 		throw new Error("TagBox constructor requires container_elem param as jQuery object!");
 	}
+	this.id = data.id;
 	this.data_src = data.data_src || null;
 	this.template_src = data.template_src || (Projectie.server_addr + "/Template/TagBox");
 	this.editable = data.editable || null;
@@ -20,6 +21,7 @@ Projectie.Tagging.TagBox = function(data){
 					tags : data_result_obj.tags,
 					template : template_result_obj
 				});
+				html_elem.attr("id", this.id);
 				this.container_elem.append(html_elem);
 			}
 		}.bind(this);
