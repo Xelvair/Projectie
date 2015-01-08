@@ -20,7 +20,7 @@ class TemplateController extends Controller{
 			$locale->load("en-us");
 		}
 
-		return $this->view("ChatBoxTemplate");
+		return $this->view("TagBoxTemplate");
 	}
 }
 ?>

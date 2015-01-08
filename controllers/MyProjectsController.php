@@ -6,7 +6,8 @@ class MyProjectsController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
@@ -42,9 +43,9 @@ class MyProjectsController extends Controller{
 															"footer" => $footer));
 		
 			$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-												"body" => $contentwrap, 
-												"body_padding" => true,
-												"current_user" => $user));
+													"body" => $contentwrap, 
+													"body_padding" => true,
+													"current_user" => $user));
 		
 		
 	return $html;

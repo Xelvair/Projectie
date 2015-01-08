@@ -350,6 +350,7 @@ width: 100%;
 	padding-left: 5px;
 	width:0px;
 	height:100%;
+	cursor: pointer;
 }
 
 .tag_btn{
