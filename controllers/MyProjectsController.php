@@ -6,7 +6,8 @@ class MyProjectsController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
@@ -26,13 +27,18 @@ class MyProjectsController extends Controller{
 			
 			$user_review = $this->view("UserReview", "");
 			
-			$list_content = array("entries" => array());
-			array_push($list_content["entries"], array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
-			array_push($list_content["entries"], array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
-			array_push($list_content["entries"], array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
-			array_push($list_content["entries"], array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
+			$list_content = array();
+			array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
+			array_push($list_content, array("title" => "Test 2", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
+			array_push($list_content, array("title" => "Test 3", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
+			array_push($list_content, array("title" => "Test 4", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
+			array_push($list_content, array("title" => "Test 5", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
+			array_push($list_content, array("title" => "Test 6", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
 			
-			$list = $this->view("TitleDescriptionList", $list_content);
+			$list = array();
+			foreach($list_content as $entry){
+				array_push($list, $this->view("Entry", $entry));
+			}
 			
 			$content = $this->view("ListPage", array("list" => $list, "list_title" => $locale["my_projects"], "user_review" => $user_review));
 			

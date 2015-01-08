@@ -29,7 +29,6 @@
 	"login_pw_err" : "Your password is not correct!",
 	"projects_created" : "Projects created",
 	"projects_involved" : "Projects Involved",
-	"tags" : "Tags",
 	"create" : "Create",
 	"create_desc_title" : "Descripe what you are targeting with your project and what your intentions are.",
 	"create_subtitle_title" : "This should be a short description what your project is about.",
@@ -47,7 +46,17 @@
 	"projects" : "Projects",
 	"tags" : "Tags",
 	"users" : "Users",
-	"chronological" : "Chronological",
-	"alphabetical" : "Alphabetical",
-	"placeholder_search" : "Search..."
+	"date" : "Date",
+	"alphabet" : "Alphabet",
+	"placeholder_search" : "Search...",
+	"skills" : "Skills",
+	"relevance" : "Relevance",
+	"sorted_by" : "Sorted by",
+	"search_for" : "Search for",
+	"project_title" : "Project Title",
+	"subtitle" : "Subtitle",
+	"desc" : "Description",
+	"news_feed" : "News feed",
+	"post_title" : "Post title"
+	
 }

@@ -1,6 +1,10 @@
+<?php
+global $locale;
+?>
+
 <div class="row" id="chatwindow-title-wrapper">
     <div class="col-md-12 text-center" id="chatwindow-title">
-            <h1>Conversations</h1>
+            <h1><?=$locale['conversations']?></h1>
             <hr />
     </div>
 </div>
@@ -25,8 +29,8 @@
         <div id="chat-footer">
         	<form>
            	  <div class="input-group">
-                <textarea class="form-control custom-control no_right_border" placeholder="Write something..."rows="3" style="resize:none" id="chat_input"></textarea>     
- 			   <span class="input-group-addon btn btn-default" id="chat_send">Send</span>
+                <textarea class="form-control custom-control no_right_border" placeholder="<?=$locale['write_something']?>..."rows="3" style="resize:none" id="chat_input"></textarea>     
+ 			   <span class="input-group-addon btn btn-default" id="chat_send"><?=$locale['send']?></span>
                 </div>
           </form>
   		</div>	
@@ -34,7 +38,7 @@
 	<div class="col-md-2 chat-col">
 		<div id="select-chat-box">
 			<div class="select-chat-box-head text-center">
-				<h3>Conversations</h3>
+				<h3><?=$locale['conversations']?></h3>
 			</div>
 			<ul id="chat-list" class="sidebar-nav stacked-list">
 				<?php foreach ($_DATA["chat_list"] as $chat){ ?>

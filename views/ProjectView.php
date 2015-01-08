@@ -126,7 +126,7 @@ $(document).ready(function(){
 								<div class="col-md-12">
 									<form>
 									  <div class="input-group">
-										<input type="text" class="form-control custom-control no_right_border" placeholder="Post title..." id="post_title"/>
+										<input type="text" class="form-control custom-control no_right_border" placeholder="<?=$locale['post_title']?>..." id="post_title"/>
 										<textarea class="form-control custom-control no_right_border" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="post_input"></textarea>     
 											<span class="input-group-addon btn btn-default" style="border-style: none;" id="post_btn">Post</span>
 										</div>
