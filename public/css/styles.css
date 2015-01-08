@@ -50,7 +50,7 @@ box-shadow:         0px 3px 4px 0px rgba(50, 50, 50, 0.71);
 }
 
 .btn-default{
-    background-color: #C1F15B ;
+    background-color: #C1F15B !important;
     border-color: #828282 ;
     color: #323232 ;
 }
@@ -670,4 +670,8 @@ color: #E6E506 ;
 	border-style: none;
 	margin-right: 50px;
 	color: #323232;
+}
+
+.dropdown-menu>li>a{
+text-align: left;
 }

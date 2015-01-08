@@ -288,7 +288,7 @@ class ProjectController extends Controller{
 		array_push($project["participators"], array("id" => "1", "username" => "admin"));
 		
 		
-		$news_feed_content = array("entries" => array(), "list_title" =>  "News Feed");
+		$news_feed_content = array("entries" => array(), "list_title" =>  $locale['news_feed']);
 		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
 		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
 		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));

@@ -39,7 +39,7 @@ global $locale;
 						</div>
 						<div class="row text-center">
 							<div class="col-xs-12">
-								<h3>Search for...</h3>
+								<h3><?=$locale['search_for']?>...</h3>
 								<div class="form-group">
 									<div class="btn-group" data-toggle="buttons">
 									  <label class="btn btn-default active">
@@ -60,14 +60,17 @@ global $locale;
 						</div>
 						<div class="row  text-center">
 							<div class="col-xs-12">
-								<h3>Sorted...</h3>
+								<h3><?=$locale['sorted_by']?>...</h3>
 								<div class="form-group">
 									<div class="btn-group" data-toggle="buttons">
 										<label class="btn btn-default active">
-											<input type="radio" name="options" id="opt_alphabetical" autocomplete="off" checked><?=$locale['alphabetical']?>
+											<input type="radio" name="options" id="opt_relevance" autocomplete="off" checked><?=$locale['relevance']?>
 										</label>
 										<label class="btn btn-default">
-											<input type="radio" name="options" id="opt_chronological" autocomplete="off"><?=$locale['chronological']?>
+											<input type="radio" name="options" id="opt_alphabetical" autocomplete="off"><?=$locale['alphabet']?>
+										</label>
+										<label class="btn btn-default">
+											<input type="radio" name="options" id="opt_chronological" autocomplete="off"><?=$locale['date']?>
 										</label>
 									</div>
 								</div>
