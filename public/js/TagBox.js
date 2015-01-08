@@ -53,7 +53,7 @@ Projectie.Tagging.TagBox = function(data){
 	}.bind(this))();
 
 	this.onAddTag = function(tag_name){
-		window[this.add_callback](this.template_res, this.container_elem, 1, tag_name);
+		window[this.add_callback](this, this.template_res, this.container_elem, 1, tag_name, this.editable);
 	}
 
 	this.onRemoveTag = function(tag_id){

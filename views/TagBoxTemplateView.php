@@ -79,8 +79,9 @@ function TagBox_assembly_callback(data){
 
 			$("#input_newtag").on("keypress", function(event){
 				if(event.charCode == 13){
+					data.tagbox_obj.onAddTag($(event.target).val());
 					$(event.target).val("");
-					data.tagbox_obj.onAddTag($(this).val());
+					$(add_tag_elem).popover('toggle');
 				}
 			});
 			
@@ -93,13 +94,38 @@ function TagBox_tag_add_name_retrieval_callback(){
 	return $("#input_newtag").val();
 }
 
-function TagBox_tag_add_callback(tagbox_template, tagbox_elem, tag_id, tag_name){
+function TagBox_tag_add_callback(tagbox_obj, tagbox_template, tagbox_elem, tag_id, tag_name, editable){
 	var tag_elem = $(tagbox_template).find("#tag_template").clone();
-		tag_elem.attr("id", "tag_"+tag_id);
-		tag_elem.attr("data_tag_id", tag_id);
-		tag_elem.find(".tag_name").text("faget");
+	tag_elem.attr("id", "tag_"+tag_id);
+	tag_elem.attr("data_tag_id", tag_id);
+	tag_elem.find(".tag_name").text(tag_name);
 
-	console.log($(tagbox_template).find("#tag_template").get());
+	if(editable){
+		var edit_tag_elem = $(tagbox_template).find("#tag_delete_template").clone().removeAttr("id");
+
+		tag_elem.append(edit_tag_elem);
+
+		tag_elem.hover(
+			//onHover
+			function(){
+				var element = $(this);
+				tOut = setTimeout(function(){
+					$(element).find('.tag_delete').show().animate({width: '20px'},200);
+				}, 500);
+			},
+			//onUnhover
+			function(){
+				clearTimeout(tOut);
+				$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
+			}
+		);
+
+		var tag_delete_elem = $(tag_elem).find(".tag_delete");
+
+		$(tag_delete_elem).on("click", function(){
+			tagbox_obj.onRemoveTag($(this).parent().attr("data_tag_id"));
+		});
+	}
 
 	$(tagbox_elem).find(".tag_list").append(tag_elem);
 }
