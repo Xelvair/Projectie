@@ -175,13 +175,14 @@ class ChatController extends Controller{
 			}
 		}
 		
-		$content = $this->view("Chat", array("chat_list" => $chat_list, "user_id" => $user["id"], "username" => $user["username"], "footer" => $footer));
+		$content = $this->view("Chat", array("chat_list" => $chat_list, "user_id" => $user["id"], "username" => $user["username"]));
 
 		$login_modal = $this->view("LoginModal", "");
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
 															"user" => ($user == null ? null : $user["username"]),
-															"login_modal" => $login_modal));
+															"login_modal" => $login_modal,
+															"footer" => $footer));
 
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 

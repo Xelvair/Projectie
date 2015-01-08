@@ -27,13 +27,14 @@ class CreateProjectController extends Controller{
 		$upload_picture_modal = $this->view("UploadPictureModal", "");
 		
 		
-		$content = $this->view("CreateProject", array("footer" => $footer, "upload_picture_modal" => $upload_picture_modal));
+		$content = $this->view("CreateProject", array("upload_picture_modal" => $upload_picture_modal));
 
 		$login_modal = $this->view("LoginModal", "");
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
 															"user" => ($user == null ? null : $user["username"]),
-															"login_modal" => $login_modal));
+															"login_modal" => $login_modal,
+															"footer" => $footer));
 
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 

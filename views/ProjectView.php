@@ -1,6 +1,5 @@
 <?php
 #PARAMETERS
-#user_review
 #project
 	#participators
 		#id
@@ -171,7 +170,3 @@ $(document).ready(function(){
 		</div><!--Row END-->
 	</div>
 </div>
-
-<?=$_DATA['user_review']?>
-
-<?=$_DATA['footer']?>

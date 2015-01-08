@@ -86,5 +86,4 @@ global $locale;
      </form>
     </div>
 </div>
- <?=$_DATA['footer']?>
  <?=$_DATA['upload_picture_modal']?>

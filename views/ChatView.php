@@ -108,4 +108,3 @@ function curser_style(button){
 		button.style.cursor = 'pointer';
 };
 </script>
-<?=$_DATA['footer']?>

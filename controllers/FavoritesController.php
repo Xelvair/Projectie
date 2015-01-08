@@ -6,7 +6,8 @@ class FavoritesController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$auth = $this->model("Auth");
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
@@ -16,7 +17,6 @@ class FavoritesController extends Controller{
 			}
 		} else {
 			$locale->load("en-us");
-		
 		}
 		
 			$footer_array = array("user" => ($user == null ? null : $user["username"]));
@@ -39,11 +39,12 @@ class FavoritesController extends Controller{
 			
 			$list = $this->view("TitleDescriptionList", $list_content);
 			
-			$content = $this->view("ListPage", array("list" => $list,"list_title" => $locale["favorites"],"footer" => $footer, "user_review" => $user_review));
+			$content = $this->view("ListPage", array("list" => $list, "list_title" => $locale["favorites"], "user_review" => $user_review));
 			
 			$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
 															"user" => ($user == null ? null : $user["username"]),
-															"login_modal" => $login_modal));
+															"login_modal" => $login_modal,
+															"footer" => $footer));
 		
 			$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 

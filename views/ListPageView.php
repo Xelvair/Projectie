@@ -4,5 +4,3 @@
 		<?=$_DATA["list"]?>
 	</div>
 </div>
-<?=$_DATA["footer"]?>
-<?=$_DATA["user_review"]?>

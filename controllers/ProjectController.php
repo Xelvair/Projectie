@@ -297,13 +297,14 @@ class ProjectController extends Controller{
 		
 		
 		
-		$content = $this->view("Project", array("footer" => $footer, "user_review" => $user_review, "news_feed" => $news_feed, "project" => $project));
+		$content = $this->view("Project", array("user_review" => $user_review, "news_feed" => $news_feed, "project" => $project));
 		
 		$login_modal = $this->view("LoginModal", "");
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
 															"user" => ($user == null ? null : $user["username"]),
-															"login_modal" => $login_modal));
+															"login_modal" => $login_modal,
+															"footer" => $footer));
 
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 

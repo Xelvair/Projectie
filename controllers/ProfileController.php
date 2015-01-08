@@ -51,7 +51,6 @@ class ProfileController extends Controller{
 		$user_review = $this->view('UserReview', "");
 		
 		$profile_content = array(
-			"footer" => $footer, 
 			"user" => $viewed_user,
 			"projects_created" => $projects_created_list,
 			"projects_involved" => $projects_involved_list
@@ -63,7 +62,8 @@ class ProfileController extends Controller{
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
 															"user" => ($user == null ? null : $user["username"]),
-															"login_modal" => $login_modal));
+															"login_modal" => $login_modal,
+															"footer" => $footer));
 
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 

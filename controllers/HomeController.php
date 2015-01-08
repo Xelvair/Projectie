@@ -43,7 +43,7 @@ class HomeController extends Controller{
 		$user_review = $this->view('UserReview', "");
 
 	
-        $mainpagelists = array("top_project" => array(), "left_col" => $html_new, "mid_col" => $html_trending, "right_col" => $html_news, "footer" => $footer, "user_review" => $user_review);
+        $mainpagelists = array("top_project" => array(), "left_col" => $html_new, "mid_col" => $html_trending, "right_col" => $html_news, "user_review" => $user_review);
 		array_push($mainpagelists["top_project"], array("title" => "Test Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/header.jpg")));
 		array_push($mainpagelists["top_project"], array("title" => "Test Project 2", "desc" => "Test Desc 2", "thumb" => abspath("/public/images/header.jpg")));
 		array_push($mainpagelists["top_project"], array("title" => "Test Project 3", "desc" => "Test Desc 3", "thumb" => abspath("/public/images/header.jpg")));
@@ -54,7 +54,8 @@ class HomeController extends Controller{
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
 															"user" => ($user == null ? null : $user["username"]),
-															"login_modal" => $login_modal));
+															"login_modal" => $login_modal,
+															"footer" => $footer));
 
 		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 

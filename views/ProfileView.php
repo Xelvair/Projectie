@@ -126,5 +126,3 @@ function delete_tag(element, id){
 		<?=$_DATA['projects_created']?>
     </div><!--col-->
 </div>
- <?=$_DATA['footer']?>
- <?=$_DATA['user_review']?>
