@@ -69,6 +69,13 @@ class TestController extends Controller{
 												"body" => $content,
 												"body_padding" => false));
 	}
+
+	public function participationlist(){
+		$content = $this->view("ParticipationListTest");
+		return $this->view("HtmlBase", array(	"title" => "ParticipationList Test",
+												"body" => $content,
+												"body_padding" => false));
+	}
 }
 
 ?>

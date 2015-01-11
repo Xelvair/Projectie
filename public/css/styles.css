@@ -1,6 +1,11 @@
 @charset "utf-8";
 /* CSS Document */
 
+*{
+	padding: 0;
+	margin: 0;
+}
+
 .body-padding{
     padding-top:50px;
 }
@@ -674,4 +679,97 @@ color: #E6E506 ;
 
 .dropdown-menu>li>a{
 text-align: left;
+}
+
+.participation_entry{
+	overflow: hidden;
+	border: 1px solid #555;
+	box-shadow: 3px 3px 5px #888888;
+}
+
+.participation_entry>div:first-child{
+	background-image: url(/public/images/pane_header.png);
+	height: 40px;
+	width: 100%;
+	background-repeat: no-repeat;
+	color: #92D405;
+	background-size: auto 40px;
+	padding-left: 10px;
+	padding-top: 1px;
+	font-size: 20px;
+}
+
+.participation_entry>div:nth-child(2){
+	display: table;
+}
+
+.participation_entry>div>div{
+	display: table-cell;
+	vertical-align: top;
+}
+
+.participation_entry>div>div:first-child{
+	padding: 0 5px 5px 5px;
+}
+
+.participation_entry>div>div:nth-child(2){
+	position: relative;
+	width: 100%;
+}
+
+.participation_entry>div>div:nth-child(2)>h1{
+	font-size: 26px;
+}
+
+.participation_entry>div>div:nth-child(2)>h2{
+	font-size: 16px;
+	color: #777;
+}
+
+.participation_entry h1, h2{
+	margin: 0;
+	padding: 0;
+}
+
+.participation_entry>div>div>div{
+	position: absolute; bottom:0px;
+	width: 100%;
+	text-align: right;
+}
+
+.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div{
+	margin: 5px 2px 5px 1px;
+	padding: 2px;
+	border-radius: 5px;
+	border: 1px solid #999;
+	background-color: #AAA;
+	display: inline-block;
+	font-size: 10px;
+	cursor: pointer;
+}
+
+.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.cancel,
+.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.kick{
+	background-color: #D9534F;
+	border-color: #D23531;
+}
+
+.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.accept,
+.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.request,
+.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.invite{
+	background-color: #92D405;
+	border-color: #88C804;
+}
+
+.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.rights{
+	background-color: #5BC0DE;
+	border-color: #38B4D8;
+}
+
+.participation_entry hr{
+	margin: 0 0 5px 0;
+}
+
+.participation_entry .participation_entry_rights_rolldown{
+	display: none;
 }
