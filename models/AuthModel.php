@@ -175,7 +175,7 @@ class AuthModel implements Model{
 				p.subtitle AS subtitle, 
 				p.create_time AS create_time 
 			FROM project AS p 
-			LEFT OUTER JOIN project_participation AS pp 
+			LEFT OUTER JOIN project_position AS pp 
 				ON p.project_id = pp.project_id 
 			WHERE pp.user_id = ?");
 		$query_get_projects->bind_param("i", $user_id);

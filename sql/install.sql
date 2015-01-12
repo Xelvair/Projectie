@@ -1,14 +1,14 @@
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
-	user_id int(11) NOT NULL AUTO_INCREMENT,
-	create_time int(11) NOT NULL,
-	email varchar(128) NOT NULL,
-	username varchar(32) NOT NULL,
-	lang varchar(10) NOT NULL,
+	user_id       int(11) NOT NULL AUTO_INCREMENT,
+	create_time   int(11) NOT NULL,
+	email         varchar(128) NOT NULL,
+	username      varchar(32) NOT NULL,
+	lang          varchar(10) NOT NULL,
 	password_salt varchar(8) NOT NULL,
 	password_hash varchar(32) NOT NULL,
-	is_admin boolean NOT NULL DEFAULT 0,
-	active boolean NOT NULL,
+	is_admin      boolean NOT NULL DEFAULT 0,
+	active        boolean NOT NULL,
 	PRIMARY KEY (user_id)
 );
 
@@ -17,53 +17,54 @@ VALUES (1, 'admin@projectie.com', 'admin', 'de-de', 'a77239ba', '73bfd1bfe49f8b4
 
 DROP TABLE IF EXISTS project;
 CREATE TABLE project (
-	project_id int NOT NULL AUTO_INCREMENT,
-	creator_id int NOT NULL,
-	create_time int NOT NULL,
-	title varchar(256) NOT NULL,
-	subtitle varchar(124) NOT NULL,
-	description text NOT NULL,
-	public_chat_id int NOT NULL,
+	project_id      int NOT NULL AUTO_INCREMENT,
+	creator_id      int NOT NULL,
+	create_time     int NOT NULL,
+	title           varchar(256) NOT NULL,
+	subtitle        varchar(124) NOT NULL,
+	description     text NOT NULL,
+	public_chat_id  int NOT NULL,
 	private_chat_id int NOT NULL,
-	active boolean NOT NULL DEFAULT 1,
+	active          boolean NOT NULL DEFAULT 1,
 	PRIMARY KEY(project_id)
 );
 
 INSERT INTO project (creator_id, create_time, title, subtitle, description, active)
 VALUES(1, UNIX_TIMESTAMP(), "Sample Project", "Sample Subtitle", "Sample Description", true);
 
-DROP TABLE IF EXISTS project_participation;
-CREATE TABLE project_participation (
-	project_participation_id int NOT NULL AUTO_INCREMENT,
-	project_id int NOT NULL,
-	user_id int NOT NULL,
-	can_delete boolean NOT NULL,
-	can_edit boolean NOT NULL,
-	can_communicate boolean NOT NULL,
-	can_add_participants boolean NOT NULL,
+DROP TABLE IF EXISTS project_position;
+CREATE TABLE project_position(
+	project_position_id     int NOT NULL AUTO_INCREMENT,
+	project_id              int NOT NULL,
+	user_id                 int,
+	job_title               varchar(128) NOT NULL,
+	can_delete              boolean NOT NULL,
+	can_edit                boolean NOT NULL,
+	can_communicate         boolean NOT NULL,
+	can_add_participants    boolean NOT NULL,
 	can_remove_participants boolean NOT NULL,
-	PRIMARY KEY(project_participation_id)
+	PRIMARY KEY(project_position_id)
 );
 
-INSERT INTO project_participation (project_id, user_id, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants)
-VALUES(1, 1, 1, 1, 1, 1, 1);
+INSERT INTO project_position (project_id, user_id, job_title, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants)
+VALUES(1, 1, "Creator", 1, 1, 1, 1, 1);
 
 DROP TABLE IF EXISTS project_participation_request;
 	CREATE TABLE project_participation_request (
 	project_participation_request_id int NOT NULL AUTO_INCREMENT,
-	project_id int NOT NULL,
-	user_id int NOT NULL,
-	request_type enum("USER_TO_PROJECT", "PROJECT_TO_USER") NOT NULL,
-	chat_id int NOT NULL,
+	project_position_id              int NOT NULL,
+	user_id                          int NOT NULL,
+	request_type                     enum("USER_TO_PROJECT", "PROJECT_TO_USER") NOT NULL,
+	chat_id                          int NOT NULL,
 	PRIMARY KEY(project_participation_request_id)
 );
 
 DROP TABLE IF EXISTS chat;
 CREATE TABLE chat (
-	chat_id int NOT NULL AUTO_INCREMENT,
+	chat_id    int NOT NULL AUTO_INCREMENT,
 	creator_id int NOT NULL,
-	title varchar(256) NOT NULL,
-	access enum("PUBLIC", "PRIVATE") NOT NULL,
+	title      varchar(256) NOT NULL,
+	access     enum("PUBLIC", "PRIVATE") NOT NULL,
 	PRIMARY KEY(chat_id)
 );
 
@@ -73,62 +74,62 @@ VALUES (1, "Test Chat", "PUBLIC");
 DROP TABLE IF EXISTS chat_participation;
 CREATE TABLE chat_participation (
 	chat_participation_id int NOT NULL AUTO_INCREMENT,
-	chat_id int NOT NULL,
-	participant_id int NOT NULL,
+	chat_id               int NOT NULL,
+	participant_id        int NOT NULL,
 	PRIMARY KEY (chat_participation_id)
 );
 
 DROP TABLE IF EXISTS chat_message;
 CREATE TABLE chat_message (
 	chat_message_id int NOT NULL AUTO_INCREMENT,
-	chat_id int NOT NULL,
-	user_id int NOT NULL,
+	chat_id         int NOT NULL,
+	user_id         int NOT NULL,
 	chat_session_id int NOT NULL,
-	send_time int NOT NULL,
-	message varchar(512) NOT NULL,
+	send_time       int NOT NULL,
+	message         varchar(512) NOT NULL,
 	PRIMARY KEY (chat_message_id)
 );
 
 DROP TABLE IF EXISTS tag;
 CREATE TABLE tag (
 	tag_id int NOT NULL AUTO_INCREMENT,
-	name varchar(64) NOT NULL,
+	name   varchar(64) NOT NULL,
 	PRIMARY KEY(tag_id)
 );
 
 DROP TABLE IF EXISTS project_tag;
 CREATE TABLE project_tag (
 	project_tag_id int NOT NULL AUTO_INCREMENT,
-	project_id int NOT NULL,
-	tag_id int NOT NULL,
+	project_id     int NOT NULL,
+	tag_id         int NOT NULL,
 	PRIMARY KEY(project_tag_id)
 );
 
 DROP TABLE IF EXISTS user_tag;
 CREATE TABLE user_tag (
 	user_tag_id int NOT NULL AUTO_INCREMENT,
-	user_id int NOT NULL,
-	tag_id int NOT NULL,
+	user_id     int NOT NULL,
+	tag_id      int NOT NULL,
 	PRIMARY KEY(user_tag_id)
 );
 
 DROP TABLE IF EXISTS project_fav;
 CREATE TABLE project_fav (
 	project_fav_id int NOT NULL AUTO_INCREMENT,
-	project_id int NOT NULL,
-	user_id int NOT NULL,
+	project_id     int NOT NULL,
+	user_id        int NOT NULL,
 	PRIMARY KEY(project_fav_id)
 );
 
 DROP TABLE IF EXISTS project_news;
 CREATE TABLE project_news (
 	project_news_id int NOT NULL AUTO_INCREMENT,
-	project_id int NOT NULL,
-	author_id int NOT NULL,
-	post_time int NOT NULL,
-	content text NOT NULL,
-	last_editor int DEFAULT NULL,
-	last_edit_time int DEFAULT NULL,
-	active boolean NOT NULL DEFAULT 1,
+	project_id      int NOT NULL,
+	author_id       int NOT NULL,
+	post_time       int NOT NULL,
+	content         text NOT NULL,
+	last_editor     int DEFAULT NULL,
+	last_edit_time  int DEFAULT NULL,
+	active          boolean NOT NULL DEFAULT 1,
 	PRIMARY KEY(project_news_id)
 );

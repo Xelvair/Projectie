@@ -39,26 +39,40 @@ class ProjectModel implements Model{
 			"active" => 1
 		]);
 
-		$project_participation_id = $this->dbez->insert("project_participation", [
+		$project_position_id = $this->dbez->insert("project_position", [
 			"project_id" => $project_id,
 			"user_id" => $creator_id,
-			"can_delete" => 0,
-			"can_edit" => 0,
-			"can_communicate" => 0,
-			"can_add_participants" => 0,
-			"can_remove_participants" => 0
+			"job_title" => "Creator",
+			"can_delete" => 1,
+			"can_edit" => 1,
+			"can_communicate" => 1,
+			"can_add_participants" => 1,
+			"can_remove_participants" => 1
 		]);
 		
 		return array();
 	}
 
 	public function get_participators($project_id){
-		return $this->dbez->find(
-			"project_participation", 
-			["project_id" => $project_id], 
-			["project_participation_id", "user_id", "can_delete", "can_edit", "can_communicate", "can_add_participants", "can_remove_participants"],
-			DBEZ_SLCT_KEY_AS_INDEX
-		);
+		global $mysqli;
+
+		$stmt_get_participators = $mysqli->prepare("
+			SELECT project_position_id, user_id, job_title, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants
+			FROM project_position
+			WHERE project_id = ?
+			AND user_id IS NOT NULL
+		");
+		$stmt_get_participators->bind_param("i", $project_id);
+		$stmt_get_participators->execute();
+		$result_get_participators = $stmt_get_participators->get_result();
+		$result_array = $result_get_participators->fetch_all(MYSQLI_ASSOC);
+
+		$result_array_keyasidx = array();
+		foreach($result_array as $result_entry){
+			$result_array_keyasidx[$result_entry["project_position_id"]] = $result_entry;
+		}
+
+		return $result_array_keyasidx;
 	}
 
 	public function get($id){
@@ -110,7 +124,7 @@ class ProjectModel implements Model{
 	}
 
 	//REQUEST_TYPE: ENUM["USER_TO_PROJECT", "PROJECT_TO_USER"]
-	public function request_participation($chat_obj, $project_id, $user_id, $request_type){
+	public function request_participation($chat_obj, $project_position_id, $user_id, $request_type){
 		global $mysqli;
 
 		//Check parameters
@@ -121,6 +135,10 @@ class ProjectModel implements Model{
 			write_log(Logger::ERROR, "Invalid parameter for function request_participation!".callinfo());
 			return array("ERROR" => "ERR_INVALID_PARAMETERS");
 		}
+
+		$project_position_obj = $this->dbez->find("project_position", ["project_position_id" => $project_position_id], ["project_id"])[0];
+
+		$project_id = $project_position_obj["project_id"];
 
 		if(self::exists_participation_request($project_id, $user_id)){
 			write_log(Logger::ERROR, "User #".$user_id."has already requested participation at project #".$project_id."!".callinfo());
@@ -144,14 +162,14 @@ class ProjectModel implements Model{
 
 		$recruitment_chat = $chat_obj->create_private(0, $recruitment_chat_title);
 
-		$project_participation_id = $this->dbez->insert("project_participation_request", [
-			"project_id" => $project_id,
+		$project_participation_request_id = $this->dbez->insert("project_participation_request", [
+			"project_position_id" => $project_position_id,
 			"user_id" => $user_id,
 			"request_type" => $request_type,
 			"chat_id" => $recruitment_chat["chat_id"]
 		]);
 
-		if(!$project_participation_id){
+		if(!$project_participation_request_id){
 			write_log(Logger::DEBUG, $project_id." ".$user_id." ".$request_type." ".print_r($recruitment_chat, true));
 			return array("ERROR" => "ERR_DB_INSERT_FAILED");
 		}
@@ -173,15 +191,24 @@ class ProjectModel implements Model{
 	public function accept_participation($participation_req_id, $acceptor_id){
 		global $mysqli;
 
-		$result = $this->dbez->find("project_participation_request", ["project_participation_request_id" => $participation_req_id], ["project_id", "user_id", "request_type"]);
+		$result_participation = $this->dbez->find("project_participation_request", ["project_participation_request_id" => $participation_req_id], ["project_position_id", "user_id", "request_type"]);
 
 		//Check if participation request exists
-		if(!$result){
+		if(!$result_participation){
 			write_log(Logger::WARNING, "Tried to accept non-existent participation request!".callinfo());
 			return array("ERROR" => "ERR_PARTICIPATION_REQUEST_NONEXISTENT");
 		}
 
-		extract($result[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
+		extract($result_participation[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
+
+		$result_position = $this->dbez->find("project_position", ["project_position_id" => $res_project_position_id], ["project_id"]);
+
+		if(!$result_position){
+			write_log(Logger::WARNING, "Tried to accept non-existent participation request!".callinfo());
+			return array("ERROR" => "ERR_PARTICIPATION_REQUEST_NONEXISTENT");
+		}
+
+		extract($result_position[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
 
 		//Determine who originally sent requesst
 		if($res_request_type == "USER_TO_PROJECT"){
@@ -206,7 +233,7 @@ class ProjectModel implements Model{
 	}
 
 	public function user_has_right($project_id, $user_id, $right){
-		$result = $this->dbez->find("project_participation", ["project_id" => $project_id, "user_id" => $user_id], "*");
+		$result = $this->dbez->find("project_position", ["project_id" => $project_id, "user_id" => $user_id], "*");
 
 		if(!$result){
 			return false;
@@ -222,7 +249,9 @@ class ProjectModel implements Model{
 	}
 
 	public function create_participation($participation_req_id){
-		$result = $this->dbez->find("project_participation_request", $participation_req_id, ["project_id", "user_id"]);
+		global $mysqli;
+
+		$result = $this->dbez->find("project_participation_request", $participation_req_id, ["project_position_id", "user_id"]);
 
 		if(!$result){
 			write_log(Logger::ERROR, "Participation request #".$participation_req_id."doesn't exist!");
@@ -231,7 +260,7 @@ class ProjectModel implements Model{
 
 		extract($result, EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
 
-		if(self::exists_participation($res_project_id, $res_user_id)){
+		if(self::exists_participation($res_project_position_id, $res_user_id)){
 			write_log(Logger::ERROR, "User #".$res_user_id." is already participating in project #".$res_project_id."!".callinfo());
 			return array("ERROR" => "ERR_PARTICIPATION_ALREADY_EXISTS");
 		}
@@ -239,15 +268,9 @@ class ProjectModel implements Model{
 		//Remove entry in participation request table, since we're going to create the real deal now
 		$this->dbez->delete("project_participation_request", $participation_req_id);
 
-		$this->dbez->insert("project_participation", [
-			"project_id" => $res_project_id,
-			"user_id" => $res_user_id,
-			"can_delete" => 0,
-			"can_edit" => 0,
-			"can_communicate" => 0,
-			"can_add_participants" => 0,
-			"can_remove_participants" => 0
-		]);
+		$stmt_update_position = $mysqsli->prepare("UPDATE project_position SET user_id = ? WHERE project_position_id = ?");
+		$stmt_update_position->bind_param("ii", $res_user_id, $res_project_position_id);
+		$stmt_update_position->execute();
 	}
 
 	public function get_all_projects(){
@@ -255,11 +278,26 @@ class ProjectModel implements Model{
 	}
 
 	public function exists_participation_request($project_id, $user_id){
-		return !!$this->dbez->find("project_participation_request", ["project_id" => $project_id, "user_id" => $user_id], ["project_participation_request_id"]);
+		global $mysqli;
+
+		$stmt_check_participation = $mysqli->prepare("
+			SELECT project_participation_request_id 
+			FROM project_participation_request ppr 
+			LEFT JOIN project_position pp 
+				ON(pp.project_position_id = ppr.project_position_id) 
+			WHERE ppr.user_id = ? 
+			AND pp.project_id = ?");
+
+		$stmt_check_participation->bind_param("ii", $user_id, $project_id);
+		$stmt_check_participation->execute();
+		
+		$result = $stmt_check_participation->get_result();
+
+		return ($result->num_rows > 0);
 	}
 
 	public function exists_participation($project_id, $user_id){
-		return !!$this->dbez->find("project_participation", ["project_id" => $project_id, "user_id" => $user_id], ["project_participation_id"]);
+		return !!$this->dbez->find("project_position", ["project_id" => $project_id, "user_id" => $user_id], ["project_position_id"]);
 	}
 
 	public function tag($tag_model, $project_id, $tag){

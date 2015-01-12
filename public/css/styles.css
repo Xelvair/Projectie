@@ -687,6 +687,12 @@ text-align: left;
 	box-shadow: 3px 3px 5px #888888;
 }
 
+.participation_entry a:focus,
+.participation_entry a:hover
+{
+	color: black;
+}
+
 .participation_entry>div:first-child{
 	background-image: url(/public/images/pane_header.png);
 	height: 40px;
@@ -737,33 +743,34 @@ text-align: left;
 	text-align: right;
 }
 
-.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div{
+.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3) div{
 	margin: 5px 2px 5px 1px;
 	padding: 2px;
 	border-radius: 5px;
 	border: 1px solid #999;
 	background-color: #AAA;
 	display: inline-block;
-	font-size: 10px;
+	font-size: 12px;
+	font-weight: bold;
 	cursor: pointer;
 }
 
-.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.cancel,
-.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.kick{
-	background-color: #D9534F;
-	border-color: #D23531;
+.participation_entry div.cancel,
+.participation_entry div.kick{
+	background-color: #D9534F !important;
+	border-color: #D23531 !important;
 }
 
-.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.accept,
-.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.request,
-.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.invite{
-	background-color: #92D405;
-	border-color: #88C804;
+.participation_entry div.accept,
+.participation_entry div.request,
+.participation_entry div.invite{
+	background-color: #92D405 !important;
+	border-color: #88C804 !important;
 }
 
-.participation_entry>div:nth-child(2)>div:nth-child(2)>div:nth-child(3)>div.rights{
-	background-color: #5BC0DE;
-	border-color: #38B4D8;
+.participation_entry div.rights{
+	background-color: #5BC0DE !important;
+	border-color: #38B4D8 !important;
 }
 
 .participation_entry hr{
