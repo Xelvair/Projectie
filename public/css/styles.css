@@ -698,11 +698,18 @@ text-align: left;
 	height: 40px;
 	width: 100%;
 	background-repeat: no-repeat;
-	color: #92D405;
 	background-size: auto 40px;
 	padding-left: 10px;
 	padding-top: 1px;
 	font-size: 20px;
+}
+
+.participation_entry.active_participation>div:first-child{
+	color: #92D405;
+}
+
+.participation_entry.open_participation>div:first-child{
+	color: #38B4D8;
 }
 
 .participation_entry>div:nth-child(2){

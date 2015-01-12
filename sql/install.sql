@@ -43,11 +43,12 @@ CREATE TABLE project_position(
 	can_communicate         boolean NOT NULL,
 	can_add_participants    boolean NOT NULL,
 	can_remove_participants boolean NOT NULL,
+	participator_since			int,
 	PRIMARY KEY(project_position_id)
 );
 
-INSERT INTO project_position (project_id, user_id, job_title, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants)
-VALUES(1, 1, "Creator", 1, 1, 1, 1, 1);
+INSERT INTO project_position (project_id, user_id, job_title, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants, participator_since)
+VALUES(1, 1, "Creator", 1, 1, 1, 1, 1, 0);
 
 DROP TABLE IF EXISTS project_participation_request;
 	CREATE TABLE project_participation_request (

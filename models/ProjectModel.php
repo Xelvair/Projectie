@@ -47,7 +47,8 @@ class ProjectModel implements Model{
 			"can_edit" => 1,
 			"can_communicate" => 1,
 			"can_add_participants" => 1,
-			"can_remove_participants" => 1
+			"can_remove_participants" => 1,
+			"participator_since" => time()
 		]);
 		
 		return array();
@@ -57,7 +58,7 @@ class ProjectModel implements Model{
 		global $mysqli;
 
 		$stmt_get_participators = $mysqli->prepare("
-			SELECT project_position_id, user.user_id, username, job_title, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants
+			SELECT project_position_id, user.user_id, username, job_title, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants, participator_since
 			FROM project_position
 			LEFT JOIN user
 				ON(project_position.user_id = user.user_id)
@@ -274,8 +275,8 @@ class ProjectModel implements Model{
 		//Remove entry in participation request table, since we're going to create the real deal now
 		$this->dbez->delete("project_participation_request", $participation_req_id);
 
-		$stmt_update_position = $mysqsli->prepare("UPDATE project_position SET user_id = ? WHERE project_position_id = ?");
-		$stmt_update_position->bind_param("ii", $res_user_id, $res_project_position_id);
+		$stmt_update_position = $mysqsli->prepare("UPDATE project_position SET user_id = ?, participator_since = ? WHERE project_position_id = ?");
+		$stmt_update_position->bind_param("iii", $res_user_id, time(), $res_project_position_id);
 		$stmt_update_position->execute();
 	}
 
