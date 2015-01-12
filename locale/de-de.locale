@@ -57,5 +57,6 @@
 	"subtitle" : "Untertitel",
 	"desc" : "Beschreibung",
 	"news_feed" : "Neuigkeiten",
-	"post_title" : "Post Titel"
+	"post_title" : "Post Titel",
+	"members" : "Mitglieder"
 }

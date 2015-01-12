@@ -755,7 +755,7 @@ text-align: left;
 	cursor: pointer;
 }
 
-.participation_entry div.cancel,
+.participation_entry div.leave,
 .participation_entry div.kick{
 	background-color: #D9534F !important;
 	border-color: #D23531 !important;

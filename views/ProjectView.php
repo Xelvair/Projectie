@@ -56,7 +56,7 @@ $(document).ready(function(){
 	<div class="col-md-2">
 		<ul class="list-group">
 		<?php foreach ($_DATA["project"]["participators"] as $participators){ ?>
-			<li class="user list-group-item" user-id="<?=$participators['id']?>"><?=$participators['username']?></li>
+			<li class="user list-group-item" user-id="<?=$participators['user_id']?>"><?=$participators['username']?></li>
 		<?php }?>
 		</ul>
 	</div>
@@ -66,6 +66,7 @@ $(document).ready(function(){
 					<ul class="nav nav-tabs">
 						<li role="presentation" class="active"><a href="#home" id="home-btn" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
 						<li role="presentation" ><a href="#conversations" id="conversation-btn" aria-controls="conversations" role="tab" data-toggle="tab"><?=$locale['conversations']?></a></li>
+						<li role="presentation" ><a href="#members" id="member-btn" aria-controls="members" role="tab" data-toggle="tab"><?=$locale['members']?></a></li>
 					</ul>
 					<div class="tab-content project-desc-tab">
 						<div role="tabpanel" class="tab-pane fade in active" id="home">
@@ -165,6 +166,9 @@ $(document).ready(function(){
 								</div>
 							</div>
 						</div><!--Conversation tab End-->
+						<div role="tabpanel" class="tab-pane fade" id="members">
+						<?=$_DATA["project"]["member_list"]?>
+						</div>
 					</div><!--Tab content END-->
 			</div><!--TABPanel END-->
 		</div><!--Row END-->

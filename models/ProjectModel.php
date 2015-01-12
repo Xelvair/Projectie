@@ -57,10 +57,12 @@ class ProjectModel implements Model{
 		global $mysqli;
 
 		$stmt_get_participators = $mysqli->prepare("
-			SELECT project_position_id, user_id, job_title, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants
+			SELECT project_position_id, user.user_id, username, job_title, can_delete, can_edit, can_communicate, can_add_participants, can_remove_participants
 			FROM project_position
+			LEFT JOIN user
+				ON(project_position.user_id = user.user_id)
 			WHERE project_id = ?
-			AND user_id IS NOT NULL
+			AND project_position.user_id IS NOT NULL
 		");
 		$stmt_get_participators->bind_param("i", $project_id);
 		$stmt_get_participators->execute();
@@ -73,6 +75,10 @@ class ProjectModel implements Model{
 		}
 
 		return $result_array_keyasidx;
+	}
+
+	public function get_positions($project_id){
+		return $this->dbez->find("project_position", ["project_id" => $project_id], "*");
 	}
 
 	public function get($id){

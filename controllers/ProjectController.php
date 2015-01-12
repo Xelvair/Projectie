@@ -314,6 +314,84 @@ class ProjectController extends Controller{
 		
 		return $html;
 	}
+
+	public function show($data){
+		global $locale;
+		global $CONFIG;
+
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+		if(!isset($data[0])){
+			return "No project id given.";
+		}
+
+		$user = $auth->get_current_user();
+		if($user != null){
+			$locale_load_result = $locale->load($user["lang"]);
+
+			if($locale_load_result == false){
+				$locale->load("en-us");
+			}
+		} else {
+			$locale->load("en-us");
+		}
+
+		$project_obj = $project->get((int)$data[0]);
+		if(!$project_obj){
+			return "No project found for id ".$data[0];
+		}
+		
+		$footer_array = array("user" => ($user == null ? null : $user["username"]));
+		$footer = $this->view("Footer", $footer_array);
+		
+		$user_review = $this->view("UserReview", "");
+		
+		$member_list = $project->get_positions((int)$data[0]);
+		$member_list_html = "";
+		foreach($member_list as $member_list_entry){
+			$member_list_entry["user"] = $auth->get_user($member_list_entry["user_id"]);
+			$member_list_html .= $this->view("ParticipationListTest", array("project_position" => $member_list_entry));
+		}
+
+		$project_info = array(
+			"participators" => $project->get_participators($data[0]), 
+			"desc" => $project_obj["description"], 
+			"subtitle" =>  $project_obj["subtitle"], 
+			"title" => $project_obj["title"], 
+			"header" => abspath("/public/images/default-banner.png"), 
+			"time" => "14. 08. 2013 10:23", 
+			"fav_count" => $project->get_fav_count($data[0]),
+			"member_list" => $member_list_html
+		);
+		
+		
+		$news_feed_content = array("entries" => array(), "list_title" =>  $locale['news_feed']);
+		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		
+		$news_feed = $this->view("TitleDescriptionList", $news_feed_content);
+		
+		
+		
+		$content = $this->view("Project", array("user_review" => $user_review, "news_feed" => $news_feed, "project" => $project_info));
+		
+		$login_modal = $this->view("LoginModal", "");
+
+		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
+															"user" => ($user == null ? null : $user["username"]),
+															"login_modal" => $login_modal,
+															"footer" => $footer));
+
+		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+												"body" => $contentwrap, 
+												"body_padding" => true,
+												"current_user" => $user));
+		
+		
+		return $html;
+	}
 	
 
 }
