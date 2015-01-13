@@ -150,8 +150,6 @@ class DBEZModel implements Model{
 		global $mysqli;
 
 		$result = $mysqli->query("SHOW COLUMNS FROM ".$table);
-		write_log(Logger::DEBUG, $table);
-		write_log(Logger::DEBUG, print_r($result, true));
 		return $result->fetch_all(MYSQLI_ASSOC);
 	}
 

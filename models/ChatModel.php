@@ -30,7 +30,7 @@ class ChatModel implements Model{
 				chat.creator_id AS creator_id,
 				chat.access AS access,
 				pp.project_participation_request_id,
-				pp.project_id AS participation_project_id,
+				pp.project_Position_id AS participation_project_position_id,
 				pp.user_id AS participation_user_id
 			FROM chat 
 			LEFT JOIN project_participation_request pp 

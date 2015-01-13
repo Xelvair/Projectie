@@ -261,59 +261,6 @@ class ProjectController extends Controller{
 			"tags" => $project->get_tags($project_id)
 		));
 	}
-	
-	public function index(){
-		global $locale;
-		global $CONFIG;
-
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$user = $auth->get_current_user();
-		if($user != null){
-			$locale_load_result = $locale->load($user["lang"]);
-
-			if($locale_load_result == false){
-				$locale->load("en-us");
-			}
-		} else {
-			$locale->load("en-us");
-		}
-		
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = $this->view("Footer", $footer_array);
-		
-		$user_review = $this->view("UserReview", "");
-		
-		$project = array("participators" => array(), "desc" => "hello guys :)", "subtitle" => "This is a test project", "title" => "test_project", "header" => abspath("/public/images/default-banner.png"), "time" => "14. 08. 2013 10:23", "fav_count" => "234");
-		array_push($project["participators"], array("id" => "1", "username" => "admin"));
-		
-		
-		$news_feed_content = array("entries" => array(), "list_title" =>  $locale['news_feed']);
-		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		
-		$news_feed = $this->view("TitleDescriptionList", $news_feed_content);
-		
-		
-		
-		$content = $this->view("Project", array("user_review" => $user_review, "news_feed" => $news_feed, "project" => $project));
-		
-		$login_modal = $this->view("LoginModal", "");
-
-		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user["username"]),
-															"login_modal" => $login_modal,
-															"footer" => $footer));
-
-		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-												"body" => $contentwrap, 
-												"body_padding" => true,
-												"current_user" => $user));
-		
-		
-		return $html;
-	}
 
 	public function show($data){
 		global $locale;
@@ -342,16 +289,13 @@ class ProjectController extends Controller{
 			return "No project found for id ".$data[0];
 		}
 		
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		
 		$member_list = $project->get_positions((int)$data[0]);
-		$member_list_html = "";
-		foreach($member_list as $member_list_entry){
-			$member_list_entry["user"] = $auth->get_user($member_list_entry["user_id"]);
-			$member_list_html .= $this->view("ParticipationListTest", array("project_position" => $member_list_entry));
-		}
+		$member_list = array_map(function($entry) use ($auth){
+			$result = array_merge($entry, array("user" => $auth->get_user($entry["user_id"])));
+			return array("project_position" => $result);
+		}, $member_list);
 
-		$html = $this->view("HtmlBase", array(	
+		return $this->view("HtmlBase", array(	
 			"title" => "Projectie - Driving Development", 
 			"body" => $this->view("ContentWrapper", array(	
 				"content" => $this->view("Project", array(
@@ -381,8 +325,8 @@ class ProjectController extends Controller{
 								"creator" => array("id" => "1", "name" => "admin"),
 								"source" => array("id" => "1", "name" => "Test Project"), 
 								"time" => "09:12"
-							),
-						),
+							)
+						)
 					)), 
 					"project" => array(
 						"participators" => $project->get_participators($data[0]), 
@@ -392,22 +336,19 @@ class ProjectController extends Controller{
 						"header" => abspath("/public/images/default-banner.png"), 
 						"time" => "14. 08. 2013 10:23", 
 						"fav_count" => $project->get_fav_count($data[0]),
-						"member_list" => $member_list_html
+						"member_list" => $this->view_batch("ParticipationListTest", $member_list)
 					)
 				)), 
 				"user" => ($user == null ? null : $user["username"]),
 				"login_modal" => $this->view("LoginModal"),
-				"footer" => $this->view("Footer", $footer_array))
+				"footer" => $this->view("Footer", array(
+					"user" => ($user == null ? null : $user["username"]))
+				))
 			), 
 			"body_padding" => true,
 			"current_user" => $user
 		));
-		
-		
-		return $html;
 	}
-	
-
 }
 
 ?>

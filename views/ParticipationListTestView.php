@@ -1,6 +1,7 @@
 <?php
-$id_removemodal = rand();
-$id_leavemodal = rand();
+
+require_once(abspath_lcl("/templates/position_remove_modal.html"));
+require_once(abspath_lcl("/templates/position_leave_modal.html"));
 
 $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
 
@@ -27,10 +28,14 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
             <?php } ?>
 			<div>
 				<div class="rights"><span class="glyphicon glyphicon-ok"></span> Rights<span class="caret"></span></div>
-				<a href="#" data-toggle="modal" data-target="#modal<?=$id_removemodal?>">
+				<a href="#" data-toggle="modal" data-target="#position_remove_modal" 
+                <?php if($is_position_filled){ ?>
+                    data-username="<?=$_DATA["project_position"]["user"]["username"]?>"
+                <?php } ?>
+                >
 					<div class="kick"><span class="glyphicon glyphicon-remove"></span> Kick</div>
 				</a>
-				<a href="#" data-toggle="modal" data-target="#modal<?=$id_leavemodal?>">
+				<a href="#" data-toggle="modal" data-target="#position_leave_modal">
 					<div class="leave"><span class="glyphicon glyphicon-remove"></span> Leave</div>
 				</a>
 			</div>
@@ -40,40 +45,4 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
 		<hr>
 		fawfawfawf
 	</div>
-</div>
-
-<div id="modal<?=$id_removemodal?>" class="modal fade" tabindex="-1" role="dialog">
-	<div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
-            </div>
-            <div class="modal-body">
-                <h3>Do you really want to remove <?=$_DATA["project_position"]["user"]["username"]?> from the Project?</h3>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger">Remove</button>
-        </div>
-    </div>
-  </div>
-</div>
-
-<div id="modal<?=$id_leavemodal?>" class="modal fade" tabindex="-1" role="dialog">
-	<div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
-            </div>
-            <div class="modal-body">
-                <h3>Do you really want to leave the Project?</h3>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger">Leave</button>
-        </div>
-    </div>
-  </div>
 </div>
