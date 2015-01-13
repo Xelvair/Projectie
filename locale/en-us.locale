@@ -57,6 +57,9 @@
 	"subtitle" : "Subtitle",
 	"desc" : "Description",
 	"news_feed" : "News feed",
-	"post_title" : "Post title"
+	"post_title" : "Post title",
+	"close" : "Close",
+	"update" : "Update",
+	"settings" : "Settings"
 	
 }

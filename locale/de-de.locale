@@ -57,5 +57,8 @@
 	"subtitle" : "Untertitel",
 	"desc" : "Beschreibung",
 	"news_feed" : "Neuigkeiten",
-	"post_title" : "Post Titel"
+	"post_title" : "Post Titel",
+	"close" : "Schließen",
+	"update" : "Aktualisieren",
+	"settings" : "Einstellungen"
 }
