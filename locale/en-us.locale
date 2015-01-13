@@ -58,6 +58,8 @@
 	"desc" : "Description",
 	"news_feed" : "News feed",
 	"post_title" : "Post title",
-	"members" : "Members"
-	
+	"members" : "Members",
+	"close" : "Close",
+	"update" : "Update",
+	"settings" : "Settings"	
 }

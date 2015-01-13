@@ -58,5 +58,8 @@
 	"desc" : "Beschreibung",
 	"news_feed" : "Neuigkeiten",
 	"post_title" : "Post Titel",
-	"members" : "Mitglieder"
+	"members" : "Mitglieder",
+	"close" : "Schließen",
+	"update" : "Aktualisieren",
+	"settings" : "Einstellungen"
 }

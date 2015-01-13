@@ -17,8 +17,8 @@ global $locale;
     <div class="col-md-4 col-xs-4 text-right">
         <ul class="list-inline">
         	<li><?php echo $locale['logged_in_as'].": ";  
-                if(isset($_DATA['username']) && $_DATA['username'] != ""){ 
-                    echo $_DATA['username']; 
+                if(isset($_DATA['user']) && $_DATA['user'] != ""){ 
+                    echo $_DATA['user']; 
     			
     			}else{
     				echo $locale['guest'];

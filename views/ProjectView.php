@@ -17,6 +17,8 @@ global $locale;
 ?>
 
 <script>
+var desc_click = 0;
+
 $(document).ready(function(){
 	
 	$('#btn_add_fav').on('click', function(){
@@ -44,7 +46,40 @@ $(document).ready(function(){
 			$(this).addClass('downvote_selected');
 		}	
 	});
+	
+	$('#desc_wrap').on('click', function(){
+		if(desc_click == 0){
+			desc_click = 1;
+			var desc = $(this).text();
+			$(this).hide();
+			$('#desc_update_wrap').show();
+			$('#desc_area').val(desc);
+		}
+
+	});
+	
+	
 });
+
+function update_desc(){
+	var desc = $('#desc_area').val();
+	
+	/*UPDATE DESCRIPTION PHP PLACEHOLDER*/
+	
+	exit_desc(desc);
+}
+
+function exit_desc(desc){
+
+	$('#desc_area').val('');
+	$('#desc_update_wrap').hide();
+	$('#desc_wrap').show();
+	desc_click = 0;
+	
+	if(desc != null){
+		$('#desc_wrap').text(desc);
+	}
+}
 </script>
 <div class="row" id="banner_wrap">
         <img class="img-responsive banner" src="<?=$_DATA['project']['header']?>"/>
@@ -82,8 +117,13 @@ $(document).ready(function(){
 												</h4>
 											</div>
 											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-												<div class="panel-body">
-													<?=$_DATA['project']['desc']?>
+												<div class="panel-body" id="desc_panel">
+													<div id="desc_wrap"><?=$_DATA['project']['desc']?></div>
+													<div id="desc_update_wrap" style="display: none;">
+														<textarea name="desc" rows="6" class="form-control" id="desc_area" style="margin-bottom: 15px;"></textarea>
+														<button onclick="update_desc()" class="btn btn-default pull-left"><?=$locale['update']?></button>
+														<button onclick="exit_desc();" class="btn pull-right"><?=$locale['close']?></button>
+													</div>
 												</div>
 											</div>
 										</div>

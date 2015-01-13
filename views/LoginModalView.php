@@ -154,7 +154,7 @@ $(document).ready(function(){
                 </div>
                 <div class="row">
                 	<div class="col-md-6 text-left" style="padding-top:10px;">
-                    <a onclick="modal_toggle()"><?=$locale["register"]?></a>
+                    <a style="cursor:pointer;" onclick="modal_toggle()"><?=$locale["register"]?>?</a>
                   </div>      
                   <div class="col-md-6 text-right">
                   	<button id="login_btn" type="button" class="btn btn-default">Login</button>

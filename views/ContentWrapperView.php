@@ -81,9 +81,23 @@ global $locale;
 			</div>
 			<div class="row">     
 				  <div class="col-md-12 text-right">
-					<button id="login_btn" type="button" class="btn btn-default"><?=$locale["search"]?></button>
+					<button type="button" class="btn btn-default"><?=$locale["search"]?></button>
 				  </div>
 			</div>
+          </div>
+       </div>
+   </div>
+</div>
+
+<div id="settingsModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+   <div class="modal-dialog">
+       <div class="modal-content">
+           <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
+              <h2 class="text-center"><?=$locale["settings"]?></h2>
+          </div>
+          <div class="modal-body">
+			
           </div>
        </div>
    </div>
@@ -124,8 +138,12 @@ global $locale;
           <ul class="dropdown-menu" role="menu">
             <li><a href="#"><?=$locale["about"]?></a></li>
             <li class="divider"></li>
+			<?php if($_DATA["user"] != null){?>
+			<li><a href="#settingsModal" role="button" data-toggle="modal"><?=$locale["settings"]?></a></li>
             <li><a href="#" id="logout_btn"><?=$locale["logout"]?></a></li>
-            <li><a href="#loginModal" role="button" class="btn" data-toggle="modal">Login</a></li>
+			<?php }else{ ?>
+            <li><a href="#loginModal" role="button" data-toggle="modal">Login</a></li>
+			<?php } ?>
           </ul>
         </li>
       </ul>
