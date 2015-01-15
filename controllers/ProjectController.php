@@ -262,58 +262,6 @@ class ProjectController extends Controller{
 		));
 	}
 	
-	public function index(){
-		global $locale;
-		global $CONFIG;
-
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$user = $auth->get_current_user();
-		if($user != null){
-			$locale_load_result = $locale->load($user["lang"]);
-
-			if($locale_load_result == false){
-				$locale->load("en-us");
-			}
-		} else {
-			$locale->load("en-us");
-		}
-		
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = $this->view("Footer", $footer_array);
-		
-		$user_review = $this->view("UserReview", "");
-		
-		$project = array("participators" => array(), "desc" => "hello guys :)", "subtitle" => "This is a test project", "title" => "test_project", "header" => abspath("/public/images/default-banner.png"), "time" => "14. 08. 2013 10:23", "fav_count" => "234");
-		array_push($project["participators"], array("id" => "1", "username" => "admin"));
-		
-		
-		$news_feed_content = array("entries" => array(), "list_title" =>  $locale['news_feed']);
-		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($news_feed_content["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		
-		$news_feed = $this->view("TitleDescriptionList", $news_feed_content);
-		
-		
-		
-		$content = $this->view("Project", array("user_review" => $user_review, "news_feed" => $news_feed, "project" => $project));
-		
-		$login_modal = $this->view("LoginModal", "");
-
-		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user["username"]),
-															"login_modal" => $login_modal,
-															"footer" => $footer));
-
-		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-												"body" => $contentwrap, 
-												"body_padding" => true,
-												"current_user" => $user));
-		
-		
-		return $html;
-	}
 
 	public function show($data){
 		global $locale;
@@ -343,6 +291,11 @@ class ProjectController extends Controller{
 		}
 		
 		$footer_array = array("user" => ($user == null ? null : $user["username"]));
+		
+		$tags = array("tags" => array(), "tag_box_title" => false);
+		array_push($tags["tags"], array("tag_id" => 12, "name" => "dafuq r u?"));
+		
+		$tag_box = $this->view("TagBox", $tags);
 		
 		$member_list = $project->get_positions((int)$data[0]);
 		$member_list_html = "";
@@ -393,7 +346,8 @@ class ProjectController extends Controller{
 						"time" => "14. 08. 2013 10:23", 
 						"fav_count" => $project->get_fav_count($data[0]),
 						"member_list" => $member_list_html
-					)
+					),
+					"tag_box" => $tag_box
 				)), 
 				"user" => ($user == null ? null : $user["username"]),
 				"login_modal" => $this->view("LoginModal"),

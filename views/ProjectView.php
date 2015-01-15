@@ -11,7 +11,7 @@
 	#fav_count
 	#time
 #news_feed
-#footer
+#tag_box
 
 global $locale;
 ?>
@@ -88,14 +88,7 @@ function exit_desc(desc){
 		</div>
 </div>
 <div class="row" style="margin-top: 15px; margin-bottom: 20px;">
-	<div class="col-md-2">
-		<ul class="list-group">
-		<?php foreach ($_DATA["project"]["participators"] as $participators){ ?>
-			<li class="user list-group-item" user-id="<?=$participators['user_id']?>"><?=$participators['username']?></li>
-		<?php }?>
-		</ul>
-	</div>
-	<div class="col-md-10">
+	<div class="col-md-12">
 		<div class="row">
 			<div class="tabpanel">
 					<ul class="nav nav-tabs">
@@ -106,19 +99,21 @@ function exit_desc(desc){
 					<div class="tab-content project-desc-tab">
 						<div role="tabpanel" class="tab-pane fade in active" id="home">
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-md-8">
 									<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab" id="headingOne">
-												<h4 class="panel-title">
-													<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+												
+													<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+													<h4 class="panel-title">
 													<?=$locale['project_desc']?>
+													</h4>
 													</a>
-												</h4>
+												
 											</div>
 											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 												<div class="panel-body" id="desc_panel">
-													<div id="desc_wrap"><?=$_DATA['project']['desc']?></div>
+													<div id="desc_wrap"><?=$_DATA['project']['desc']?> ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka</div>
 													<div id="desc_update_wrap" style="display: none;">
 														<textarea name="desc" rows="6" class="form-control" id="desc_area" style="margin-bottom: 15px;"></textarea>
 														<button onclick="update_desc()" class="btn btn-default pull-left"><?=$locale['update']?></button>
@@ -127,9 +122,21 @@ function exit_desc(desc){
 												</div>
 											</div>
 										</div>
+										<div class="panel-heading tag-heading" role="tab" id="headingTwo">
+											<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+												<h4 class="panel-title">
+													<?=$locale['tags']?>
+												</h4>
+											</a>
+										</div>
+										<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+											<div class="panel-body" id="tag_panel">
+												<?=$_DATA['tag_box']?>
+											</div>
+										</div>
 									</div>
 								</div><!--COl END-->
-								<div class="col-md-6">
+								<div class="col-md-4">
 									<div class="project-property">
 										<div class="property-title property-item"><?=$locale['favorites']?>:</div><div class="property-item"><?=$_DATA['project']['fav_count']?></div>
 									</div>
@@ -188,7 +195,7 @@ function exit_desc(desc){
 												<h2 id="chat-title">
 												 <?=$_DATA['project']['title']?>
 												</h2>
-											</div>f
+											</div>
 										</div>
 									</div>
 									<div id="chat-box">

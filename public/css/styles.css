@@ -285,13 +285,10 @@ hr{
     border:solid;
     border-width: 1px;
     border-color: #AAAAAA;  
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    border-radius: 15px;
     padding: 10px;
     max-height: 320px;
     overflow-y: auto;
-    margin-top: 20px;
+    margin-top: 10px;
     
     -webkit-box-shadow: 2px 2px 5px 0px rgba(50, 48, 50, 0.5);
     -moz-box-shadow:    2px 2px 5px 0px rgba(50, 48, 50, 0.5);
@@ -786,4 +783,53 @@ text-align: left;
 
 .participation_entry .participation_entry_rights_rolldown{
 	display: none;
+}
+
+.desc_panel{
+	background-image: url(/public/images/pane_header.png);
+	height: 40px;
+	background-repeat: no-repeat;
+	background-size: auto 40px;
+	padding-left: 10px;
+	font-size: 20px;
+	border-style: none !important;
+}
+
+.panel-default{
+	border-style: none !important;
+	box-shadow: none;
+}
+
+
+.panel-body{
+	border-style: none;
+	box-shadow: none;
+}
+
+.panel-title{
+	color: #92D405;
+	font-size: 20px;
+}
+
+.panel-group .panel-heading+.panel-collapse>.panel-body{
+	border-style: none;
+}
+
+.panel-heading{
+	background-color: #FFF !important;
+	background-image: url(/public/images/pane_header.png);
+	background-size: auto 40px;
+	background-repeat: no-repeat;
+	padding:  5px 10px 20px;
+}
+.panel-group{
+	margin-top: 10px;
+}
+
+#tag_panel{
+padding: 0px;
+}
+
+.tag-heading{
+padding-bottom: 9px !important;
 }
