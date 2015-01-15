@@ -177,7 +177,6 @@ class ProjectModel implements Model{
 		]);
 
 		if(!$project_participation_request_id){
-			write_log(Logger::DEBUG, $project_id." ".$user_id." ".$request_type." ".print_r($recruitment_chat, true));
 			return array("ERROR" => "ERR_DB_INSERT_FAILED");
 		}
 

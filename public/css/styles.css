@@ -66,6 +66,10 @@ box-shadow:         0px 3px 4px 0px rgba(50, 50, 50, 0.71);
     color: #323232 ;
 }
 
+.btn-danger{
+	background-color: #CC3114;
+}
+
 #wrapper {
     padding-left: 0;
     min-padding-right: 120px;
@@ -763,13 +767,14 @@ text-align: left;
 }
 
 .participation_entry div.leave,
-.participation_entry div.kick{
+.participation_entry div.kick,
+.participation_entry div.remove{
 	background-color: #D9534F !important;
 	border-color: #D23531 !important;
 }
 
 .participation_entry div.accept,
-.participation_entry div.request,
+.participation_entry div.participate,
 .participation_entry div.invite{
 	background-color: #92D405 !important;
 	border-color: #88C804 !important;

@@ -21,7 +21,7 @@ class ProjectController extends Controller{
 			$private_chat = $chat->create_private(0, $_POST["title"]." Private Chat");
 
 			//Add creator to private chat
-			write_log(Logger::DEBUG, print_r($chat->add_user($private_chat["chat_id"], $logged_in_user["id"]), true));
+			$chat->add_user($private_chat["chat_id"], $logged_in_user["id"]);
 
 			//Create the project itself
 			$create_result = $project->create(
@@ -272,6 +272,7 @@ class ProjectController extends Controller{
 		if(!isset($data[0])){
 			return "No project id given.";
 		}
+		$data[0] = (int)$data[0];
 
 		$user = $auth->get_current_user();
 		if($user != null){
@@ -290,9 +291,44 @@ class ProjectController extends Controller{
 		}
 		
 		$member_list = $project->get_positions((int)$data[0]);
-		$member_list = array_map(function($entry) use ($auth){
-			$result = array_merge($entry, array("user" => $auth->get_user($entry["user_id"])));
-			return array("project_position" => $result);
+		$member_list = array_map(function($entry) use ($auth, $project, $project_obj, $user){
+			$result = array_merge($entry, array("user" => $auth->get_user($entry["user_id"])), array("project" => $project->get($entry["project_id"])));
+			write_log(Logger::DEBUG, print_r($entry, true));
+			$flags = array();
+
+			if($user){
+				//If the currently shown user is the logged in user
+				if(
+					$project->exists_participation($project_obj["project_id"], $entry["user_id"]) &&
+					$user["user_id"] == $result["user"]["user_id"]
+				){
+					array_push($flags, "LEAVE", "RIGHTS");
+				}
+
+				//If the current user is the creator of the project
+				if($project_obj["creator_id"] == $user["user_id"]){
+					array_push($flags, "RIGHTS", "RIGHTS_EDITABLE");
+					
+					if($entry["user_id"] != $user["user_id"] && !empty($entry["user_id"])){
+						array_push($flags, "KICK");
+					} else if($entry["user_id"] != $user["user_id"] && empty($entry["user_id"])){
+						array_push($flags, "REMOVE");
+					}
+				}
+
+				//If the current user is not a participator in the project
+				if(
+					!$project->exists_participation($project_obj["project_id"], $user["user_id"]) && 
+					!$project->exists_participation_request($project_obj["project_id"], $user["user_id"]) &&
+					empty($entry["user_id"])
+				){
+					array_push($flags, "PARTICIPATE");
+				}
+			}
+
+			$flags = array_unique($flags);
+
+			return array("project_position" => $result, "flags" => $flags);
 		}, $member_list);
 
 		return $this->view("HtmlBase", array(	

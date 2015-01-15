@@ -2,11 +2,14 @@
 
 require_once(abspath_lcl("/templates/position_remove_modal.html"));
 require_once(abspath_lcl("/templates/position_leave_modal.html"));
+require_once(abspath_lcl("/templates/position_kick_modal.html"));
+require_once(abspath_lcl("/templates/position_participate_modal.html"));
 
 $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
 
 # project_position : assoc array of project_position as in database
 # project_position[user] : assoc array of user as in database
+# flags : flags for functions
 ?>
 
 <?php if($is_position_filled){ ?>
@@ -27,22 +30,46 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
                 <h2></h2>
             <?php } ?>
 			<div>
-				<div class="rights"><span class="glyphicon glyphicon-ok"></span> Rights<span class="caret"></span></div>
-				<a href="#" data-toggle="modal" data-target="#position_remove_modal" 
-                <?php if($is_position_filled){ ?>
-                    data-username="<?=$_DATA["project_position"]["user"]["username"]?>"
+                <?php write_log(Logger::DEBUG, print_r($_DATA["flags"], true)); ?>
+                <?php if(array_search("RIGHTS", $_DATA["flags"]) !== false){ ?>
+				    <div class="rights"><span class="glyphicon glyphicon-ok"></span> Rights<span class="caret"></span></div>
+				<?php } ?>
+
+                <?php if(array_search("KICK", $_DATA["flags"]) !== false){ ?>
+                    <a href="#" data-toggle="modal" data-target="#position_kick_modal" 
+                    <?php if($is_position_filled){ ?>
+                        data-username="<?=$_DATA["project_position"]["user"]["username"]?>"
+                    <?php } ?>
+                    >
+    					<div class="kick"><span class="glyphicon glyphicon-remove"></span> Kick</div>
+    				</a>
                 <?php } ?>
-                >
-					<div class="kick"><span class="glyphicon glyphicon-remove"></span> Kick</div>
-				</a>
-				<a href="#" data-toggle="modal" data-target="#position_leave_modal">
-					<div class="leave"><span class="glyphicon glyphicon-remove"></span> Leave</div>
-				</a>
+
+                <?php if(array_search("REMOVE", $_DATA["flags"]) !== false){ ?>
+                    <a href="#" data-toggle="modal" data-target="#position_remove_modal" data-position-title="<?=$_DATA["project_position"]["job_title"]?>">
+                        <div class="remove"><span class="glyphicon glyphicon-remove"></span> Remove</div>
+                    </a>
+                <?php } ?>
+
+                <?php if(array_search("LEAVE", $_DATA["flags"]) !== false){ ?>
+    				<a href="#" data-toggle="modal" data-target="#position_leave_modal">
+    					<div class="leave"><span class="glyphicon glyphicon-remove"></span> Leave</div>
+    				</a>
+                <?php } ?>
+
+                <?php if(array_search("PARTICIPATE", $_DATA["flags"]) !== false){ ?>
+                    <a href="#" data-toggle="modal" data-target="#position_participate_modal" 
+                    data-project-id="<?=$_DATA["project_position"]["project_id"]?>" 
+                    data-project-title="<?=$_DATA["project_position"]["project"]["title"]?>"
+                    >
+                        <div class="participate"><span class="glyphicon glyphicon-ok"></span> Participate</div>
+                    </a>
+                <?php } ?>
 			</div>
 		</div>
 	</div>
 	<div class="participation_entry_rights_rolldown">
 		<hr>
-		fawfawfawf
+		<?=print_r($_DATA["flags"], true)?>
 	</div>
 </div>
