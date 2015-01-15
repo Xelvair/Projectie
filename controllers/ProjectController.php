@@ -290,6 +290,13 @@ class ProjectController extends Controller{
 			return "No project found for id ".$data[0];
 		}
 		
+		$footer_array = array("user" => ($user == null ? null : $user["username"]));
+		
+		$tags = array("tags" => array(), "tag_box_title" => false);
+		array_push($tags["tags"], array("tag_id" => 12, "name" => "dafuq r u?"));
+		
+		$tag_box = $this->view("TagBox", $tags);
+		
 		$member_list = $project->get_positions((int)$data[0]);
 		$member_list = array_map(function($entry) use ($auth, $project, $project_obj, $user){
 			$result = array_merge($entry, array("user" => $auth->get_user($entry["user_id"])), array("project" => $project->get($entry["project_id"])));
@@ -373,7 +380,8 @@ class ProjectController extends Controller{
 						"time" => "14. 08. 2013 10:23", 
 						"fav_count" => $project->get_fav_count($data[0]),
 						"member_list" => $this->view_batch("ParticipationListTest", $member_list)
-					)
+					),
+					"tag_box" => $tag_box
 				)), 
 				"user" => ($user == null ? null : $user["username"]),
 				"login_modal" => $this->view("LoginModal"),

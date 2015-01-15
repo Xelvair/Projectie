@@ -48,12 +48,16 @@ class ProfileController extends Controller{
 		
 		$projects_created_list = $this->view("TitleDescriptionList", $projects_created);
 		
-		$user_review = $this->view('UserReview', "");
+		$tags = array("tags" => array(), "tag_box_title" => true);
+		array_push($tags["tags"], array("tag_id" => 12, "name" => "dafuq r u?"));
+		
+		$tag_box = $this->view("TagBox", $tags);
 		
 		$profile_content = array(
 			"user" => $viewed_user,
 			"projects_created" => $projects_created_list,
-			"projects_involved" => $projects_involved_list
+			"projects_involved" => $projects_involved_list,
+			"tag_box" => $tag_box
 		);
 
 		$content = $this->view("Profile", $profile_content);

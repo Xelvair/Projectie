@@ -1,84 +1,14 @@
 <?php
-
 #PARAMETERS
-#footer : site footer
 #user : user
+	#username
+	#created_projects
+	#project_participations
+#tag_box
+#projects_involved
+#projects_created
 global $locale;
 ?>
-
-<script>
-var popover = "hidden";
-
-$(document).ready(function(){
-	var tOut;
-	
-	$('.tag').hover(
-		//onHover
-		function(){
-			var element = $(this);
-			tOut = setTimeout(function(){
-				$(element).find('.tag_delete').show().animate({width: '20px'},200);
-			}, 500);
-		},
-		//onUnhover
-		function(){
-			clearTimeout(tOut);
-			$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
-		}
-	);
-	
-	$('#addtag').click(function(){
-		if (popover=="shown"){
-			$('#addtag').popover('hide');
-			popover="hidden";
-		} else if (popover == "hidden"){
-			$('#addtag').popover('show');
-			popover = "shown";
-		}
-	});
-});
-
-function submit_tag(event){
-	$('#tag_input_group').removeClass('has-error');
-	
-	if (event.which == 13 || event.keyCode == 13) {
-		var new_tag = document.getElementById('input_newtag').value;
-			
-		if(new_tag == ""){
-			$('#tag_input_group').addClass('has-error');
-		} else {
-				
-			var id = 23;
-
-			$('#addtag').popover('hide');
-			$('#tag-list').append('<li class="tag" id="tag'+id+'">'+new_tag+'<div class="tag_delete"><a onclick="delete_tag(this, '+id+');" class="tag_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>');
-			
-			var tOut;
-	
-			$('.tag').hover(
-				function(){
-					var element = $(this);
-					tOut = setTimeout(function(){
-						$(element).find('.tag_delete').show().animate({width: '20px'},200);
-					},500);			
-				},
-				function(){
-					clearTimeout(tOut);
-					$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
-				}
-			);	
-		}
-        return false;
-	}
-    return true;
-}
-
-function delete_tag(element, id){
-	$('#tag'+id).remove();
-}
-
-</script>
-
 <div class="row">
     <div class="col-md-3 col-xs-3" style="padding-top:20px;">
         <img src="<?=abspath("/public/images/default-profile-pic.png")?>" class="img-responsive img-rounded profile-pic">
@@ -92,29 +22,8 @@ function delete_tag(element, id){
                   <dd><?=sizeof($_DATA['user']["project_participations"])?></dd>
                 </dl>     
     </div>
-    <div class="col-md-4">
-        <div class="row">
-            <div class="tag_box">
-            	<h1 align="center" style="margin-top:0px;"><small><?=$locale['tags']?></small></h1>
-                <ul class="list-inline" id="tag-list">
-                    <?php foreach($_DATA["user"]["tags"] as $entry){ ?>
-                         <li class="tag" id="tag<?=$entry['tag_id']?>"><?=$entry['name']?>
-	                         <div class="tag_delete">
-		                         <a onclick="delete_tag(this, <?=$entry["tag_id"]?>);" class="tag_a">
-		                         	<span class="glyphicon glyphicon-remove"></span>
-		                         </a>
-	                         </div>
-                         </li>
-                    <?php 
-					}?>
-                </ul>
-            	<div class="tag_box_bottom">
-					<button class="tag_btn" id="addtag" data-toggle="popover" data-html="true" data-content="<div id='tag_input_group'><input type='text' class='form-control' placeholder='New tag...' id='input_newtag' onkeypress='submit_tag(event);'/></div>" data-placement="left">             
-						<span class="glyphicon glyphicon-plus"></span><strong>tag</strong>
-					</button>
-				</div>
-            </div>
-        </div>
+    <div class="col-md-4" style="padding-top: 10px;">
+		<?=$_DATA['tag_box']?>
     </div>
 </div><!--row-->
 <hr style="box-shadow:  2px 2px 5px 0px rgba(50, 48, 50, 0.5);"/>
