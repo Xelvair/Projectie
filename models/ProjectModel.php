@@ -194,7 +194,7 @@ class ProjectModel implements Model{
 		return array();
 	}
 
-	public function accept_participation($participation_req_id, $acceptor_id){
+	public function accept_participation_request($participation_req_id, $acceptor_id){
 		global $mysqli;
 
 		$result_participation = $this->dbez->find("project_participation_request", ["project_participation_request_id" => $participation_req_id], ["project_position_id", "user_id", "request_type"]);
@@ -238,7 +238,7 @@ class ProjectModel implements Model{
 
 	}
 
-	public function cancel_participation($participation_id, $canceler_id){
+	public function cancel_participation_request($participation_id, $canceler_id){
 		global $mysqli;
 
 		$stmt_load_info = $mysqli->prepare("
@@ -261,8 +261,6 @@ class ProjectModel implements Model{
 
 		$result_load_row = $result_load_info->fetch_assoc();
 
-		write_log(Logger::DEBUG, print_r($result_load_row, true));
-
 		$can_remove_from_project = self::user_has_right($canceler_id, $result_load_row["project_id"], "remove_participants");
 		$is_requester = ($canceler_id == $result_load_row["user_id"]);
 
@@ -273,6 +271,25 @@ class ProjectModel implements Model{
 
 		return array("ERROR" => "ERR_NO_RIGHTS");
 
+	}
+	public function cancel_participation($canceled_position_id, $canceler_id){
+		global $mysqli;
+
+		$result_load_row = $this->dbez->find("project_position", $canceled_position_id, ["project_id"]);
+
+		if(empty($result_load_row)){
+			return array("ERROR" => "ERR_NO_SUCH_PROJECT_POSITION");
+		}
+
+		$can_remove_from_project = self::user_has_right($canceler_id, $result_load_row["project_id"], "remove_participants");
+
+		if($can_remove_from_project){
+			$stmt_cancel_participation = $mysqli->prepare("UPDATE project_position SET user_id = NULL, participator_since = NULL WHERE project_position_id = ?");
+			$stmt_cancel_participation->bind_param("i", $canceled_position_id);
+			return json_encode($stmt_cancel_participation->execute());
+		}
+
+		return array("ERROR" => "ERR_NO_RIGHTS");
 	}
 
 	public function user_has_right($project_id, $user_id, $right){

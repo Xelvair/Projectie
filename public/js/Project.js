@@ -8,7 +8,7 @@ Projectie.Project.sendParticipationRequest = function(project_position_id){
 
 Projectie.Project.acceptParticipationRequest = function(participation_request_id){
 	$.post(
-		Projectie.server_addr + "/project/accept_participation",
+		Projectie.server_addr + "/project/accept_participation_request",
 		{
 			project_participation_request_id : participation_request_id
 		},
@@ -22,7 +22,7 @@ Projectie.Project.acceptParticipationRequest = function(participation_request_id
 
 Projectie.Project.cancelParticipationRequest = function(participation_request_id){
 	$.post(
-		Projectie.server_addr + "/project/cancel_participation",
+		Projectie.server_addr + "/project/cancel_participation_request",
 		{
 			project_participation_request_id : participation_request_id
 		},

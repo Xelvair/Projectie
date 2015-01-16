@@ -81,7 +81,7 @@ class ProjectController extends Controller{
 	}
 
 	//$_POST["project_participation_request_id"]
-	public function accept_participation(){
+	public function accept_participation_request(){
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
 		$project = $this->model("Project", $dbez);
@@ -92,7 +92,22 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
 		}
 
-		return json_encode($project->accept_participation((int)$_POST["project_participation_request_id"], $current_user["id"]));
+		return json_encode($project->accept_participation_request((int)$_POST["project_participation_request_id"], $current_user["id"]));
+	}
+
+		//$_POST["project_position_id"]
+	public function cancel_participation(){
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		return json_encode($project->cancel_participation((int)$_POST["project_position_id"], $current_user["id"]));
 	}
 
 	public function tag(){
@@ -263,7 +278,7 @@ class ProjectController extends Controller{
 	}
 
 	//$_POST["project_participation_request_id"] : id of the participation request to be cancelled
-	public function cancel_participation(){
+	public function cancel_participation_request(){
 		$dbez = $this->model("DBEZ");
 		$project = $this->model("Project", $dbez);
 		$auth = $this->model("Auth", $dbez);
@@ -276,7 +291,7 @@ class ProjectController extends Controller{
 			return array("ERROR" => "ERR_INVALID_PARAMETERS");
 		}
 
-		return json_encode($project->cancel_participation($req_id, $current_user["user_id"]));
+		return json_encode($project->cancel_participation_request($req_id, $current_user["user_id"]));
 	}
 
 	public function show($data){
