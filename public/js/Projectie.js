@@ -1,4 +1,5 @@
 var Projectie = {
 	Messaging : {},
-	Tagging : {}
+	Tagging : {},
+	Project : {}
 }

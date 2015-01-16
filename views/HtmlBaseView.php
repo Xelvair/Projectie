@@ -26,6 +26,7 @@
     <script src="<?=abspath("public/js/fileinput.js")?>"></script>
     <script src="<?=abspath("public/js/TagBox.js")?>"></script>
     <script src="<?=abspath("public/js/ParticipationList.js")?>"></script>
+    <script src="<?=abspath("public/js/Project.js")?>"></script>
     <title><?=$_DATA["title"];?></title>
 </head>    
 <body <?php if($_DATA["body_padding"]){echo "class='body-padding'";} ?>>

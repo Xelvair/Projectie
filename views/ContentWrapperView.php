@@ -124,7 +124,7 @@ global $locale;
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <form class="navbar-form navbar-left" role="search">
-			<a href="<?=abspath("CreateProject")?>" class="btn btn-create-project" id="btn_create_project"><span class="glyphicon glyphicon-plus" style="margin-right: 5px;"></span><?=$locale["create_a_project"]?></a>
+			<a href="<?=abspath("/project/createnew")?>" class="btn btn-create-project" id="btn_create_project"><span class="glyphicon glyphicon-plus" style="margin-right: 5px;"></span><?=$locale["create_a_project"]?></a>
 			<div class="form-group">
 				<input type="text" class="form-control" placeholder="<?=$locale['placeholder_search']?>">
 			</div>

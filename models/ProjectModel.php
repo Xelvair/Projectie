@@ -238,6 +238,43 @@ class ProjectModel implements Model{
 
 	}
 
+	public function cancel_participation($participation_id, $canceler_id){
+		global $mysqli;
+
+		$stmt_load_info = $mysqli->prepare("
+			SELECT 
+				ppr.project_participation_request_id as project_participation_request_id, 
+				ppr.user_id as user_id, 
+				pp.project_id as project_id
+			FROM project_participation_request ppr
+			LEFT JOIN project_position pp ON(ppr.project_position_id = pp.project_position_id)
+			WHERE ppr.project_participation_request_id = ?
+		");
+		$stmt_load_info->bind_param("i", $participation_id);
+		$stmt_load_info->execute();
+
+		$result_load_info = $stmt_load_info->get_result();
+
+		if($result_load_info->num_rows <= 0){
+			return array("ERROR" => "ERR_NO_SUCH_PARTICIPATION_REQUEST");
+		}
+
+		$result_load_row = $result_load_info->fetch_assoc();
+
+		write_log(Logger::DEBUG, print_r($result_load_row, true));
+
+		$can_remove_from_project = self::user_has_right($canceler_id, $result_load_row["project_id"], "remove_participants");
+		$is_requester = ($canceler_id == $result_load_row["user_id"]);
+
+		if($can_remove_from_project || $is_requester){
+			$this->dbez->delete("project_participation_request", ["project_participation_request_id" => $participation_id]);
+			return true;
+		}
+
+		return array("ERROR" => "ERR_NO_RIGHTS");
+
+	}
+
 	public function user_has_right($project_id, $user_id, $right){
 		$result = $this->dbez->find("project_position", ["project_id" => $project_id, "user_id" => $user_id], "*");
 
@@ -274,8 +311,10 @@ class ProjectModel implements Model{
 		//Remove entry in participation request table, since we're going to create the real deal now
 		$this->dbez->delete("project_participation_request", $participation_req_id);
 
-		$stmt_update_position = $mysqsli->prepare("UPDATE project_position SET user_id = ?, participator_since = ? WHERE project_position_id = ?");
-		$stmt_update_position->bind_param("iii", $res_user_id, time(), $res_project_position_id);
+		$curr_time = time();
+
+		$stmt_update_position = $mysqli->prepare("UPDATE project_position SET user_id = ?, participator_since = ? WHERE project_position_id = ?");
+		$stmt_update_position->bind_param("iii", $res_user_id, $curr_time, $res_project_position_id);
 		$stmt_update_position->execute();
 	}
 

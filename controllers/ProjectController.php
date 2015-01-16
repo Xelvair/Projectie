@@ -86,13 +86,13 @@ class ProjectController extends Controller{
 		$auth = $this->model("Auth", $dbez);
 		$project = $this->model("Project", $dbez);
 
-		$current_user = $user->get_current_user();
+		$current_user = $auth->get_current_user();
 
 		if(!$current_user){
 			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
 		}
 
-		$project->accept_participation($_POST["project_participation_request_id"], $current_user["id"]);
+		return json_encode($project->accept_participation((int)$_POST["project_participation_request_id"], $current_user["id"]));
 	}
 
 	public function tag(){
@@ -262,6 +262,23 @@ class ProjectController extends Controller{
 		));
 	}
 
+	//$_POST["project_participation_request_id"] : id of the participation request to be cancelled
+	public function cancel_participation(){
+		$dbez = $this->model("DBEZ");
+		$project = $this->model("Project", $dbez);
+		$auth = $this->model("Auth", $dbez);
+
+		$current_user = $auth->get_current_user();
+
+		$req_id = (int)$_POST["project_participation_request_id"] ?: null;
+
+		if(empty($req_id)){
+			return array("ERROR" => "ERR_INVALID_PARAMETERS");
+		}
+
+		return json_encode($project->cancel_participation($req_id, $current_user["user_id"]));
+	}
+
 	public function show($data){
 		global $locale;
 		global $CONFIG;
@@ -392,6 +409,47 @@ class ProjectController extends Controller{
 			"body_padding" => true,
 			"current_user" => $user
 		));
+	}
+
+	public function createnew(){
+		global $locale;
+		global $CONFIG;
+
+		$dbez = $this->model("DBEZ");
+		$auth = $this->model("Auth", $dbez);
+		$user = $auth->get_current_user();
+		if($user != null){
+			$locale_load_result = $locale->load($user["lang"]);
+
+			if($locale_load_result == false){
+				$locale->load("en-us");
+			}
+		} else {
+			$locale->load("en-us");
+		}
+	
+		
+		
+		$footer_array = array("user" => ($user == null ? null : $user["username"]));
+		$footer = $this->view("Footer", $footer_array);
+		
+		$upload_picture_modal = $this->view("UploadPictureModal", "");
+		
+		
+		$content = $this->view("CreateProject", array("upload_picture_modal" => $upload_picture_modal));
+
+		$login_modal = $this->view("LoginModal", "");
+
+		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
+															"user" => ($user == null ? null : $user["username"]),
+															"login_modal" => $login_modal,
+															"footer" => $footer));
+
+		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+												"body" => $contentwrap, 
+												"body_padding" => true,
+												"current_user" => $user));
+		return $html;
 	}
 }
 

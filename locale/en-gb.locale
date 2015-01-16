@@ -58,6 +58,9 @@
 	"desc" : "Description",
 	"news_feed" : "News feed",
 	"post_title" : "Post title",
-	"members" : "Members / Open Positions"
+	"members" : "Members / Open Positions",
+	"close" : "Close",
+	"update" : "Update",
+	"settings" : "Settings"	
 	
 }
