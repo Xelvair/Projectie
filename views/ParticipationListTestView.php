@@ -52,18 +52,21 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
                 <?php } ?>
 
                 <?php if(array_search("LEAVE", $_DATA["flags"]) !== false){ ?>
-    				<a href="#" data-toggle="modal" data-target="#position_leave_modal">
+    				<a href="#" data-toggle="modal" data-target="#position_leave_modal" data-project-position-id="<?=$_DATA["project_position"]["project_position_id"]?>">
     					<div class="leave"><span class="glyphicon glyphicon-remove"></span> Leave</div>
     				</a>
                 <?php } ?>
 
                 <?php if(array_search("PARTICIPATE", $_DATA["flags"]) !== false){ ?>
                     <a href="#" data-toggle="modal" data-target="#position_participate_modal" 
-                    data-project-id="<?=$_DATA["project_position"]["project_id"]?>" 
+                    data-project-position-id="<?=$_DATA["project_position"]["project_position_id"]?>" 
                     data-project-title="<?=$_DATA["project_position"]["project"]["title"]?>"
                     >
                         <div class="participate"><span class="glyphicon glyphicon-ok"></span> Participate</div>
                     </a>
+                <?php } ?>
+                <?php if(array_search("PARTICIPATION_REQUESTED", $_DATA["flags"]) !== false){ ?>
+                        <div class="participation-requested"><span class="glyphicon glyphicon-ok"></span> Request sent</div>
                 <?php } ?>
 			</div>
 		</div>

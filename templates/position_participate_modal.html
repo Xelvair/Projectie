@@ -1,4 +1,4 @@
-<div id="position_participate_modal" class="modal fade" tabindex="-1" role="dialog">
+<div id="position_participate_modal" class="modal fade" tabindex="-1" role="dialog" data-project-position-id="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,7 +10,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-default">Participate</button>
+                <button type="button" class="btn btn-default confirm">Participate</button>
         </div>
     </div>
   </div>
@@ -21,6 +21,11 @@
 $(document).ready(function(){
     $("#position_participate_modal").on("show.bs.modal", function(event){
         $(event.currentTarget).find(".project-title").text($(event.relatedTarget).data("project-title"));
+        $(event.delegateTarget).attr("data-project-position-id", $(event.relatedTarget).data("project-position-id"))
+    });
+
+    $("#position_participate_modal").on("click", ".confirm", function(event){
+        Projectie.Project.sendParticipationRequestToProject($(event.delegateTarget).attr("data-project-position-id"));
     });
 });
 

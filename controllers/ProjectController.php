@@ -52,6 +52,8 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
+		write_log(Logger::DEBUG, print_r($_POST, true));
+
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
 		$chat = $this->model("Chat", $dbez);
@@ -66,13 +68,13 @@ class ProjectController extends Controller{
 		switch($_POST["request_type"]){
 			case "PROJECT_TO_USER":
 				if($project->user_has_right($_POST["requester_id"], $current_user["id"], "add_participants")){
-					return json_encode($project->request_participation($chat, $_POST["requester_id"], $_POST["requestee_id"], "PROJECT_TO_USER"));
+					return json_encode($project->request_participation($chat, (int)$_POST["requester_id"], (int)$_POST["requestee_id"], "PROJECT_TO_USER"));
 				} else {
 					return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
 				}
 				break;
 			case "USER_TO_PROJECT":
-				return json_encode($project->request_participation($chat, $_POST["requestee_id"], $_POST["requester_id"], "USER_TO_PROJECT"));
+				return json_encode($project->request_participation($chat, (int)$_POST["requestee_id"], (int)$_POST["requester_id"], "USER_TO_PROJECT"));
 				break;
 			default:
 				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
@@ -362,6 +364,13 @@ class ProjectController extends Controller{
 					empty($entry["user_id"])
 				){
 					array_push($flags, "PARTICIPATE");
+				}
+
+				if(
+					$project->exists_participation_request($project_obj["project_id"], $user["user_id"]) &&
+					empty($entry["user_id"])
+				){
+					array_push($flags, "PARTICIPATION_REQUESTED");
 				}
 			}
 

@@ -275,15 +275,16 @@ class ProjectModel implements Model{
 	public function cancel_participation($canceled_position_id, $canceler_id){
 		global $mysqli;
 
-		$result_load_row = $this->dbez->find("project_position", $canceled_position_id, ["project_id"]);
+		$result_load_row = $this->dbez->find("project_position", $canceled_position_id, ["project_id", "user_id"]);
 
 		if(empty($result_load_row)){
 			return array("ERROR" => "ERR_NO_SUCH_PROJECT_POSITION");
 		}
 
+		$is_said_participator = ($result_load_row["user_id"] == $canceler_id);
 		$can_remove_from_project = self::user_has_right($canceler_id, $result_load_row["project_id"], "remove_participants");
 
-		if($can_remove_from_project){
+		if($can_remove_from_project || $is_said_participator){
 			$stmt_cancel_participation = $mysqli->prepare("UPDATE project_position SET user_id = NULL, participator_since = NULL WHERE project_position_id = ?");
 			$stmt_cancel_participation->bind_param("i", $canceled_position_id);
 			return json_encode($stmt_cancel_participation->execute());
