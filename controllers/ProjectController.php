@@ -97,7 +97,7 @@ class ProjectController extends Controller{
 		return json_encode($project->accept_participation_request((int)$_POST["project_participation_request_id"], $current_user["id"]));
 	}
 
-		//$_POST["project_position_id"]
+	//$_POST["project_position_id"]
 	public function cancel_participation(){
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
@@ -112,6 +112,55 @@ class ProjectController extends Controller{
 		return json_encode($project->cancel_participation((int)$_POST["project_position_id"], $current_user["id"]));
 	}
 
+	//$_POST["project_id"]
+	//$_POST["position_title"]	
+	public function add_position(){
+		if(	
+			!isset($_POST["project_id"]) || 
+			!isset($_POST["position_title"])
+		){
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+
+		$project_id = (int)$_POST["project_id"];
+		$project_title = htmlentities($_POST["position_title"]);
+
+		$dbez = $this->model("DBEZ");
+		$project = $this->model("Project", $dbez);
+		$auth = $this->model("Auth", $dbez);
+
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		return json_encode($project->add_position($project_id, $project_title, $current_user["user_id"]));
+	}
+
+	//$_POST["project_position_id"]
+	public function remove_position(){
+		$dbez = $this->model("DBEZ");
+		$project = $this->model("Project", $dbez);
+		$auth = $this->model("Auth", $dbez);
+
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		$project_position_id = (int)$_POST["project_position_id"];
+
+		if(!$project_position_id){
+			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
+		}
+	
+		return json_encode($project->remove_position($project_position_id, $current_user["user_id"]));
+	}
+
+	# $_POST["project_id"]
+	# $_POST["tag_id"] || $_POST["tag_name"]
 	public function tag(){
 		$exists_and_filled_out = function(&$var){
 			return (isset($var) && !empty($var));
@@ -341,7 +390,8 @@ class ProjectController extends Controller{
 				//If the currently shown user is the logged in user
 				if(
 					$project->exists_participation($project_obj["project_id"], $entry["user_id"]) &&
-					$user["user_id"] == $result["user"]["user_id"]
+					$user["user_id"] == $result["user"]["user_id"] &&
+					$project_obj["creator_id"] != $user["user_id"]
 				){
 					array_push($flags, "LEAVE", "RIGHTS");
 				}
@@ -370,7 +420,7 @@ class ProjectController extends Controller{
 					$project->exists_participation_request($project_obj["project_id"], $user["user_id"]) &&
 					empty($entry["user_id"])
 				){
-					array_push($flags, "PARTICIPATION_REQUESTED");
+					array_push($flags, "CANCEL_REQUEST");
 				}
 			}
 
@@ -378,6 +428,8 @@ class ProjectController extends Controller{
 
 			return array("project_position" => $result, "flags" => $flags);
 		}, $member_list);
+
+		$user_can_add_position = $user ? $project->user_has_right($project_obj["project_id"], $user["user_id"], "edit") : false;
 
 		return $this->view("HtmlBase", array(	
 			"title" => "Projectie - Driving Development", 
@@ -420,7 +472,11 @@ class ProjectController extends Controller{
 						"header" => abspath("/public/images/default-banner.png"), 
 						"time" => "14. 08. 2013 10:23", 
 						"fav_count" => $project->get_fav_count($data[0]),
-						"member_list" => $this->view_batch("ParticipationListTest", $member_list)
+						"member_panel" => $this->view("MemberPanel", array(
+							"member_list" => $this->view_batch("ParticipationListTest", $member_list),
+							"can_add_position" => $user_can_add_position,
+							"project_id" => $project_obj["project_id"]
+						))
 					),
 					"tag_box" => $tag_box
 				)), 

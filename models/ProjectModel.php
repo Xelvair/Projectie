@@ -281,8 +281,15 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_NO_SUCH_PROJECT_POSITION");
 		}
 
+		$result_project = $this->dbez->find("project", $result_load_row["project_id"], ["creator_id"]);
+
 		$is_said_participator = ($result_load_row["user_id"] == $canceler_id);
 		$can_remove_from_project = self::user_has_right($canceler_id, $result_load_row["project_id"], "remove_participants");
+		$is_project_creator = $result_load_row["user_id"] == $result_project["creator_id"];
+
+		if($is_project_creator){
+			return array("ERROR" => "ERR_CREATOR_CANT_LEAVE");
+		}
 
 		if($can_remove_from_project || $is_said_participator){
 			$stmt_cancel_participation = $mysqli->prepare("UPDATE project_position SET user_id = NULL, participator_since = NULL WHERE project_position_id = ?");
@@ -334,6 +341,40 @@ class ProjectModel implements Model{
 		$stmt_update_position = $mysqli->prepare("UPDATE project_position SET user_id = ?, participator_since = ? WHERE project_position_id = ?");
 		$stmt_update_position->bind_param("iii", $res_user_id, $curr_time, $res_project_position_id);
 		$stmt_update_position->execute();
+	}
+
+	public function add_position($project_id, $position_title, $adder_id){
+		if(!self::user_has_right($project_id, $adder_id, "edit")){
+			return array("ERROR" => "ERR_NO_RIGHTS");
+		} 
+
+		return $this->dbez->insert("project_position", [
+			"project_id" => $project_id,
+			"job_title" => $position_title,
+			"can_edit" => 0,
+			"can_delete" => 0,
+			"can_communicate" => 0,
+			"can_add_participants" => 0,
+			"can_remove_participants" => 0
+		]);
+	}
+	
+	public function remove_position($project_position_id, $remover_id){
+		$position_result = $this->dbez->find("project_position", $project_position_id, ["project_id", "user_id"]);
+
+		if(!$position_result){
+			return array("ERROR" => "ERR_NO_SUCH_PROJECT_POSITION");
+		}
+
+		if($position_result["user_id"] != null){
+			return array("ERROR" => "ERR_POSITION_IS_FILLED");
+		}
+
+		if(self::user_has_right($position_result["project_id"], $remover_id, "edit")){
+			$this->dbez->delete("project_position", ["project_position_id" => $project_position_id]);
+		} else {
+			return array("ERROR" => "ERR_NO_RIGHTS");
+		}
 	}
 
 	public function get_all_projects(){

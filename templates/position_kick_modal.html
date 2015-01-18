@@ -1,4 +1,4 @@
-<div id="position_kick_modal" class="modal fade" tabindex="-1" role="dialog">
+<div id="position_kick_modal" class="modal fade" tabindex="-1" role="dialog" data-project-position-id="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,6 +21,12 @@
 $(document).ready(function(){
     $("#position_kick_modal").on("show.bs.modal", function(event){
         $(event.currentTarget).find(".username").text($(event.relatedTarget).data("username"));
+        $(event.currentTarget).attr("data-project-position-id", $(event.relatedTarget).data("project-position-id"));
+    });
+
+    $("#position_kick_modal").on("click", ".confirm", function(event){
+        Projectie.Project.cancelParticipation($(event.delegateTarget).attr("data-project-position-id"));
+        location.reload();
     });
 });
 

@@ -214,7 +214,7 @@ function exit_desc(desc){
 							</div>
 						</div><!--Conversation tab End-->
 						<div role="tabpanel" class="tab-pane fade" id="members">
-						<?=$_DATA["project"]["member_list"]?>
+						<?=$_DATA["project"]["member_panel"]?>
 						</div>
 					</div><!--Tab content END-->
 			</div><!--TABPanel END-->

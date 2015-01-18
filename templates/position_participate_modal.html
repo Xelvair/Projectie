@@ -26,6 +26,7 @@ $(document).ready(function(){
 
     $("#position_participate_modal").on("click", ".confirm", function(event){
         Projectie.Project.sendParticipationRequestToProject($(event.delegateTarget).attr("data-project-position-id"));
+        location.reload();
     });
 });
 

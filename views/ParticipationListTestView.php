@@ -37,16 +37,18 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
 
                 <?php if(array_search("KICK", $_DATA["flags"]) !== false){ ?>
                     <a href="#" data-toggle="modal" data-target="#position_kick_modal" 
-                    <?php if($is_position_filled){ ?>
-                        data-username="<?=$_DATA["project_position"]["user"]["username"]?>"
-                    <?php } ?>
+                        data-username="<?=$_DATA["project_position"]["user"]["username"]?>" 
+                        data-project-position-id="<?=$_DATA["project_position"]["project_position_id"]?>"
                     >
     					<div class="kick"><span class="glyphicon glyphicon-remove"></span> Kick</div>
     				</a>
                 <?php } ?>
 
                 <?php if(array_search("REMOVE", $_DATA["flags"]) !== false){ ?>
-                    <a href="#" data-toggle="modal" data-target="#position_remove_modal" data-position-title="<?=$_DATA["project_position"]["job_title"]?>">
+                    <a href="#" data-toggle="modal" data-target="#position_remove_modal" 
+                       data-position-title="<?=$_DATA["project_position"]["job_title"]?>" 
+                       data-project-position-id="<?=$_DATA["project_position"]["project_position_id"]?>"
+                    >
                         <div class="remove"><span class="glyphicon glyphicon-remove"></span> Remove</div>
                     </a>
                 <?php } ?>
@@ -65,8 +67,8 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
                         <div class="participate"><span class="glyphicon glyphicon-ok"></span> Participate</div>
                     </a>
                 <?php } ?>
-                <?php if(array_search("PARTICIPATION_REQUESTED", $_DATA["flags"]) !== false){ ?>
-                        <div class="participation-requested"><span class="glyphicon glyphicon-ok"></span> Request sent</div>
+                <?php if(array_search("CANCEL_REQUEST", $_DATA["flags"]) !== false){ ?>
+                        <div class="cancel-request"><span class="glyphicon glyphicon-remove"></span> Cancel Request</div>
                 <?php } ?>
 			</div>
 		</div>

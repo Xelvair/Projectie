@@ -61,5 +61,8 @@
 	"members" : "Members / Open Positions",
 	"close" : "Close",
 	"update" : "Update",
-	"settings" : "Settings"	
+	"settings" : "Settings",
+	"add_new_position" : "Add new Position",
+	"cancel" : "Cancel",
+	"enter_new_position_title" : "Enter the title of the new position"
 }

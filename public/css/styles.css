@@ -684,8 +684,14 @@ text-align: left;
 
 .participation_entry{
 	overflow: hidden;
-	border: 1px solid #555;
-	box-shadow: 3px 3px 5px #888888;
+	#border-bottom: 1px solid #555;
+	#box-shadow: 3px 3px 5px #888888;
+	margin-bottom: 5px;
+	border-top-left-radius: 3px;
+}
+
+.participation_entry:not(:last-child){
+	border-bottom: 1px solid #CCCCCC;
 }
 
 .participation_entry a:focus,
@@ -765,7 +771,8 @@ text-align: left;
 
 .participation_entry div.leave,
 .participation_entry div.kick,
-.participation_entry div.remove{
+.participation_entry div.remove,
+.participation_entry div.cancel-request{
 	background-color: #D9534F !important;
 	border-color: #D23531 !important;
 }
