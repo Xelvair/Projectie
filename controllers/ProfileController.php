@@ -38,13 +38,13 @@ class ProfileController extends Controller{
 		$footer = $this->view("Footer", $footer_array);
 		
 		$projects_involved = array("entries" => array(), "list_title" => $locale["projects_involved"]);
-		array_push($projects_involved["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($projects_involved["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
 		$projects_involved_list = $this->view("TitleDescriptionList", $projects_involved);
 		
 		$projects_created = array("entries" => array(), "list_title" => $locale["projects_created"]);
-		array_push($projects_created["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($projects_created["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($projects_created["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($projects_created["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($projects_created["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($projects_created["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
 		
 		$projects_created_list = $this->view("TitleDescriptionList", $projects_created);
 		
@@ -65,7 +65,7 @@ class ProfileController extends Controller{
 		$login_modal = $this->view("LoginModal", "");
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user["username"]),
+															"user" => $user,
 															"login_modal" => $login_modal,
 															"footer" => $footer));
 

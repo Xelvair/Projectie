@@ -631,6 +631,16 @@ class ProjectModel implements Model{
 		return $projects;
 	}
 
+	public function get_new_projects($count){
+		global $mysqli;
+
+		$stmt_get_projects = $mysqli->prepare("SELECT * FROM project ORDER BY create_time DESC LIMIT ?");
+		$stmt_get_projects->bind_param("i", $count);
+		$stmt_get_projects->execute();
+
+		return $stmt_get_projects->get_result()->fetch_all(MYSQL_ASSOC);
+	}
+
 	public function add_picture($id, $picture_id){}
 	public function remove_picture($id){}
 

@@ -43,7 +43,7 @@ class FavoritesController extends Controller{
 			
 			$contentwrap = $this->view("ContentWrapper", array(	
 				"content" => $content, 
-				"user" => ($user == null ? null : $user["username"]),
+				"user" => $user,
 				"login_modal" => $login_modal,
 				"footer" => $footer)
 			);

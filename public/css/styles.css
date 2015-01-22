@@ -306,6 +306,10 @@ hr{
 
 }
 
+.media-heading{
+	padding-top: 5px;
+}
+
 .content_heading{
     margin-bottom: 30px;
 }
@@ -771,11 +775,12 @@ text-align: left;
 
 .participation_entry div.leave,
 .participation_entry div.kick,
-.participation_entry div.remove,
-.participation_entry div.cancel-request{
+.participation_entry div.remove{
 	background-color: #D9534F !important;
 	border-color: #D23531 !important;
 }
+
+.participation_entry div.cancel-request{}
 
 .participation_entry div.accept,
 .participation_entry div.participate,
@@ -839,9 +844,21 @@ text-align: left;
 }
 
 #tag_panel{
-padding: 0px;
+	padding: 0px;
 }
 
 .tag-heading{
-padding-bottom: 9px !important;
+	padding-bottom: 9px !important;
+}
+
+.title-desc-list,
+.title-desc-list:active,
+.title-desc-list:focus{
+	text-decoration: none;
+	color: black;
+}
+
+.title-desc-list:hover > div{
+	color: black;
+	box-shadow: 1px 1px 20px #CCC;
 }

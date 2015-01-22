@@ -162,6 +162,7 @@ class ChatController extends Controller{
 			}
 		} else {
 			$locale->load("en-us");
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
 		}
 		
 		$footer_array = array("user" => ($user == null ? null : $user["username"]));
@@ -180,7 +181,7 @@ class ChatController extends Controller{
 		$login_modal = $this->view("LoginModal", "");
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user["username"]),
+															"user" => $user,
 															"login_modal" => $login_modal,
 															"footer" => $footer));
 

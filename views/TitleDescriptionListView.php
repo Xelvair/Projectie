@@ -2,14 +2,16 @@
 #PARAMENTERS
 #list_title : Title of list	
 #entries: 
+	#project_id
 	#thumb: thumb
 	#title: title
-	#des: description
+	#description: description
 	#creator
 		#id
 		#name
 	#source
-	#time
+	#annotation
+
                 
 
 if(isset($_DATA['list_title'])){                
@@ -19,20 +21,22 @@ if(isset($_DATA['list_title'])){
 <?php 
 }
 foreach($_DATA["entries"] as $entry){ ?>
+	<?php 
+		$project_href = isset($entry["project_id"]) ? abspath("/project/show/".$entry["project_id"]) : "#"; 
+	?>
+
+	<a class="title-desc-list" href="<?=$project_href?>">
     <div class="media">
-      <a class="pull-left" href="#">
-        <img class="media-object img-responsive" src="<?=$entry['thumb'];?>" alt="...">
-      </a>
+        <img class="media-object pull-left img-responsive" src="<?=abspath("/public/images/default-profile-pic.png")?>" alt="...">
       <div class="media-body">
         <h4 class="media-heading"><?=$entry['title'];?></h4>
-        <?=$entry['desc'];?>
+        <?=$entry['description'];?>
       </div>
 	  <div class="media-footer">
-		<small class="media-time-container text-muted pull-right"><span class="glyphicon glyphicon-time"></span><span class="chat-msg-time"><?=$entry['time']?></span></small>
-		<?php if(isset($entry['creator']['id']) && $entry['creator']['id'] != "")
-			{ ?> <a href="<?=abspath("profile");?>"  class="user" user-id="<?=$entry['creator']['id']?>"><small class="source-container text-muted"></span><span class="media-source"><?=$entry['creator']['name']?></span></small></a>
-			<?php
-			} ?>
+	  	<?php if(isset($_DATA["annotation"])){ ?>
+			<small class="media-time-container text-muted pull-right"><span class="chat-msg-time"><?=$entry['annotation']?></span></small>
+	 	<?php } ?>
 	  </div>
     </div><hr/><!--media-->
+    </a>
  <?php }?>   

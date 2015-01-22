@@ -68,7 +68,7 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
                     </a>
                 <?php } ?>
                 <?php if(array_search("CANCEL_REQUEST", $_DATA["flags"]) !== false){ ?>
-                        <div class="cancel-request"><span class="glyphicon glyphicon-remove"></span> Cancel Request</div>
+                        <div class="cancel-request"><span class="glyphicon glyphicon-ok"></span> Participation Requested</div>
                 <?php } ?>
 			</div>
 		</div>

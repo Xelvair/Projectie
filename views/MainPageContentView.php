@@ -41,7 +41,7 @@
                               <img src="<?=$entry['thumb']?>" alt="..." class="img-responsive">
                               <div class="carousel-caption">
                                 <h4><?=$entry['title']?></h4>
-                                <p><?=$entry['desc']?></p>
+                                <p><?=$entry['description']?></p>
                               </div>
                             </div>
                            

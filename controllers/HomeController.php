@@ -8,6 +8,8 @@ class HomeController extends Controller{
 
 		$dbez = $this->model("DBEZ");
 		$auth = $this->model("Auth", $dbez);
+		$project = $this->model("Project", $dbez);
+
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
@@ -19,22 +21,19 @@ class HomeController extends Controller{
 			$locale->load("en-us");
 		}
 	
-		$new_list = array("entries" => array(), "list_title" => $locale["new_projects"]);
-		array_push($new_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($new_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($new_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		$new_list = array("entries" => $project->get_new_projects(3), "list_title" => $locale["new_projects"]);
 		$html_new = $this->view("TitleDescriptionList", $new_list);
 		
 		$news_list = array("entries" => array(), "list_title" => $locale["news"]);
-		array_push($news_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($news_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($news_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($news_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
+		array_push($news_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
+		array_push($news_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
 		$html_news = $this->view("TitleDescriptionList", $news_list);
 		
 		$trending_list = array("entries" => array(), "list_title" => $locale["trending_projects"]);
-		array_push($trending_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($trending_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($trending_list["entries"], array("title" => "Trending Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($trending_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
+		array_push($trending_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
+		array_push($trending_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
 		$html_trending = $this->view("TitleDescriptionList", $trending_list);
 		
 		$footer_array = array("user" => ($user == null ? null : $user["username"]));
@@ -44,16 +43,16 @@ class HomeController extends Controller{
 
 	
         $mainpagelists = array("top_project" => array(), "left_col" => $html_new, "mid_col" => $html_trending, "right_col" => $html_news, "user_review" => $user_review);
-		array_push($mainpagelists["top_project"], array("title" => "Test Project 1", "desc" => "Test Desc 1", "thumb" => abspath("/public/images/header.jpg")));
-		array_push($mainpagelists["top_project"], array("title" => "Test Project 2", "desc" => "Test Desc 2", "thumb" => abspath("/public/images/header.jpg")));
-		array_push($mainpagelists["top_project"], array("title" => "Test Project 3", "desc" => "Test Desc 3", "thumb" => abspath("/public/images/header.jpg")));
+		array_push($mainpagelists["top_project"], array("title" => "Test Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/header.jpg")));
+		array_push($mainpagelists["top_project"], array("title" => "Test Project 2", "description" => "Test Desc 2", "thumb" => abspath("/public/images/header.jpg")));
+		array_push($mainpagelists["top_project"], array("title" => "Test Project 3", "description" => "Test Desc 3", "thumb" => abspath("/public/images/header.jpg")));
 
 		$content = $this->view("MainPageContent", $mainpagelists);
 
 		$login_modal = $this->view("LoginModal", "");
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user["username"]),
+															"user" => ($user == null ? null : $user),
 															"login_modal" => $login_modal,
 															"footer" => $footer));
 

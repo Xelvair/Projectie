@@ -1,7 +1,10 @@
 <?php
 //PARAMETERS
 //content : site content
+//user : array of the current user
 global $locale;
+
+$user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 ?>
 <script>
 	$(document).ready(function(){
@@ -119,9 +122,11 @@ global $locale;
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-left">
-       <li><a href="#toggle-menue" style="font-size:20px; height:50px;" id="menu-toggle"><span class="glyphicon glyphicon-list"></span></a></li>
-      </ul>
+      <?php if($user_logged_in){ ?>
+	      <ul class="nav navbar-nav navbar-left">
+	      	<li><a href="#toggle-menue" style="font-size:20px; height:50px;" id="menu-toggle"><span class="glyphicon glyphicon-list"></span></a></li>
+	      </ul>
+      <?php } ?>
       <ul class="nav navbar-nav navbar-right">
         <form class="navbar-form navbar-left" role="search">
 			<a href="<?=abspath("/project/createnew")?>" class="btn btn-create-project" id="btn_create_project"><span class="glyphicon glyphicon-plus" style="margin-right: 5px;"></span><?=$locale["create_a_project"]?></a>
@@ -152,23 +157,27 @@ global $locale;
 </nav>
 
 <div id="wrapper" class="toggled">
-	<div id="sidebar-wrapper">
-    <ul class="sidebar-nav">
-      <li class="sidebar-brand"><?php echo($_DATA["user"] != null ? $_DATA["user"] : $locale["welcome"]); ?></li>
-      <li>
-        <a href="<?=abspath("profile")?>"><?=$locale["profile"]?></a>
-      </li>
-      <li>
-        <a href="<?=abspath("MyProjects")?>"><?=$locale["my_projects"]?></a>
-      </li>
-      <li>
-        <a href="<?=abspath("favorites")?>"><?=$locale["favorites"]?></a>
-      </li>
-      <li>
-        <a href="<?=abspath("chat")?>"><?=$locale["conversations"]?></a>
-      </li>
-    </ul>
-  </div>
+	<?php if($user_logged_in){ ?>
+		<div id="sidebar-wrapper">
+	    <ul class="sidebar-nav">
+	      <li class="sidebar-brand"><?=$_DATA["user"]["username"]?></li>
+	      <?php if(isset($_DATA["user"]) && !empty($_DATA["user"])){ ?>
+	      <li>
+	        <a href="<?=abspath("profile/show/".$_DATA["user"]["user_id"])?>"><?=$locale["profile"]?></a>
+	      </li>
+	      <?php } ?>
+	      <li>
+	        <a href="<?=abspath("MyProjects")?>"><?=$locale["my_projects"]?></a>
+	      </li>
+	      <li>
+	        <a href="<?=abspath("favorites")?>"><?=$locale["favorites"]?></a>
+	      </li>
+	      <li>
+	        <a href="<?=abspath("chat")?>"><?=$locale["conversations"]?></a>
+	      </li>
+	    </ul>
+	  </div>
+	<?php } ?>
   <div id="page-content-wrapper"> 
   	<div id="page-content-div">
   		<?php echo $_DATA["content"]; ?>

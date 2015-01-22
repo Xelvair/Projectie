@@ -381,7 +381,7 @@ class ProjectController extends Controller{
 		$tag_box = $this->view("TagBox", $tags);
 		
 		$member_list = $project->get_positions((int)$data[0]);
-		$member_list = array_map(function($entry) use ($auth, $project, $project_obj, $user){
+		$member_list = array_map(function($entry) use ($dbez, $auth, $project, $project_obj, $user){
 			$result = array_merge($entry, array("user" => $auth->get_user($entry["user_id"])), array("project" => $project->get($entry["project_id"])));
 			write_log(Logger::DEBUG, print_r($entry, true));
 			$flags = array();
@@ -418,6 +418,7 @@ class ProjectController extends Controller{
 
 				if(
 					$project->exists_participation_request($project_obj["project_id"], $user["user_id"]) &&
+					!!$dbez->find("project_participation_request", ["project_position_id" => $entry["project_position_id"], "user_id" => $user["user_id"]],["project_participation_request_id"]) &&
 					empty($entry["user_id"])
 				){
 					array_push($flags, "CANCEL_REQUEST");
@@ -480,7 +481,7 @@ class ProjectController extends Controller{
 					),
 					"tag_box" => $tag_box
 				)), 
-				"user" => ($user == null ? null : $user["username"]),
+				"user" => $user,
 				"login_modal" => $this->view("LoginModal"),
 				"footer" => $this->view("Footer", array(
 					"user" => ($user == null ? null : $user["username"]))
@@ -507,8 +508,6 @@ class ProjectController extends Controller{
 		} else {
 			$locale->load("en-us");
 		}
-	
-		
 		
 		$footer_array = array("user" => ($user == null ? null : $user["username"]));
 		$footer = $this->view("Footer", $footer_array);
@@ -521,7 +520,7 @@ class ProjectController extends Controller{
 		$login_modal = $this->view("LoginModal", "");
 
 		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user["username"]),
+															"user" => $user,
 															"login_modal" => $login_modal,
 															"footer" => $footer));
 

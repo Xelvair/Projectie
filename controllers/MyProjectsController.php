@@ -43,7 +43,7 @@ class MyProjectsController extends Controller{
 			$content = $this->view("ListPage", array("list" => $list, "list_title" => $locale["my_projects"], "user_review" => $user_review));
 			
 			$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user["username"]),
+															"user" => $user),
 															"login_modal" => $login_modal,
 															"footer" => $footer));
 		
