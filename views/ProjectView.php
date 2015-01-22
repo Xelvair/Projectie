@@ -47,6 +47,10 @@ $(document).ready(function(){
 		}	
 	});
 	
+	$('#desc_area').keypress(function(){
+		$(this).parent().removeClass('has-error');
+	});
+	
 	$('#desc_wrap').on('click', function(){
 		if(desc_click == 0){
 			desc_click = 1;
@@ -63,10 +67,12 @@ $(document).ready(function(){
 
 function update_desc(){
 	var desc = $('#desc_area').val();
-	
-	/*UPDATE DESCRIPTION PHP PLACEHOLDER*/
-	
-	exit_desc(desc);
+	if(desc != ""){
+		/*UPDATE DESCRIPTION PHP PLACEHOLDER*/	
+		exit_desc(desc);
+	}else{
+		$('#desc_update_wrap').addClass('has-error');
+	}
 }
 
 function exit_desc(desc){
@@ -80,11 +86,30 @@ function exit_desc(desc){
 		$('#desc_wrap').text(desc);
 	}
 }
+/*RESPONSIVE FONT TEST
+textfit();
+$(window).on('resize', textfit);
+
+function textfit() {
+    $('.text-fitter').css('font-size', 'medium');
+    var w1 = $('.container-fitter').width()-10;
+    var w2 = $('.text-fitter').width();
+    var wRatio = Math.round(w1 / w2 * 10) / 10;
+
+    var h1 = $('.container-fitter').height()-10;
+    var h2 = $('.text-fitter').height();
+    var hRatio = Math.round(h1 / h2 * 10) / 10;
+
+    var constraint = Math.min(wRatio, hRatio);
+	alert(constraint);
+    $('.text-fitter').css('font-size', constraint + 'em');
+}
+*/
 </script>
 <div class="row" id="banner_wrap">
         <img class="img-responsive banner" src="<?=$_DATA['project']['header']?>"/>
-		<div id="project-title">
-			<?=$_DATA['project']['title']?>
+		<div id="project-title" class="container-fitter">
+			<span class="text-fitter"><?=$_DATA['project']['title']?></span>
 		</div>
 </div>
 <div class="row" style="margin-top: 15px; margin-bottom: 20px;">
@@ -113,8 +138,8 @@ function exit_desc(desc){
 											</div>
 											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 												<div class="panel-body" id="desc_panel">
-													<div id="desc_wrap"><?=$_DATA['project']['desc']?> ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka ölaskdfölk asöldfk öalsmfieijf asldkfleinf alsdkfef asijfd efojasdf epfojas dfpoka</div>
-													<div id="desc_update_wrap" style="display: none;">
+													<div id="desc_wrap"><?=$_DATA['project']['desc']?></div>
+													<div id="desc_update_wrap" class="form-group" style="display: none;">
 														<textarea name="desc" rows="6" class="form-control" id="desc_area" style="margin-bottom: 15px;"></textarea>
 														<button onclick="update_desc()" class="btn btn-default pull-left"><?=$locale['update']?></button>
 														<button onclick="exit_desc();" class="btn pull-right"><?=$locale['close']?></button>
@@ -173,9 +198,9 @@ function exit_desc(desc){
 							<div class="row" style="margin-top: 20px;">
 								<div class="col-md-12">
 									<form>
-									  <div class="input-group">
-										<input type="text" class="form-control custom-control no_right_border" placeholder="<?=$locale['post_title']?>..." id="post_title"/>
-										<textarea class="form-control custom-control no_right_border" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="post_input"></textarea>     
+										<div class="input-group post_group">
+											<input type="text" class="form-control custom-control no_right_border" placeholder="<?=$locale['post_title']?>..." id="post_title"/>
+											<textarea class="form-control custom-control no_right_border" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="post_input"></textarea>     
 											<span class="input-group-addon btn btn-default" style="border-style: none;" id="post_btn">Post</span>
 										</div>
 									</form>
@@ -186,18 +211,6 @@ function exit_desc(desc){
 						<div role="tabpanel" class="tab-pane fade" id="conversations">
 						<div class="row" id="chat-row">
 								<div id="chat-wrapper" class="col-md-12 chat-col pull-left">
-									<div id="chat-head" class="text-center">
-										<div class="row">
-											<div class="col-xs-1">
-												<h2><span class="glyphicon glyphicon-comment"></span></h2>
-											</div>
-											<div class="col-xs-10">
-												<h2 id="chat-title">
-												 <?=$_DATA['project']['title']?>
-												</h2>
-											</div>
-										</div>
-									</div>
 									<div id="chat-box">
 										<ul id="chat">
 									  </ul>

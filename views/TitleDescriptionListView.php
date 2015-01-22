@@ -10,7 +10,6 @@
 		#id
 		#name
 	#source
-	#annotation
 
                 
 
@@ -33,9 +32,9 @@ foreach($_DATA["entries"] as $entry){ ?>
         <?=$entry['description'];?>
       </div>
 	  <div class="media-footer">
-	  	<?php if(isset($_DATA["annotation"])){ ?>
-			<small class="media-time-container text-muted pull-right"><span class="chat-msg-time"><?=$entry['annotation']?></span></small>
-	 	<?php } ?>
+		<?php if(isset($entry['creator']) && !empty($entry['creator'])){ ?> 
+			<span class="user media-source" user-id="<?=$entry['creator']['id']?>"><small class="source-container text-muted"><?=$entry['creator']['name']?></small></span>
+		<?php } ?>
 	  </div>
     </div><hr/><!--media-->
     </a>

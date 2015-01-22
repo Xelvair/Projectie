@@ -417,6 +417,7 @@ a:hover{
 }
 
 #chat-wrapper{
+	margin-top: 20px;
 	border-style:none;
 	height: 500px;
 	padding-left:25px;
@@ -564,6 +565,7 @@ box-shadow:         inset 1px 1px 3px 0px rgba(50, 50, 50, 0.75);
 	position: fixed;
 	top: 0px;
 	left: 0px;
+	z-index: 1000;
 -webkit-box-shadow: 1px 2px 5px 0px rgba(50, 50, 50, 0.75);
 -moz-box-shadow:    1px 2px 5px 0px rgba(50, 50, 50, 0.75);
 box-shadow:         1px 2px 5px 0px rgba(50, 50, 50, 0.75);
@@ -594,9 +596,7 @@ padding-left: 60px;
 	font-size: 50px;
 	letter-spacing: 5px;
 	text-shadow: 2px 2px 4px rgba(150, 150, 150, 1);
-	color: #FFF;
-	
-	
+	color: #FFF;	
 }
 
 #post_title{
@@ -861,4 +861,14 @@ text-align: left;
 .title-desc-list:hover > div{
 	color: black;
 	box-shadow: 1px 1px 20px #CCC;
+}
+
+.post_group{
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.media-source{
+	cursor: pointer;
 }

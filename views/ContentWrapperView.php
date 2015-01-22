@@ -2,9 +2,13 @@
 //PARAMETERS
 //content : site content
 //user : array of the current user
+
+require_once(abspath_lcl('templates/user_review.html'));
+
 global $locale;
 
 $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
+
 ?>
 <script>
 	$(document).ready(function(){
@@ -17,6 +21,25 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 		  $.post("<?=abspath("/auth/logout")?>").done(function(){
 			 window.location.href="<?=abspath("")?>";
 			});
+		});
+		
+		$('#btn_advanced_search').on('click', function(){
+			
+			var search_val = $('#advanced_search_input').val();
+			var search_for = $("input[name='radio_search_for']:checked").val();
+			var sorted_by = $("input[name='radio_sorted_by']:checked").val();
+			
+			if(search_val != ""){
+			
+			alert('search_val: '+search_val+'search_for: '+search_for+'sorted_by: '+sorted_by)
+			}else{
+				$('#advanced_search_group').addClass('has-error');
+			}
+			
+		});
+		
+		$('#advanced_search_input').keypress(function(){
+			$(this).parent().removeClass('has-error');
 		});
 		
 		
@@ -37,25 +60,25 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 			<div class="row">
 				<div class="col-md-12">
 					<form>
-						<div class="form-group">
-							<input type="text" class="form-control" placeholder="<?=$locale['placeholder_search']?>"/>
-						</div>
+						<div class="form-group" id="advanced_search_group">
+							<input type="text" id="advanced_search_input" class="form-control" placeholder="<?=$locale['placeholder_search']?>"/>
+						</div> 
 						<div class="row text-center">
 							<div class="col-xs-12">
 								<h3><?=$locale['search_for']?>...</h3>
 								<div class="form-group">
 									<div class="btn-group" data-toggle="buttons">
 									  <label class="btn btn-default active">
-										<input type="radio" name="options" id="opt_projects" autocomplete="off" checked><?=$locale['projects']?>
+										<input type="radio" name="radio_search_for" value="projects" autocomplete="off" checked><?=$locale['projects']?>
 									  </label>
 									  <label class="btn btn-default">
-										<input type="radio" name="options" id="opt_users" autocomplete="off"><?=$locale['users']?>
+										<input type="radio" name="radio_search_for" value="users" autocomplete="off"><?=$locale['users']?>
 									  </label>
 									  <label class="btn btn-default">
-										<input type="radio" name="options" id="opt_tags" autocomplete="off"><?=$locale['tags']?>
+										<input type="radio" name="radio_search_for" value="tags" autocomplete="off"><?=$locale['tags']?>
 									  </label>
 									  <label class="btn btn-default">
-										<input type="radio" name="options" id="opt_skills" autocomplete="off"><?=$locale['skills']?>
+										<input type="radio" name="radio_search_for" value="skills" autocomplete="off"><?=$locale['skills']?>
 									  </label>
 									</div>
 								</div>
@@ -67,13 +90,13 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 								<div class="form-group">
 									<div class="btn-group" data-toggle="buttons">
 										<label class="btn btn-default active">
-											<input type="radio" name="options" id="opt_relevance" autocomplete="off" checked><?=$locale['relevance']?>
+											<input type="radio" name="radio_sorted_by" value="relevance" autocomplete="off" checked><?=$locale['relevance']?>
 										</label>
 										<label class="btn btn-default">
-											<input type="radio" name="options" id="opt_alphabetical" autocomplete="off"><?=$locale['alphabet']?>
+											<input type="radio" name="radio_sorted_by" value="alphabet" autocomplete="off"><?=$locale['alphabet']?>
 										</label>
 										<label class="btn btn-default">
-											<input type="radio" name="options" id="opt_chronological" autocomplete="off"><?=$locale['date']?>
+											<input type="radio" name="radio_sorted_by" value="date" autocomplete="off"><?=$locale['date']?>
 										</label>
 									</div>
 								</div>
@@ -84,7 +107,7 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 			</div>
 			<div class="row">     
 				  <div class="col-md-12 text-right">
-					<button type="button" class="btn btn-default"><?=$locale["search"]?></button>
+					<button type="button" id="btn_advanced_search" class="btn btn-default"><?=$locale["search"]?></button>
 				  </div>
 			</div>
           </div>
@@ -188,40 +211,3 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
   </div>
 </div>
 
-<div class="user-review">
-<img src="../public/images/default-profile-pic.png" class="img-rounded pull-left" height="50" width="50"/>
-<h3 class="user-review-title" id="user-review-username">Username</h3>
-<p>Projects involved: 30</p>
-</div>
-
-<script>
-var mouse_x, mouse_y;
-$(document).mousemove(function(event) {
-        mouse_x = event.pageX;
-        mouse_y = event.pageY;
-		
-});
-
-$(document).ready(function(){
-	var tOut;
-		$('.user-review').hide();
-		$('.user').hover(function(){
-			var id = $(this).attr( "user-id" );
-			tOut = setTimeout(function(){
-					$('.user-review').animate({left: mouse_x+"px", top: mouse_y+"px"});
-					
-					$.ajax({url: "<?=abspath("/auth/get_user/")?>"+id}).done(function(data){
-					var result = JSON.parse(data);
-					
-					$('#user-review-username').text(result.username);
-					$('.user-review').fadeIn();
-					
-					});					
-				},1000);
-		},function(){
-			clearTimeout(tOut);
-			$('.user-review').fadeOut();		
-		});
-
-});
-</script>

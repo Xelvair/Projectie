@@ -19,7 +19,7 @@
 	<div class="media-footer">
 		<small class="media-time-container text-muted pull-right"><span class="glyphicon glyphicon-time"></span><span class="chat-msg-time"><?=$_DATA['time']?></span></small>
 		<?php if(isset($_DATA['creator']['id']) && $_DATA['creator']['id'] != "")
-			{ ?> <a href="<?=abspath("profile");?>"  class="user" user-id="<?=$_DATA['creator']['id']?>"><small class="source-container text-muted"></span><span class="media-source"><?=$_DATA['creator']['name']?></span></small></a>
+			{ ?> <span class="user media-source" user-id="<?=$_DATA['creator']['id']?>"><small class="source-container text-muted"><?=$_DATA['creator']['name']?></small></span>
 			<?php
 			} ?>
 	</div>

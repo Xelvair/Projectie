@@ -440,34 +440,31 @@ class ProjectController extends Controller{
 						"list_title" =>  $locale['news_feed'],
 						"entries" => array(
 							array(
-								"title" => "Trending Project 1",
-								"desc" => "Test Desc 1",
+								"title" => "Project News 1",
+								"description" => "Test Desc 1",
 								"thumb" => abspath("/public/images/default-profile-pic.png"),
 								"creator" => array("id" => "1", "name" => "admin"),
-								"source" => array("id" => "1", "name" => "Test Project"), 
 								"time" => "09:12"
 							),
 							array(
-								"title" => "Trending Project 2",
-								"desc" => "Test Desc 2",
+								"title" => "Project News 2",
+								"description" => "Test Desc 2",
 								"thumb" => abspath("/public/images/default-profile-pic.png"),
 								"creator" => array("id" => "1", "name" => "admin"),
-								"source" => array("id" => "1", "name" => "Test Project"), 
 								"time" => "09:12"
 							),
 							array(
-								"title" => "Trending Project 3",
-								"desc" => "Test Desc 3",
+								"title" => "Project News 3",
+								"description" => "Test Desc 3",
 								"thumb" => abspath("/public/images/default-profile-pic.png"),
 								"creator" => array("id" => "1", "name" => "admin"),
-								"source" => array("id" => "1", "name" => "Test Project"), 
 								"time" => "09:12"
 							)
 						)
 					)), 
 					"project" => array(
 						"participators" => $project->get_participators($data[0]), 
-						"desc" => $project_obj["description"], 
+						"description" => $project_obj["description"], 
 						"subtitle" =>  $project_obj["subtitle"], 
 						"title" => $project_obj["title"], 
 						"header" => abspath("/public/images/default-banner.png"), 
