@@ -30,7 +30,7 @@ foreach($_DATA["entries"] as $entry){ ?>
 	  <div class="media-footer">
 		<small class="media-time-container text-muted pull-right"><span class="glyphicon glyphicon-time"></span><span class="chat-msg-time"><?=$entry['time']?></span></small>
 		<?php if(isset($entry['creator']['id']) && $entry['creator']['id'] != "")
-			{ ?> <a href="<?=abspath("profile");?>"  class="user" user-id="<?=$entry['creator']['id']?>"><small class="source-container text-muted"></span><span class="media-source"><?=$entry['creator']['name']?></span></small></a>
+			{ ?> <span class="user media-source" user-id="<?=$entry['creator']['id']?>"><small class="source-container text-muted"><?=$entry['creator']['name']?></small></span>
 			<?php
 			} ?>
 	  </div>

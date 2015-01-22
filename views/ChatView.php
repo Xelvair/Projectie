@@ -1,13 +1,6 @@
 <?php
 global $locale;
 ?>
-
-<div class="row" id="chatwindow-title-wrapper">
-    <div class="col-md-12 text-center" id="chatwindow-title">
-            <h1><?=$locale['conversations']?></h1>
-            <hr />
-    </div>
-</div>
 <div class="row" id="chat-row">
 	<div id="chat-wrapper" class="col-md-10 chat-col pull-left">
     	<div id="chat-head" class="text-center">
