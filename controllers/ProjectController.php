@@ -383,7 +383,6 @@ class ProjectController extends Controller{
 		$member_list = $project->get_positions((int)$data[0]);
 		$member_list = array_map(function($entry) use ($dbez, $auth, $project, $project_obj, $user){
 			$result = array_merge($entry, array("user" => $auth->get_user($entry["user_id"])), array("project" => $project->get($entry["project_id"])));
-			write_log(Logger::DEBUG, print_r($entry, true));
 			$flags = array();
 
 			if($user){
@@ -470,7 +469,13 @@ class ProjectController extends Controller{
 						"header" => abspath("/public/images/default-banner.png"), 
 						"time" => "14. 08. 2013 10:23", 
 						"fav_count" => $project->get_fav_count($data[0]),
-						"member_panel" => $this->view("MemberPanel", array(
+						"public_conversation_panel" => $this->view("Conversation", array(
+							"chat_title" => $locale["public_conversation"]." - ".$project_obj["title"],
+							"chat_id" => $project_obj["public_chat_id"],
+							"user_id" => $user["user_id"],
+							"username" => $user["username"]
+						)),
+						"members_panel" => $this->view("MemberPanel", array(
 							"member_list" => $this->view_batch("ParticipationListTest", $member_list),
 							"can_add_position" => $user_can_add_position,
 							"project_id" => $project_obj["project_id"]

@@ -48,9 +48,7 @@ class Controller{
 
 	protected function view_batch($view, $data_batch){
 		$content = "";
-		write_log(Logger::DEBUG, print_r($data_batch, true));
 		foreach($data_batch as $data){
-			write_log(Logger::DEBUG, print_r($data, true));
 			$content .= $this->view($view, $data);
 		}
 		return $content;

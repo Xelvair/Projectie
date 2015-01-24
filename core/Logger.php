@@ -23,7 +23,11 @@ class Logger{
 
 		$logfile = fopen($_SERVER['DOCUMENT_ROOT']."/".$this->filename, 'a'); //This sh*t better not fail
 
-		fwrite($logfile, $datestring.$typestring.": ".$message."\n");
+		$backtrace = debug_backtrace();
+
+		$call = "(".$backtrace[1]["file"].":".$backtrace[1]["line"].")";
+
+		fwrite($logfile, $datestring.$typestring.$call.": ".$message."\n");
 
 		fclose($logfile);
 

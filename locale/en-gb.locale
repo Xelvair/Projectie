@@ -5,6 +5,8 @@
 	"profile": "Profile",
 	"my_projects": "My Projects",
 	"favorites": "Favorites",
+	"public_conversation": "Public Conversation",
+	"private_conversation": "Private Conversation",
 	"conversations": "Conversations",
 	"more": "More",
 	"about": "About",

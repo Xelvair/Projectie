@@ -30,7 +30,6 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
                 <h2></h2>
             <?php } ?>
 			<div>
-                <?php write_log(Logger::DEBUG, print_r($_DATA["flags"], true)); ?>
                 <?php if(array_search("RIGHTS", $_DATA["flags"]) !== false){ ?>
 				    <div class="rights"><span class="glyphicon glyphicon-ok"></span> Rights<span class="caret"></span></div>
 				<?php } ?>
