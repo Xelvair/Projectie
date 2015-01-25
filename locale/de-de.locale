@@ -67,5 +67,11 @@
 	"add_new_position" : "Neue Position hinzufügen",
 	"cancel" : "Abbrechen",
 	"enter_new_position_title" : "Geben Sie den Titel der neuen Position ein",
-	"requests" : "Anfragen"
+	"requests" : "Anfragen",
+	"profile_pic" : "Profilbild",
+	"new_password" : "Neues Passwort",
+	"retype_new_password" : "Wiederhole Password",
+	"delete_account" : "Konto löschen",
+	"save_changes" : "Einstellungen speichern",
+	"lang" : "Sprache"
 }
