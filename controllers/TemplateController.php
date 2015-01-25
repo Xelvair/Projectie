@@ -5,8 +5,8 @@ class TemplateController extends Controller{
 	function TagBox(){
 		global $locale;
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
 
 		$user = $auth->get_current_user();
 
@@ -20,7 +20,7 @@ class TemplateController extends Controller{
 			$locale->load("en-us");
 		}
 
-		return $this->view("TagBoxTemplate");
+		return Core::view("TagBoxTemplate");
 	}
 }
 ?>

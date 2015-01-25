@@ -9,8 +9,8 @@ class TestController extends Controller{
 
 		$locale->load("en-us");
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
 		$logged_in_user = $auth->get_current_user();
 		if($logged_in_user){
 			$login_name = $logged_in_user["username"];
@@ -18,27 +18,27 @@ class TestController extends Controller{
 			$login_name = null;
 		}
 
-		$content = $this->view("LoginTest", array("login" => $login_name));
-		return $this->view("HtmlBase", array("title" => "Login Test", "body" => $content, "body_padding" => false, "current_user" => $logged_in_user));
+		$content = Core::view("LoginTest", array("login" => $login_name));
+		return Core::view("HtmlBase", array("title" => "Login Test", "body" => $content, "body_padding" => false, "current_user" => $logged_in_user));
 	}
 
 	public function project(){
-		$dbez = $this->model("dbez");
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("dbez");
+		$project = Core::model("Project", $dbez);
 	
 		$project_list = $project->get_all_projects();
 
-		$content = $this->view("ProjectTest", array("projects" => $project_list));
+		$content = Core::view("ProjectTest", array("projects" => $project_list));
 
-		return $this->view("HtmlBase", array(	"title" => "Project Test",
+		return Core::view("HtmlBase", array(	"title" => "Project Test",
 																					"body" => $content,
 																					"body_padding" => false));
 	}
 
 	public function tagbox(){
-		$content = $this->view("TagBoxTest");
+		$content = Core::view("TagBoxTest");
 
-		return $this->view("HtmlBase", [ 
+		return Core::view("HtmlBase", [ 
 			"title" => "Tagbox Test",
 			"body" => $content,
 			"body_padding" => false
@@ -50,9 +50,9 @@ class TestController extends Controller{
 
 		$locale->load("en-us");
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 		$user = $auth->get_current_user();
 
 		$chat_list = array();
@@ -64,18 +64,43 @@ class TestController extends Controller{
 		}
 
 
-		$content = $this->view("ChatTest", array("user_id" => $user["id"], "username" => $user["username"], "chat_list" => $chat_list));
-		return $this->view("HtmlBase", array(	"title" => "Chat Test",
+		$content = Core::view("ChatTest", array("user_id" => $user["id"], "username" => $user["username"], "chat_list" => $chat_list));
+		return Core::view("HtmlBase", array(	"title" => "Chat Test",
 												"body" => $content,
 												"body_padding" => false));
 	}
 
 	public function participationlist(){
-		$content = $this->view("ParticipationListTest");
-		return $this->view("HtmlBase", array(	"title" => "ParticipationList Test",
+		$content = Core::view("ParticipationListTest");
+		return Core::view("HtmlBase", array(	"title" => "ParticipationList Test",
 												"body" => $content,
 												"body_padding" => false));
 	}
+
+	public function test(){
+		$arr = [
+			"faget" => 5,
+			"lel" => "hi",
+			"ayy" => "lmao@web.de",
+			"gtc" => array(
+				"mom" => "faygt"
+			)
+		];
+
+		$format_arr = [
+			"faget" => "int|min(3)",
+			"lel" => "string",
+			"ayy" => "email",
+			"gtc" => array(
+				"mom" => "int"
+			)
+		];
+
+		return validate($arr, $format_arr);
+
+	}
 }
+
+
 
 ?>

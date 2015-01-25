@@ -31,8 +31,8 @@ class InstallController extends Controller{
 				$action = "default";
 			}
 
-			$content = $this->view("Install", array("action" => $action));
-			$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+			$content = Core::view("Install", array("action" => $action));
+			$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 													"body" => $content,
 													"body_padding" => false));
 			return $html;

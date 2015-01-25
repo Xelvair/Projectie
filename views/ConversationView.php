@@ -43,7 +43,7 @@ $show_chat_title = isset($_DATA["chat_title"]);
 </div>
 
 <script>
-function chat_dispatch(msg_obj, chat_type){
+function <?=$chat_dom_id?>_chat_dispatch(msg_obj, chat_type){
   var msg_html = $("#chat-msg-prefab").clone().removeAttr("hidden").removeAttr("id");
   msg_html.find(".chat-msg-time").text("null");
   msg_html.find(".chat-msg-sender").text(msg_obj.username);
@@ -58,21 +58,22 @@ function chat_dispatch(msg_obj, chat_type){
   $("#<?=$chat_dom_id?> .chat").append(msg_html);
   
   //if scroll height != current scroll
-  $("#<?=$chat_dom_id?> .chat-box").animate({ scrollTop: $("#<?=$chat_dom_id?> .chat-box").scrollHeight}, 500);
+  if(chat_type != Projectie.Messaging.ChatType.PRELOAD){
+    $("#<?=$chat_dom_id?> .chat-box").animate({ scrollTop: $("#<?=$chat_dom_id?> .chat-box")[0].scrollHeight}, 500);
+  }
 }
 
 function chat_load(chat_obj){
   //void
 }
 
-var chatbox_obj = null;
+var <?=$chat_dom_id?>_chatbox_obj = null;
 
 $(document).ready(function(){
-  chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, '<?=$_DATA["username"]?>', <?=$_DATA["chat_id"]?>, chat_load, chat_dispatch);
+  <?=$chat_dom_id?>_chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, '<?=$_DATA["username"]?>', <?=$_DATA["chat_id"]?>, chat_load, <?=$chat_dom_id?>_chat_dispatch);
 
   var send_msg = function(){
-    console.log($("#<?=$chat_dom_id?> .chat-input").val());
-    chatbox_obj.send($("#<?=$chat_dom_id?> .chat-input").val());
+    <?=$chat_dom_id?>_chatbox_obj.send($("#<?=$chat_dom_id?> .chat-input").val());
     $("#<?=$chat_dom_id?> .chat-input").val("");
   }
 

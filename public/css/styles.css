@@ -303,7 +303,11 @@ hr{
 .media-object{
     height:100px;
     width: 100px;
+}
 
+.media-object-small{
+    height:50px;
+    width: 50px;
 }
 
 .media-heading{
@@ -548,6 +552,10 @@ box-shadow:         inset 1px 1px 3px 0px rgba(50, 50, 50, 0.75);
 	height: 50px;
 	padding-top: 10px;
 	
+}
+
+.user{
+	cursor: pointer;
 }
 
 .user-review{
@@ -868,4 +876,31 @@ text-align: left;
 
 .media-source{
 	cursor: pointer;
+}
+
+.request-entry{
+	overflow: hidden;
+}
+
+.request-entry:first-child{
+	margin-top: 10px;
+}
+
+.request-entry h1{
+	font-size: 22px;
+	margin: 3px 0 0 0;
+}
+
+.request-entry img{
+	margin-right: 10px;
+}
+
+.request-entry-tagline{
+	color: #CCC;
+	font-size: 14px;
+}
+
+.request-entry-tag{
+	color: #999;
+	font-size: 16px;
 }

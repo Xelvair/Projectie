@@ -3,9 +3,9 @@ require_once("../core/Controller.php");
 
 class ProjectController extends Controller{
 	public function create(){
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 
 		$logged_in_user = $auth->get_current_user();
 
@@ -14,7 +14,7 @@ class ProjectController extends Controller{
 		}
 
 		if(isset($_POST["title"]) && isset($_POST["subtitle"]) && isset($_POST["description"])){
-			$project = $this->model("project", $dbez);
+			$project = Core::model("project", $dbez);
 
 			//Create public and private chat for project
 			$public_chat = $chat->create_public(0, $_POST["title"]." Public Chat");
@@ -54,11 +54,11 @@ class ProjectController extends Controller{
 
 		write_log(Logger::DEBUG, print_r($_POST, true));
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 
-		$project = $this->model("Project", $dbez);
+		$project = Core::model("Project", $dbez);
 		$current_user = $auth->get_current_user();
 
 		if(!$current_user){
@@ -84,9 +84,9 @@ class ProjectController extends Controller{
 
 	//$_POST["project_participation_request_id"]
 	public function accept_participation_request(){
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 
 		$current_user = $auth->get_current_user();
 
@@ -99,9 +99,9 @@ class ProjectController extends Controller{
 
 	//$_POST["project_position_id"]
 	public function cancel_participation(){
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 
 		$current_user = $auth->get_current_user();
 
@@ -125,9 +125,9 @@ class ProjectController extends Controller{
 		$project_id = (int)$_POST["project_id"];
 		$project_title = htmlentities($_POST["position_title"]);
 
-		$dbez = $this->model("DBEZ");
-		$project = $this->model("Project", $dbez);
-		$auth = $this->model("Auth", $dbez);
+		$dbez = Core::model("DBEZ");
+		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth", $dbez);
 
 		$current_user = $auth->get_current_user();
 
@@ -140,9 +140,9 @@ class ProjectController extends Controller{
 
 	//$_POST["project_position_id"]
 	public function remove_position(){
-		$dbez = $this->model("DBEZ");
-		$project = $this->model("Project", $dbez);
-		$auth = $this->model("Auth", $dbez);
+		$dbez = Core::model("DBEZ");
+		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth", $dbez);
 
 		$current_user = $auth->get_current_user();
 
@@ -183,10 +183,10 @@ class ProjectController extends Controller{
 			}
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
-		$tag = $this->model("Tag", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
+		$tag = Core::model("Tag", $dbez);
 
 		$project_id = $_POST["project_id"];
 
@@ -210,9 +210,9 @@ class ProjectController extends Controller{
 				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 
 		$user = $auth->get_current_user();
 
@@ -230,9 +230,9 @@ class ProjectController extends Controller{
 				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 
 		$user = $auth->get_current_user();
 
@@ -253,9 +253,9 @@ class ProjectController extends Controller{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 
 		$user = $auth->get_current_user();
 
@@ -278,9 +278,9 @@ class ProjectController extends Controller{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 
 		$user = $auth->get_current_user();
 
@@ -297,9 +297,9 @@ class ProjectController extends Controller{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 
 		$user = $auth->get_current_user();
 
@@ -310,9 +310,9 @@ class ProjectController extends Controller{
 	}
 
 	public function get_tag_meta($project_id){
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 
 		$user = $auth->get_current_user();
 
@@ -330,9 +330,9 @@ class ProjectController extends Controller{
 
 	//$_POST["project_participation_request_id"] : id of the participation request to be cancelled
 	public function cancel_participation_request(){
-		$dbez = $this->model("DBEZ");
-		$project = $this->model("Project", $dbez);
-		$auth = $this->model("Auth", $dbez);
+		$dbez = Core::model("DBEZ");
+		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth", $dbez);
 
 		$current_user = $auth->get_current_user();
 
@@ -349,9 +349,9 @@ class ProjectController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$project = $this->model("Project", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
 		if(!isset($data[0])){
 			return "No project id given.";
 		}
@@ -378,7 +378,7 @@ class ProjectController extends Controller{
 		$tags = array("tags" => array(), "tag_box_title" => false);
 		array_push($tags["tags"], array("tag_id" => 12, "name" => "dafuq r u?"));
 		
-		$tag_box = $this->view("TagBox", $tags);
+		$tag_box = Core::view("TagBox", $tags);
 		
 		$member_list = $project->get_positions((int)$data[0]);
 		$member_list = array_map(function($entry) use ($dbez, $auth, $project, $project_obj, $user){
@@ -430,12 +430,13 @@ class ProjectController extends Controller{
 		}, $member_list);
 
 		$user_can_add_position = $user ? $project->user_has_right($project_obj["project_id"], $user["user_id"], "edit") : false;
+		$user_is_participator = $user ? $project->exists_participation($project_obj["project_id"], $user["user_id"]) : false;
 
-		return $this->view("HtmlBase", array(	
+		return Core::view("HtmlBase", array(	
 			"title" => "Projectie - Driving Development", 
-			"body" => $this->view("ContentWrapper", array(	
-				"content" => $this->view("Project", array(
-					"news_feed" => $this->view("TitleDescriptionList", array(
+			"body" => Core::view("ContentWrapper", array(	
+				"content" => Core::view("Project", array(
+					"news_feed" => Core::view("TitleDescriptionList", array(
 						"list_title" =>  $locale['news_feed'],
 						"entries" => array(
 							array(
@@ -469,23 +470,44 @@ class ProjectController extends Controller{
 						"header" => abspath("/public/images/default-banner.png"), 
 						"time" => "14. 08. 2013 10:23", 
 						"fav_count" => $project->get_fav_count($data[0]),
-						"public_conversation_panel" => $this->view("Conversation", array(
-							"chat_title" => $locale["public_conversation"]." - ".$project_obj["title"],
-							"chat_id" => $project_obj["public_chat_id"],
-							"user_id" => $user["user_id"],
-							"username" => $user["username"]
-						)),
-						"members_panel" => $this->view("MemberPanel", array(
-							"member_list" => $this->view_batch("ParticipationListTest", $member_list),
-							"can_add_position" => $user_can_add_position,
-							"project_id" => $project_obj["project_id"]
-						))
+						"panels" => array(
+							"public_conversation_panel" => array(
+								"content" => Core::view("Conversation", array(
+									"chat_title" => $locale["public_conversation"]." - ".$project_obj["title"],
+									"chat_id" => $project_obj["public_chat_id"],
+									"user_id" => $user["user_id"],
+									"username" => $user["username"]
+								)),
+								"viewable" => true
+							),
+							"private_conversation_panel" => array(
+								"content" => Core::view("Conversation", array(
+									"chat_title" => $locale["private_conversation"]." - ".$project_obj["title"],
+									"chat_id" => $project_obj["private_chat_id"],
+									"user_id" => $user["user_id"],
+									"username" => $user["username"]
+								)),
+								"viewable" => $user_is_participator
+							),
+							"members_panel" => array(
+								"content" => Core::view("MemberPanel", array(
+									"member_list" => Core::view_batch("ParticipationListTest", $member_list),
+									"can_add_position" => $user_can_add_position,
+									"project_id" => $project_obj["project_id"]
+								)),
+								"viewable" => true
+							),
+							"requests_panel" => array(
+								"content" => Core::view_batch("RequestEntry", $project->get_participation_requests($auth, $project_obj["project_id"])),
+								"viewable" => $user_is_participator
+							)
+						)
 					),
 					"tag_box" => $tag_box
 				)), 
 				"user" => $user,
-				"login_modal" => $this->view("LoginModal"),
-				"footer" => $this->view("Footer", array(
+				"login_modal" => Core::view("LoginModal"),
+				"footer" => Core::view("Footer", array(
 					"user" => ($user == null ? null : $user["username"]))
 				))
 			), 
@@ -498,8 +520,8 @@ class ProjectController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
@@ -512,21 +534,21 @@ class ProjectController extends Controller{
 		}
 		
 		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = $this->view("Footer", $footer_array);
+		$footer = Core::view("Footer", $footer_array);
 		
-		$upload_picture_modal = $this->view("UploadPictureModal", "");
+		$upload_picture_modal = Core::view("UploadPictureModal", "");
 		
 		
-		$content = $this->view("CreateProject", array("upload_picture_modal" => $upload_picture_modal));
+		$content = Core::view("CreateProject", array("upload_picture_modal" => $upload_picture_modal));
 
-		$login_modal = $this->view("LoginModal", "");
+		$login_modal = Core::view("LoginModal", "");
 
-		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
+		$contentwrap = Core::view("ContentWrapper", array(	"content" => $content, 
 															"user" => $user,
 															"login_modal" => $login_modal,
 															"footer" => $footer));
 
-		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+		$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 
 												"body_padding" => true,
 												"current_user" => $user));

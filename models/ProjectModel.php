@@ -343,6 +343,24 @@ class ProjectModel implements Model{
 		$stmt_update_position->execute();
 	}
 
+	public function get_participation_requests($auth, $project_id){
+		global $mysqli;
+
+		$stmt_get_participation_requests = $mysqli->prepare("SELECT ppr.* FROM project_participation_request ppr LEFT JOIN project_position pp ON(ppr.project_position_id = pp.project_position_id) WHERE pp.project_id = ?");
+		$stmt_get_participation_requests->bind_param("i", $project_id);
+		$stmt_get_participation_requests->execute();
+
+		$result = $stmt_get_participation_requests->get_result()->fetch_all(MYSQLI_ASSOC);
+
+		foreach($result as &$result_entry){
+			write_log(Logger::DEBUG, print_r($result_entry, true));
+			$result_entry["user"] = $auth->get_user($result_entry["user_id"]);
+			$result_entry["project_position"] = $this->dbez->find("project_position", $result_entry["project_position_id"], ["project_position_id", "job_title"]);
+		}
+
+		return $result;
+	}
+
 	public function add_position($project_id, $position_title, $adder_id){
 		if(!self::user_has_right($project_id, $adder_id, "edit")){
 			return array("ERROR" => "ERR_NO_RIGHTS");

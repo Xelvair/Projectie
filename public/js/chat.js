@@ -4,6 +4,12 @@
 // msg_obj.user_id : user_id of the sender
 // msg_obj.send_time : timestamp of the message
 
+Projectie.Messaging.ChatType = {
+		PRELOAD: 1,
+		SELF: 2,
+		OTHER: 3
+}
+
 Projectie.Messaging.create_private_chat = function(chat_title){
 		$.post(
 			Projectie.server_addr + "/chat/create_private",
@@ -12,12 +18,6 @@ Projectie.Messaging.create_private_chat = function(chat_title){
 }
 
 Projectie.Messaging.Chatbox = function(url, reader_id, reader_username, chat_id, load_func, dispatch_func){
-	this.ChatType = {
-		PRELOAD: 1,
-		SELF: 2,
-		OTHER: 3
-	}
-
 	this.load_func = load_func;
 	this.dispatch_func = dispatch_func;
 	this.chat_creator_id = 0;
@@ -32,12 +32,13 @@ Projectie.Messaging.Chatbox = function(url, reader_id, reader_username, chat_id,
 	$.ajax({
 		url : this.url + "/get/" + this.chat_id + "/" + 10,
 		success : function(result){
+			console.log(result);
 			result_obj = JSON.parse(result);
 			this.chatsession_id = result_obj.chat_session_id;
 			this.chat_creator_id = result_obj.creator_id;
 			load_func(result_obj);
 			for(var i = 0; i < result_obj.messages.length; i++){
-				dispatch_func(result_obj.messages[i], this.ChatType.PRELOAD);
+				dispatch_func(result_obj.messages[i], Projectie.Messaging.ChatType.PRELOAD);
 			}
 			this.toggle_listen();
 		}.bind(this)
@@ -69,13 +70,12 @@ Projectie.Messaging.Chatbox = function(url, reader_id, reader_username, chat_id,
 
 	this.load_new_messages = function(){
 		var that = this;
-		console.log("loading new msgs.");
 		$.ajax({
 			url : this.url + "/get_new/" + this.chatsession_id,
 			success : function(result){
 				var result_obj = JSON.parse(result);
 				for(var i = 0; i < result_obj.length; i++){
-					that.dispatch_func(result_obj[i], this.ChatType.OTHER);
+					that.dispatch_func(result_obj[i], Projectie.Messaging.ChatType.OTHER);
 				}
 				if(that.is_listen){
 					this.timeout_inst = setTimeout(function(){that.load_new_messages();}, 1000);
@@ -108,7 +108,7 @@ Projectie.Messaging.Chatbox = function(url, reader_id, reader_username, chat_id,
 			success : function(){}
 		});
 		var msg_obj = {user_id: this.reader_id, send_time: Math.floor(Date.now() / 1000), message: msg, username: this.reader_username};
-		this.dispatch_func(msg_obj, this.ChatType.OWN);
+		this.dispatch_func(msg_obj, Projectie.Messaging.ChatType.OWN);
 	}
 
 }

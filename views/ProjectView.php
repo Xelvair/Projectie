@@ -15,10 +15,10 @@
 
 global $locale;
 
-$show_requests = isset($_DATA["project"]["requests_panel"]);
-$show_private_conversation = isset($_DATA["project"]["private_conversation_panel"]);
-$show_public_conversation = isset($_DATA["project"]["public_conversation_panel"]);
-$show_members = isset($_DATA["project"]["members_panel"]);
+$show_requests = isset($_DATA["project"]["panels"]["requests_panel"]["viewable"]) && $_DATA["project"]["panels"]["requests_panel"]["viewable"];
+$show_private_conversation = isset($_DATA["project"]["panels"]["private_conversation_panel"]["viewable"]) && $_DATA["project"]["panels"]["private_conversation_panel"]["viewable"];
+$show_public_conversation = isset($_DATA["project"]["panels"]["public_conversation_panel"]["viewable"]) && $_DATA["project"]["panels"]["public_conversation_panel"]["viewable"];
+$show_members = isset($_DATA["project"]["panels"]["members_panel"]["viewable"]) && $_DATA["project"]["panels"]["members_panel"]["viewable"];
 ?>
 
 <script>
@@ -228,18 +228,30 @@ function textfit() {
 								</div>
 							</div>
 						</div>
-						<div role="tabpanel" class="tab-pane fade" id="public_conversation_panel">
-						<?=$_DATA["project"]["public_conversation_panel"]?>
-						</div><!--Conversation tab End-->
-						<div role="tabpanel" class="tab-pane fade" id="members_panel">
-						<?=$_DATA["project"]["members_panel"]?>
-						</div>
-						<div role="tabpanel" class="tab-pane fade" id="private_conversation_panel">
-						<?=$_DATA["project"]["private_conversation_panel"]?>
-						</div>
-						<div role="tabpanel" class="tab-pane fade" id="requests_panel">
-						<?=$_DATA["project"]["requests_panel"]?>
-						</div>
+
+						<?php if($show_public_conversation){ ?>
+							<div role="tabpanel" class="tab-pane fade" id="public_conversation_panel">
+							<?=$_DATA["project"]["panels"]["public_conversation_panel"]["content"]?>
+							</div><!--Conversation tab End-->
+						<?php } ?>
+
+						<?php if($show_members){ ?>
+							<div role="tabpanel" class="tab-pane fade" id="members_panel">
+							<?=$_DATA["project"]["panels"]["members_panel"]["content"]?>
+							</div>
+						<?php } ?>
+
+						<?php if($show_private_conversation){ ?>
+							<div role="tabpanel" class="tab-pane fade" id="private_conversation_panel">
+							<?=$_DATA["project"]["panels"]["private_conversation_panel"]["content"]?>
+							</div>
+						<?php } ?>
+
+						<?php if($show_requests){ ?>
+							<div role="tabpanel" class="tab-pane fade" id="requests_panel">
+							<?=$_DATA["project"]["panels"]["requests_panel"]["content"]?>
+							</div>
+						<?php } ?>
 					</div><!--Tab content END-->
 			</div><!--TABPanel END-->
 		</div><!--Row END-->

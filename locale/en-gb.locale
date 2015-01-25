@@ -66,6 +66,7 @@
 	"settings" : "Settings",
 	"add_new_position" : "Add new Position",
 	"cancel" : "Cancel",
-	"enter_new_position_title" : "Enter the title of the new position"
+	"enter_new_position_title" : "Enter the title of the new position",
+	"requests" : "Requests"
 	
 }

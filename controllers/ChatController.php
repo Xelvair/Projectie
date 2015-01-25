@@ -6,9 +6,9 @@ class ChatController extends Controller{
 
 	//$_POST["title"] : the title of the chat
 	public function create_private(){
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 		
 		$user = $auth->get_current_user();
 
@@ -41,9 +41,9 @@ class ChatController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 
 		$user_to_be_added = $auth->get_user($_POST["user_id"]);
 
@@ -77,9 +77,9 @@ class ChatController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 		
 		$user = $auth->get_current_user();
 
@@ -105,9 +105,9 @@ class ChatController extends Controller{
 			return json_encode(array());
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 
 		$logged_in_user = $auth->get_current_user();
 
@@ -119,9 +119,9 @@ class ChatController extends Controller{
 	public function get_new($data){
 		// data[0] : chatsession id
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 
 		$logged_in_user = $auth->get_current_user();
 		$requester_id = $logged_in_user ? $logged_in_user["id"] : null;
@@ -135,9 +135,9 @@ class ChatController extends Controller{
 			return;
 		}
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 
 		$logged_in_user = $auth->get_current_user();
 
@@ -149,9 +149,9 @@ class ChatController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
-		$chat = $this->model("Chat", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$chat = Core::model("Chat", $dbez);
 
 		$user = $auth->get_current_user();
 		if($user != null){
@@ -166,7 +166,7 @@ class ChatController extends Controller{
 		}
 		
 		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = $this->view("Footer", $footer_array);
+		$footer = Core::view("Footer", $footer_array);
 
 		$chat_list = array();
 		array_push($chat_list, $chat->get_chat(1));
@@ -176,16 +176,16 @@ class ChatController extends Controller{
 			}
 		}
 		
-		$content = $this->view("Chat", array("chat_list" => $chat_list, "user_id" => $user["id"], "username" => $user["username"]));
+		$content = Core::view("Chat", array("chat_list" => $chat_list, "user_id" => $user["id"], "username" => $user["username"]));
 
-		$login_modal = $this->view("LoginModal", "");
+		$login_modal = Core::view("LoginModal", "");
 
-		$contentwrap = $this->view("ContentWrapper", array(	"content" => $content, 
+		$contentwrap = Core::view("ContentWrapper", array(	"content" => $content, 
 															"user" => $user,
 															"login_modal" => $login_modal,
 															"footer" => $footer));
 
-		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+		$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $contentwrap, 
 												"body_padding" => true,
 												"current_user" => $user));
