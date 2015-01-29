@@ -36,7 +36,7 @@ class TestController extends Controller{
 	}
 
 	public function tagbox(){
-		$content = Core::view("TagBoxTest");
+		$content = Core::view("TagBoxTest", ["project_id" => 5]);
 
 		return Core::view("HtmlBase", [ 
 			"title" => "Tagbox Test",
@@ -76,31 +76,6 @@ class TestController extends Controller{
 												"body" => $content,
 												"body_padding" => false));
 	}
-
-	public function test(){
-		$arr = [
-			"faget" => 5,
-			"lel" => "hi",
-			"ayy" => "lmao@web.de",
-			"gtc" => array(
-				"mom" => "faygt"
-			)
-		];
-
-		$format_arr = [
-			"faget" => "int|min(3)",
-			"lel" => "string",
-			"ayy" => "email",
-			"gtc" => array(
-				"mom" => "int"
-			)
-		];
-
-		return validate($arr, $format_arr);
-
-	}
 }
-
-
 
 ?>

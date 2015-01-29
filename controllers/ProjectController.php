@@ -202,7 +202,42 @@ class ProjectController extends Controller{
 
 	}
 
-	public function untag(){}
+	public function get_tags($data){
+		if(sizeof($data) <= 0){
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+
+		$dbez = Core::model("DBEZ");
+		$project = Core::model("Project", $dbez);
+		
+		return json_encode($project->get_tags((int)$data[0]));
+	}
+
+	public function untag($data){
+		if(sizeof($data) <= 0){
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+
+		if(!isset($_POST["tag_id"])){
+			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
+		}
+
+		$project_id = (int)$data[0];
+		$tag_id = (int)$_POST["tag_id"];
+
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project", $dbez);
+		$tag = Core::model("Tag", $dbez);
+
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user || !$project->user_has_right($project_id, $current_user["user_id"], "edit")){
+			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
+		}
+
+		return json_encode($project->untag($tag, $project_id, $tag_id));
+	}
 
 	//$_POST["project_id"] : id of the project to fav
 	public function favorite(){

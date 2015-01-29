@@ -18,13 +18,13 @@ $(document).ready(function(){
 		function(){
 			var element = $(this);
 			tOut = setTimeout(function(){
-				$(element).find('.tag_delete').show().animate({width: '20px'},200);
+				$(element).find('.tag-remove').show().animate({width: '20px'},200);
 			}, 500);
 		},
 		//onUnhover
 		function(){
 			clearTimeout(tOut);
-			$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
+			$(this).find('.tag-remove').animate({width:'1px'},200).delay(250).hide();
 		}
 	);
 	
@@ -52,7 +52,7 @@ function submit_tag(event){
 			var id = 23;
 
 			$('#addtag').popover('hide');
-			$('#tag-list').append('<li class="tag" id="tag'+id+'">'+new_tag+'<div class="tag_delete"><a onclick="delete_tag(this, '+id+');" class="tag_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>');
+			$('#tag-list').append('<li class="tag" id="tag'+id+'">'+new_tag+'<div class="tag-remove"><a onclick="delete_tag(this, '+id+');" class="tag_a"><span class="glyphicon glyphicon-remove"></span></a></div></li>');
 			
 			var tOut;
 	
@@ -60,12 +60,12 @@ function submit_tag(event){
 				function(){
 					var element = $(this);
 					tOut = setTimeout(function(){
-						$(element).find('.tag_delete').show().animate({width: '20px'},200);
+						$(element).find('.tag-remove').show().animate({width: '20px'},200);
 					},500);			
 				},
 				function(){
 					clearTimeout(tOut);
-					$(this).find('.tag_delete').animate({width:'1px'},200).delay(250).hide();
+					$(this).find('.tag-remove').animate({width:'1px'},200).delay(250).hide();
 				}
 			);	
 		}
@@ -79,14 +79,14 @@ function delete_tag(element, id){
 }
 
 </script>
-<div class="tag_box">
+<div class="tagbox">
 	<?php if($_DATA["tag_box_title"]){ ?>
-		<h1 align="center" style="margin-top:0px;"><small><?=$locale['tags']?></small></h1>
+		<h1 align="center" style="margin-top:0px;"><small><?=$locale['tags']?>ayylmao</small></h1>
 	<?php } ?>
 	<ul class="list-inline" id="tag-list">
 		<?php foreach($_DATA["tags"] as $entry){ ?>
 			 <li class="tag" id="tag<?=$entry['tag_id']?>"><?=$entry['name']?>
-				 <div class="tag_delete">
+				 <div class="tag-remove">
 					 <a onclick="delete_tag(this, <?=$entry['tag_id']?>);" class="tag_a">
 						<span class="glyphicon glyphicon-remove"></span>
 					 </a>
@@ -95,7 +95,7 @@ function delete_tag(element, id){
 		<?php 
 		}?>
 	</ul>
-	<div class="tag_box_bottom">
+	<div class="tagbox-bottom">
 		<button class="tag_btn" id="addtag" data-trigger="manual" data-toggle="popover" data-html="true" data-content="<div id='tag_input_group'><input type='text' class='form-control' placeholder='New tag...' id='input_newtag' onkeypress='submit_tag(event);'/></div>" data-placement="left">             
 			<span class="glyphicon glyphicon-plus"></span><strong>tag</strong>
 		</button>
