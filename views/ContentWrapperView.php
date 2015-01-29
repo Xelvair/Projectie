@@ -59,6 +59,7 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 				$('#set_new_pw').val('false');
 				$('#settings_pw').val('').parent().removeClass('has-error has-success');
 				$('#settings_pw_retype').val('').parent().removeClass('has-error has-success');
+				$('#settings_old_pw').val('').parent().removeClass('has-error has-success');
 			}, 800);
 			
 			
@@ -66,7 +67,7 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 		
 		$('#settings_pw').on('keyup', function(){
 			var val = $(this).val();
-			if(val.length > 5){
+			if(val.length > 7){
 				$(this).parent().removeClass('has-error').addClass('has-success');
 			}else{
 				$(this).parent().removeClass('has-success').addClass('has-error');
@@ -83,49 +84,90 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 			}
 		});
 		
+		$('#settings_lang').change(function(){
+			$(this).parent().removeClass('has-error');
+		})
+		
 	});
 	
 function user_update(){
-			var set_pw = $('#set_new_pw').val();
-			var pw = $('#settings_pw').val();
-			var pw_rt = $('#settings_pw_retype').val();
-			var lang = $('#settings_lang').val();
-			var username = $('#settings_username').val();
-			var pw_correct = false;
-			var lang_correct = false;
-			var username_correct = false;
-		
-			if(set_pw == "true"){
-				if(pw != "" && pw.length > 5){
-					if(pw_rt != ""){
-						if(pw == pw_rt){
-							pw_correct = true;
-						}else{
-							$('#settings_pw_retype').parent().addClass('has-error');
-						}
-					}else{
-						$('#settings_pw_retype').parent().addClass('has-error');
-					}
-				}else{
-					$('#settings_pw').parent().addClass('has-error');
-				}
-			}
-			
-			if(lang == "de-de" || lang == "en-gb" || lang == "en-us"){
-				lang_correct = true;
-			}
-			
-			if(username != ""){
-				username_correct = true;
-			}else{
-				
-			}
-			
-			
-			alert('lang: '+ lang + ' | ' + lang_correct + ' pw: ' + pw + ' | ' + pw_correct + ' username: ' + username + ' | ' + username_correct);
-		}
-</script>
+	var set_pw = $('#set_new_pw').val();
+	var pw = $('#settings_pw').val();
+	var pw_rt = $('#settings_pw_retype').val();
+	var lang = $('#settings_lang').val();
+	var username = $('#settings_username').val();
+	var old_pw = $('#settings_old_pw').val();
+	var email = $('#settings_email').val();
+	var pw_correct = false;
+	var lang_correct = false;
+	var username_correct = false;
+	var user_id = 1;
 
+	if(set_pw == "true"){
+		if(pw != "" && pw.length > 7){
+			if(pw_rt != ""){
+				if(pw == pw_rt){
+					pw_correct = true;
+				}else{
+					$('#settings_pw_retype').parent().addClass('has-error');
+				}
+			}else{
+				$('#settings_pw_retype').parent().addClass('has-error');
+			}
+		}else{
+			$('#settings_pw').parent().addClass('has-error');
+		}
+	}
+	
+	if(lang == "de-de" || lang == "en-gb" || lang == "en-us"){
+		lang_correct = true;
+	}else{
+		$('#settings_lang').parent().addClass("has-error");
+	}
+	
+	if(lang_correct){
+		if(set_pw == "true"){
+				$.post( "<?=abspath('/auth/set_user');?>", {
+					user_id: user_id,
+					old_password: old_pw,
+					new_password: pw,
+					email: email, 
+					lang: lang,
+					}
+				).done(function(data){
+					settings_updated(data);
+				});
+		}else{
+				$.post( "<?=abspath('/auth/set_user');?>", {
+					user_id: user_id,
+					email: email, 
+					lang: lang,
+					}
+				).done(function(data){
+					settings_updated(data);
+				});
+		}
+	}	
+}
+
+function settings_updated(data){
+	alert(data);
+	var result = JSON.parse(data);
+	
+	if("ERROR" in result){
+		switch(result.ERROR){
+			case "ERR_INCORRECT_OLD_PASSWORD":
+					alert('ERR_INCORRECT_OLD_PASSWORD');
+				break;
+			case "ERR_INVALID_ARGUMENTS":
+					alert("ERR_INVALID_ARGUMENTS");
+				break;
+		}
+	} else {
+		window.location.href = "<?=abspath("")?>";
+	}
+}
+</script>
 
 <?=$_DATA['login_modal']?>
 
@@ -226,11 +268,15 @@ function user_update(){
 						<input id="settings_email" type="text" class="form-control" value="<?=$_DATA["user"]["email"]?>">
 					</div>
 					<div style="min-height: 40px; width: 100%;">
-						<label id="change_pw" style="margin-bottom: 20px; cursor: pointer;">Change Password...</label>
+						<label id="change_pw" style="margin-bottom: 20px; cursor: pointer;"><?=$locale['change_password']?>...</label>
 						<input type="hidden" id="set_new_pw" value="false"/>
 						<div id="new_pw_div" style="display: none;">
 							<div class="form-group">
-								<label><?=$locale["new_password"]?></label><span id="change_pw_close" style="cursor: pointer;" class="glyphicon glyphicon-remove pull-right"></span>
+								<label><?=$locale["old_password"]?></label><span id="change_pw_close" style="cursor: pointer;" class="glyphicon glyphicon-remove pull-right"></span>
+								<input id="settings_old_pw" type="password" class="form-control">
+							</div>
+							<div class="form-group">
+								<label><?=$locale["new_password"]?></label>
 								<input id="settings_pw" type="password" class="form-control">
 							</div>
 							<div class="form-group">
@@ -298,7 +344,7 @@ function user_update(){
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$locale["more"]?><span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="#"><?=$locale["about"]?></a></li>
+            <li><a href="<?=abspath('about')?>"><?=$locale["about"]?></a></li>
             <li class="divider"></li>
 			<?php if($user_logged_in){?>
 			<li><a href="#settingsModal" role="button" data-toggle="modal"><?=$locale["settings"]?></a></li>

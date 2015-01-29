@@ -73,5 +73,10 @@
 	"retype_new_password" : "Retype Password",
 	"delete_account" : "Delete Account",
 	"save_changes" : "Save Changes",
-	"lang" : "Language"
+	"lang" : "Language",
+	"adress" : "Adress",
+	"about_us" : "About Us",
+	"contact" : "Contact",
+	"change_password" : "Change Password",
+	"old_password" : "Old Password"
 }

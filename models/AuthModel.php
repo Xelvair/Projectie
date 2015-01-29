@@ -264,6 +264,15 @@ class AuthModel implements Model{
 				array_push($on_success_queries, $stmt_set_lang);
 			}
 
+			if(validate($info, ["username" => "string"])){
+				self::validate_username($info["username"]);
+
+				$stmt_set_username = $mysqli->prepare("UPDATE user SET username = ? WHERE user_id = ?");
+				$stmt_set_username->bind_param("si", $info["username"], $info["user_id"]);
+
+				array_push($on_success_queries, $stmt_set_username);
+			}
+
 			if(validate($info, ["old_password" => "string", "new_password" => "string"])){
 				$user_info = $this->dbez->find("User", $info["user_id"], ["password_hash", "password_salt"]);
 

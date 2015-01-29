@@ -73,5 +73,10 @@
 	"retype_new_password" : "Wiederhole Password",
 	"delete_account" : "Konto löschen",
 	"save_changes" : "Einstellungen speichern",
-	"lang" : "Sprache"
+	"lang" : "Sprache",
+	"adress" : "Adresse",
+	"about_us" : "Über Uns",
+	"contact" : "Kontakt",
+	"change_password" : "Passwort Ändern",
+	"old_password" : "Altes Passwort"
 }

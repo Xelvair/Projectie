@@ -21,6 +21,7 @@ define("VALIDATE_CAST", 1 << 1);
 define("VALIDATE_THROW", 1 << 2);
 define("VALIDATE_NOTHROW", 1 << 3);
 
+
 function validate_format(&$var, $format, $action = VALIDATE_STRICT){
 	if(preg_match("/^min\(([0-9]+)\)$/", $format, $matches)){
 		switch(gettype($var)){
@@ -137,8 +138,6 @@ function validate_format(&$var, $format, $action = VALIDATE_STRICT){
 
 function validate_format_array(&$var, $format_array, $action = VALIDATE_STRICT){
 	$formats = explode("|", $format_array);
-	write_log(Logger::DEBUG, print_r($format_array, true));
-	write_log(Logger::DEBUG, print_r($formats, true));
 	foreach($formats as $format){
 		if(!validate_format($var, $format, $action)){
 			return false;

@@ -903,4 +903,31 @@ text-align: left;
 .request-entry-tag{
 	color: #999;
 	font-size: 16px;
+<<<<<<< HEAD
+=======
+}
+
+.large-box-centered{
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+}
+
+.large-box-centered h2{
+margin-bottom: 10px;
+}
+
+.large-box-centered img{
+margin-left: auto;
+margin-right: auto;
+}
+
+.large-box-centered table{
+margin-left: auto;
+margin-right: auto;
+-webkit-box-shadow: 3px 3px 10px 0px rgba(50, 50, 50, 0.75);
+-moz-box-shadow:    3px 3px 10px 0px rgba(50, 50, 50, 0.75);
+box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
+>>>>>>> maxistuff
 }

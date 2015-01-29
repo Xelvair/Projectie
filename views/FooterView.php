@@ -2,11 +2,11 @@
 global $locale;
 ?>
 
-<div class="row" style="padding-left: 20px; padding-right: 20px;">
+<div class="row" style="padding-left: 20px; padding-right: 20px; margin-top: 20px;">
 	<div class="col-md-4 text-left col-xs-4">
     	<ul class="list-inline">
         	<li>©2014 - <?php echo date("Y"); ?> Projectie</li>
-            <li><a href="#"><?= $locale['about']?></a></li>
+            <li><a href="<?=abspath('about')?>"><?= $locale['about']?></a></li>
         </ul>
 	</div> 
     <div class="col-md-4 col-xs-4 text-center">
