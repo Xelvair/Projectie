@@ -36,6 +36,6 @@ foreach($_DATA["entries"] as $entry){ ?>
 			<span class="user media-source" user-id="<?=$entry['creator']['id']?>"><small class="source-container text-muted"><?=$entry['creator']['name']?></small></span>
 		<?php } ?>
 	  </div>
-    </div><hr/><!--media-->
-    </a>
+    </div><hr><!--media-->
+  </a>
  <?php }?>   

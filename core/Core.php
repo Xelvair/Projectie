@@ -9,6 +9,7 @@ $CONFIG = array();
 require_once("Debug.php");
 require_once("Logger.php");
 require_once("Locale.php");
+require_once("Validate.php");
 
 //Initialize logger
 $logger = new Logger("projectie.log", Logger::DEBUG);
@@ -97,7 +98,7 @@ class Core{
 		}
 	}
 
-	private function parseUrl($url){
+	private static function parseUrl($url){
 		$result = array();
 		$result["params"] = array();
 
@@ -121,11 +122,11 @@ class Core{
 		return $result;
 	}
 
-	private function controllerFilepath($controller){
+	private static function controllerFilepath($controller){
 		return "../controllers/".$controller."Controller.php";
 	}
 
-	private function load_and_check_config(){
+	private static function load_and_check_config(){
 		global $CONFIG;
 		//Check if file exists
 		if(!file_exists(abspath_lcl("projectie.cfg"))){
@@ -153,6 +154,65 @@ class Core{
 
 		$CONFIG = $config_obj;
 		return true;
+	}
+
+	public static function model($model){
+		//Determine filepath
+		$model = $model."Model";
+		$model_filepath = self::modelFilepath($model);
+		if(file_exists($model_filepath)){
+			include_once($model_filepath);
+		} else {
+			write_log(Logger::ERROR, "Failed to load model file '".$model."'! Is the file named properly?");
+			return null;
+		}
+
+		//Instantiate object
+		if(class_exists($model)){
+			$ref = new ReflectionClass($model);
+			$params = func_get_args();
+			array_shift($params);
+				return $ref->newInstanceArgs($params);
+		} else {
+			write_log(Logger::ERROR, "Failed to instantiate model class'".$model."'! Is the class named '".$model."'?");
+			return null;
+		}
+
+		return $model_obj;
+	}
+
+	public static function view($view, $data = array()){
+		$view = $view."View";
+		$view_filepath = self::viewFilepath($view);
+
+		if(!file_exists($view_filepath)){
+			write_log(Logger::ERROR, "Failed to load view file '".$view."'! Is the file named properly?");
+			return null;
+		}
+
+		$_DATA = $data;
+
+		ob_start();
+
+		include($view_filepath);
+
+		return ob_get_clean();
+	}
+
+	public static function view_batch($view, $data_batch){
+		$content = "";
+		foreach($data_batch as $data){
+			$content .= Core::view($view, $data);
+		}
+		return $content;
+	}
+
+	private static function viewFilepath($view){
+		return "../views/".$view.".php";
+	}
+
+	private static function modelFilepath($model){
+		return "../models/".$model.".php";
 	}
 }
 

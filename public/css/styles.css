@@ -303,7 +303,11 @@ hr{
 .media-object{
     height:100px;
     width: 100px;
+}
 
+.media-object-small{
+    height:50px;
+    width: 50px;
 }
 
 .media-heading{
@@ -416,8 +420,8 @@ a:hover{
 	
 }
 
-#chat-wrapper{
-	margin-top: 20px;
+.chat-wrapper{
+	margin-top: 50px;
 	border-style:none;
 	height: 500px;
 	padding-left:25px;
@@ -426,7 +430,7 @@ a:hover{
 	float: left;
 }
 
-#chat-footer{
+.chat-footer{
 	height: 100px;
 	bottom: 0px;
 	float:left;
@@ -438,11 +442,12 @@ a:hover{
 	 z-index:200;
 }
 
-#chat-footer .btn-default{
+.chat-footer .btn-default{
 	border-style:none;
 }
 
-#chat-box{
+.chat-box{
+	overflow: hidden;
 	padding-right: 20px;
 	padding-left: 20px;
 	float:left;
@@ -451,21 +456,13 @@ a:hover{
 	overflow-y:scroll;
 	width: 100%;
 	min-height: 30px;
-	margin-top:80px;
+	margin-top:25px;
 	-webkit-box-shadow: inset 2px 2px 10px 0px rgba(50, 50, 50, 0.75);
 -moz-box-shadow:    inset 2px 2px 10px 0px rgba(50, 50, 50, 0.75);
 box-shadow:         inset 2px 2px 10px 0px rgba(50, 50, 50, 0.75);
 }
 
-#chat-head{
-	float:left;
-	width:100%;
-	height: 80px;
-	position:absolute;
-	background-color:#FFF ;
-}
-
-#chat-row{
+.chat-row{
 margin-bottom: 10px;
 }
 
@@ -474,7 +471,7 @@ margin-bottom: 10px;
 	padding: 0px;
 }
 
-#chat{
+.chat{
 	list-style:none;
 	padding: 0px;
 }
@@ -483,7 +480,7 @@ margin-bottom: 10px;
 	padding-left: 5px;
 	padding-right: 5px;
 }
-#chat li{
+.chat li{
 	margin-top:15px;
 	border-bottom-style:dotted;
 	border-bottom-color: #AAAAAA;
@@ -555,6 +552,10 @@ box-shadow:         inset 1px 1px 3px 0px rgba(50, 50, 50, 0.75);
 	height: 50px;
 	padding-top: 10px;
 	
+}
+
+.user{
+	cursor: pointer;
 }
 
 .user-review{
@@ -860,7 +861,11 @@ text-align: left;
 
 .title-desc-list:hover > div{
 	color: black;
-	box-shadow: 1px 1px 20px #CCC;
+	box-shadow: 1px 1px 30px #AAA;
+}
+
+.title-desc-list > hr{
+	border-color: #DDD;
 }
 
 .post_group{
@@ -871,4 +876,55 @@ text-align: left;
 
 .media-source{
 	cursor: pointer;
+}
+
+.request-entry{
+	overflow: hidden;
+}
+
+.request-entry:first-child{
+	margin-top: 10px;
+}
+
+.request-entry h1{
+	font-size: 22px;
+	margin: 3px 0 0 0;
+}
+
+.request-entry img{
+	margin-right: 10px;
+}
+
+.request-entry-tagline{
+	color: #CCC;
+	font-size: 14px;
+}
+
+.request-entry-tag{
+	color: #999;
+	font-size: 16px;
+}
+
+.large-box-centered{
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+}
+
+.large-box-centered h2{
+margin-bottom: 10px;
+}
+
+.large-box-centered img{
+margin-left: auto;
+margin-right: auto;
+}
+
+.large-box-centered table{
+margin-left: auto;
+margin-right: auto;
+-webkit-box-shadow: 3px 3px 10px 0px rgba(50, 50, 50, 0.75);
+-moz-box-shadow:    3px 3px 10px 0px rgba(50, 50, 50, 0.75);
+box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 }

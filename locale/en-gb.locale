@@ -5,6 +5,8 @@
 	"profile": "Profile",
 	"my_projects": "My Projects",
 	"favorites": "Favorites",
+	"public_conversation": "Public Conversation",
+	"private_conversation": "Private Conversation",
 	"conversations": "Conversations",
 	"more": "More",
 	"about": "About",
@@ -64,6 +66,12 @@
 	"settings" : "Settings",
 	"add_new_position" : "Add new Position",
 	"cancel" : "Cancel",
-	"enter_new_position_title" : "Enter the title of the new position"
-	
+	"enter_new_position_title" : "Enter the title of the new position",
+	"requests" : "Requests",
+	"profile_pic" : "Profile Picture",
+	"new_password" : "New Password",
+	"retype_new_password" : "Retype Password",
+	"delete_account" : "Delete Account",
+	"save_changes" : "Save Changes",
+	"lang" : "Language"	
 }

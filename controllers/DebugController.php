@@ -3,13 +3,13 @@ require_once("../core/Controller.php");
 
 class DebugController extends Controller{
 	function index(){
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
 		$user = $auth->get_current_user();
 
-		$content = $this->view("Debug");
+		$content = Core::view("Debug");
 
-		$html = $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+		$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 												"body" => $content, 
 												"body_padding" => false,
 												"current_user" => $user));

@@ -14,6 +14,11 @@
 #tag_box
 
 global $locale;
+
+$show_requests = isset($_DATA["project"]["panels"]["requests_panel"]["viewable"]) && $_DATA["project"]["panels"]["requests_panel"]["viewable"];
+$show_private_conversation = isset($_DATA["project"]["panels"]["private_conversation_panel"]["viewable"]) && $_DATA["project"]["panels"]["private_conversation_panel"]["viewable"];
+$show_public_conversation = isset($_DATA["project"]["panels"]["public_conversation_panel"]["viewable"]) && $_DATA["project"]["panels"]["public_conversation_panel"]["viewable"];
+$show_members = isset($_DATA["project"]["panels"]["members_panel"]["viewable"]) && $_DATA["project"]["panels"]["members_panel"]["viewable"];
 ?>
 
 <script>
@@ -118,8 +123,23 @@ function textfit() {
 			<div class="tabpanel">
 					<ul class="nav nav-tabs">
 						<li role="presentation" class="active"><a href="#home" id="home-btn" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-						<li role="presentation" ><a href="#conversations" id="conversation-btn" aria-controls="conversations" role="tab" data-toggle="tab"><?=$locale['conversations']?></a></li>
-						<li role="presentation" ><a href="#members" id="member-btn" aria-controls="members" role="tab" data-toggle="tab"><?=$locale['members']?></a></li>
+
+						<?php if($show_public_conversation){ ?>
+						<li role="presentation" ><a href="#public_conversation_panel" id="public-conversation-btn" aria-controls="public_conversation_panel" role="tab" data-toggle="tab"><?=$locale['public_conversation']?></a></li>
+						<?php } ?>
+
+						<?php if($show_private_conversation){ ?>
+							<li role="presentation" ><a href="#private_conversation_panel" id="conversation-btn" aria-controls="private_conversation_panel" role="tab" data-toggle="tab"><?=$locale['private_conversation']?></a></li>
+						<?php } ?>
+
+						<?php if($show_members){ ?>
+						<li role="presentation" ><a href="#members_panel" id="member-btn" aria-controls="members_panel" role="tab" data-toggle="tab"><?=$locale['members']?></a></li>
+						<?php } ?>
+
+						<?php if($show_requests){ ?>
+							<li role="presentation" ><a href="#requests_panel" id="request-btn" aria-controls="requests_panel" role="tab" data-toggle="tab"><?=$locale['requests']?></a></li>
+						<?php } ?>
+
 					</ul>
 					<div class="tab-content project-desc-tab">
 						<div role="tabpanel" class="tab-pane fade in active" id="home">
@@ -138,7 +158,7 @@ function textfit() {
 											</div>
 											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 												<div class="panel-body" id="desc_panel">
-													<div id="desc_wrap"><?=$_DATA['project']['desc']?></div>
+													<div id="desc_wrap"><?=$_DATA['project']['description']?></div>
 													<div id="desc_update_wrap" class="form-group" style="display: none;">
 														<textarea name="desc" rows="6" class="form-control" id="desc_area" style="margin-bottom: 15px;"></textarea>
 														<button onclick="update_desc()" class="btn btn-default pull-left"><?=$locale['update']?></button>
@@ -208,27 +228,30 @@ function textfit() {
 								</div>
 							</div>
 						</div>
-						<div role="tabpanel" class="tab-pane fade" id="conversations">
-						<div class="row" id="chat-row">
-								<div id="chat-wrapper" class="col-md-12 chat-col pull-left">
-									<div id="chat-box">
-										<ul id="chat">
-									  </ul>
-									</div>
-									<div id="chat-footer">
-										<form>
-										  <div class="input-group">
-											<textarea class="form-control custom-control" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="chat_input"></textarea>     
-										   <span class="input-group-addon btn btn-default" id="chat_send"><?=$locale['send']?></span>
-											</div>
-									  </form>
-									</div>	
-								</div>
+
+						<?php if($show_public_conversation){ ?>
+							<div role="tabpanel" class="tab-pane fade" id="public_conversation_panel">
+							<?=$_DATA["project"]["panels"]["public_conversation_panel"]["content"]?>
+							</div><!--Conversation tab End-->
+						<?php } ?>
+
+						<?php if($show_members){ ?>
+							<div role="tabpanel" class="tab-pane fade" id="members_panel">
+							<?=$_DATA["project"]["panels"]["members_panel"]["content"]?>
 							</div>
-						</div><!--Conversation tab End-->
-						<div role="tabpanel" class="tab-pane fade" id="members">
-						<?=$_DATA["project"]["member_panel"]?>
-						</div>
+						<?php } ?>
+
+						<?php if($show_private_conversation){ ?>
+							<div role="tabpanel" class="tab-pane fade" id="private_conversation_panel">
+							<?=$_DATA["project"]["panels"]["private_conversation_panel"]["content"]?>
+							</div>
+						<?php } ?>
+
+						<?php if($show_requests){ ?>
+							<div role="tabpanel" class="tab-pane fade" id="requests_panel">
+							<?=$_DATA["project"]["panels"]["requests_panel"]["content"]?>
+							</div>
+						<?php } ?>
 					</div><!--Tab content END-->
 			</div><!--TABPanel END-->
 		</div><!--Row END-->

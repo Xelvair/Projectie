@@ -302,6 +302,67 @@ class AuthModel implements Model{
 	public function get_fav_projects($user_id){
 		return $this->dbez->find("project_fav", ["user_id" => (int)$user_id], "*");
 	}
+	
+	public function set_user($info){
+                global $mysqli;
+ 
+                $on_success_queries = array();
+ 
+                if(!validate($info, ["user_id" => "int"], VALIDATE_CAST)){
+                        return array("ERROR" => "ERR_INVALID_ARGUMENTS");
+                }
+ 
+                $user = self::get_user($info["user_id"]);
+                if(!$user){
+                        return array("ERROR" => "ERR_USER_NOT_FOUND");
+                }
+ 
+                try{
+                        if(validate($info, ["email" => "string"]) && $info["email"] != $user["email"]){
+                                self::validate_email($info["email"]);
+ 
+                                $stmt_set_email = $mysqli->prepare("UPDATE user SET email = ? WHERE user_id = ?");
+                                $stmt_set_email->bind_param("si", $info["email"], $info["user_id"]);
+ 
+                                array_push($on_success_queries, $stmt_set_email);
+                        }
+ 
+                        if(validate($info, ["lang" => "string"])){
+                                self::validate_lang($info["lang"]);
+ 
+                                $stmt_set_lang = $mysqli->prepare("UPDATE user SET lang = ? WHERE user_id = ?");
+                                $stmt_set_lang->bind_param("si", $info["lang"], $info["user_id"]);
+ 
+                                array_push($on_success_queries, $stmt_set_lang);
+                        }
+ 
+                        if(validate($info, ["old_password" => "string", "new_password" => "string"])){
+                                $user_info = $this->dbez->find("User", $info["user_id"], ["password_hash", "password_salt"]);
+ 
+                                if(self::password_check($info["old_password"], $user_info["password_hash"], $user_info["password_salt"])){
+                                        self::validate_password($info["new_password"]);
+ 
+                                        $password_salt = substr(md5(time()), 0, 8);
+ 
+                                        $password_hash = md5($info["new_password"].$password_salt);
+ 
+                                        $stmt_set_password = $mysqli->prepare("UPDATE user SET password_hash = ?, password_salt = ? WHERE user_id = ?");
+                                        $stmt_set_password->bind_param("ssi", $password_hash, $password_salt, $info["user_id"]);
+                                        array_push($on_success_queries, $stmt_set_password);
+                                } else {
+                                        return array("ERROR" => "ERR_INCORRECT_OLD_PASSWORD");
+                                }
+                        }
+                } catch (Exception $e){
+                        return array("ERROR" => $e->getMessage());
+                }
+ 
+                foreach($on_success_queries as $stmt){
+                        $stmt->execute();
+                }
+ 
+                return array();
+        }
 }
 
 ?>

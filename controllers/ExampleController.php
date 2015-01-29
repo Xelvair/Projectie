@@ -3,10 +3,10 @@ require_once("../core/Controller.php");
 
 class ExampleController extends Controller{
 	function index(){
-		$dbez = $this->model("DBEZ");
-		$auth = $this->model("Auth", $dbez);
+		$dbez = Core::model("DBEZ");
+		$auth = Core::model("Auth", $dbez);
 		$user = $auth->get_current_user();
-		return $this->view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
+		return Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
 										"body" => "fagit", 
 										"body_padding" => true,
 										"current_user" => $user));
@@ -26,12 +26,12 @@ class ExampleController extends Controller{
 
 		$html .= "This is the example page of the ExampleController class.";
 
-		$model = $this->model("ExampleModel");
+		$model = Core::model("ExampleModel");
 
 		$html .= $model->test();
 		$html .= var_dump($_SERVER);
 
-		$html .= $this->view("ExampleView", ["examplestring" => "ExampleView Test String!"]);
+		$html .= Core::view("ExampleView", ["examplestring" => "ExampleView Test String!"]);
 
 		return $html;
 	}

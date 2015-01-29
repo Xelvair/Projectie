@@ -130,6 +130,10 @@ class ChatModel implements Model{
 
 		$chat_session_id = rand();
 
+		while(isset($_SESSION["chatsessions"][$chat_session_id])){
+			$chat_session_id++;
+		}
+
 		$_SESSION["chatsessions"][$chat_session_id]["chat_id"] = $chat_id;
 		$_SESSION["chatsessions"][$chat_session_id]["last_msg_id"] = $last_msg_id;
 

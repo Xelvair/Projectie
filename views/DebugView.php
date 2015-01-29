@@ -57,11 +57,11 @@ $(document).ready(function(){
 <h1>PHP Debugging</h1>
 <form>
 	<textarea rows="20" cols="120" id="code">
-$dbez = $this->model("DBEZ");
-$auth = $this->model("Auth", $dbez);
-$chat = $this->model("Chat", $dbez);
-$project = $this->model("Project", $dbez);
-$tag = $this->model("Tag", $dbez);
+$dbez = Core::model("DBEZ");
+$auth = Core::model("Auth", $dbez);
+$chat = Core::model("Chat", $dbez);
+$project = Core::model("Project", $dbez);
+$tag = Core::model("Tag", $dbez);
 	</textarea><br>
 	<input type="button" id="code_submit" value="Debug">
 </form>
