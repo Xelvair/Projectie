@@ -16,8 +16,10 @@ class ValidationException extends Exception{
 	}
 }
 
-const VALIDATE_STRICT = 1;
-const VALIDATE_CAST = 2;
+define("VALIDATE_STRICT", 1 << 0);
+define("VALIDATE_CAST", 1 << 1);
+define("VALIDATE_THROW", 1 << 2);
+define("VALIDATE_NOTHROW", 1 << 3);
 
 function validate_format(&$var, $format, $action = VALIDATE_STRICT){
 	if(preg_match("/^min\(([0-9]+)\)$/", $format, $matches)){
@@ -145,20 +147,30 @@ function validate_format_array(&$var, $format_array, $action = VALIDATE_STRICT){
 	return true;
 }
 
-function validate($arr, $format_arr){
+function validate($arr, $format_arr, $action = VALIDATE_NOTHROW){
 	foreach($format_arr as $field => $format){
 		if(!isset($arr[$field])){
-			throw new ValidationException("undefined", $field);
+			if($action & VALIDATE_THROW){
+				throw new ValidationException("undefined", $field);
+			} else if($action & VALIDATE_NOTHROW){
+				return false;
+			}
 		}
 		if(gettype($format) == "array"){
 			try{
-				validate($arr[$field], $format);
+				if(!validate($arr[$field], $format, $action)){
+					return false;
+				}
 			} catch (ValidationException $e){
 				$e->add_trace($field);
 				throw $e;
 			}
 		} else if(!validate_format_array($arr[$field], $format)){
-			throw new ValidationException($format, $field);
+			if($action & VALIDATE_THROW){
+				throw new ValidationException($format, $field);
+			} else if($action & VALIDATE_NOTHROW){
+				return false;
+			}
 		}
 	}
 

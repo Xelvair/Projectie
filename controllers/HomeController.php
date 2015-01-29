@@ -40,9 +40,8 @@ class HomeController extends Controller{
 		$footer = Core::view("Footer", $footer_array);
 		
 		$user_review = Core::view('UserReview', "");
-
 	
-        $mainpagelists = array("top_project" => array(), "left_col" => $html_new, "mid_col" => $html_trending, "right_col" => $html_news, "user_review" => $user_review);
+    $mainpagelists = array("top_project" => array(), "left_col" => $html_new, "mid_col" => $html_trending, "right_col" => $html_news, "user_review" => $user_review);
 		array_push($mainpagelists["top_project"], array("title" => "Test Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/header.jpg")));
 		array_push($mainpagelists["top_project"], array("title" => "Test Project 2", "description" => "Test Desc 2", "thumb" => abspath("/public/images/header.jpg")));
 		array_push($mainpagelists["top_project"], array("title" => "Test Project 3", "description" => "Test Desc 3", "thumb" => abspath("/public/images/header.jpg")));

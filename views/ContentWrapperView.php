@@ -123,12 +123,6 @@ function user_update(){
 			
 			
 			alert('lang: '+ lang + ' | ' + lang_correct + ' pw: ' + pw + ' | ' + pw_correct + ' username: ' + username + ' | ' + username_correct);
-			
-			
-			
-			
-			
-			
 		}
 </script>
 
@@ -288,7 +282,11 @@ function user_update(){
       <?php } ?>
       <ul class="nav navbar-nav navbar-right">
         <form class="navbar-form navbar-left" role="search">
-			<a href="<?=abspath("/project/createnew")?>" class="btn btn-create-project" id="btn_create_project"><span class="glyphicon glyphicon-plus" style="margin-right: 5px;"></span><?=$locale["create_a_project"]?></a>
+					<?php if($_DATA["user"]) { ?>
+						<a href="<?=abspath("/project/createnew")?>" class="btn btn-create-project" id="btn_create_project"><span class="glyphicon glyphicon-plus" style="margin-right: 5px;"></span><?=$locale["create_a_project"]?></a>
+					<?php } else { ?>
+						<a href="#registerModal" role="button" data-toggle="modal" class="btn btn-create-project"><span class="glyphicon glyphicon-plus" style="margin-right: 5px;"></span><?=$locale["create_a_project"]?></a>
+					<?php } ?>
 			<div class="form-group">
 				<input type="text" class="form-control" placeholder="<?=$locale['placeholder_search']?>">
 			</div>
