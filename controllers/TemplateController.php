@@ -5,8 +5,7 @@ class TemplateController extends Controller{
 	function TagBox(){
 		global $locale;
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 
 		$user = $auth->get_current_user();
 

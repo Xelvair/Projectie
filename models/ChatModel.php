@@ -4,20 +4,14 @@ require_once(abspath_lcl("/core/Model.php"));
 
 class ChatModel implements Model{
 
-	private $dbez;
-
-	public function __construct($dbez){
-		$this->dbez = $dbez;
-	}
-
 	public function create_public($creator_id, $title = null){
 		$title = ($title ? $title : "New Public Chat");
 
-		return $this->dbez->insert("chat", ["creator_id" => $creator_id, "title" => htmlentities($title), "access" => "PUBLIC"], DBEZ_INSRT_RETURN_ROW);
+		return DBEZ::insert("chat", ["creator_id" => $creator_id, "title" => htmlentities($title), "access" => "PUBLIC"], DBEZ_INSRT_RETURN_ROW);
 	}
 
 	public function create_private($creator_id, $title = null){
-		return $this->dbez->insert("chat", ["creator_id" => $creator_id, "title" => htmlentities($title), "access" => "PRIVATE"], DBEZ_INSRT_RETURN_ROW);
+		return DBEZ::insert("chat", ["creator_id" => $creator_id, "title" => htmlentities($title), "access" => "PRIVATE"], DBEZ_INSRT_RETURN_ROW);
 	}
 
 	public function get_chat($chat_id){
@@ -50,7 +44,7 @@ class ChatModel implements Model{
 	}
 
 	public function can_participate($chat_id, $user_id){
-		$chat = $this->dbez->find("chat", $chat_id, ["access"]);
+		$chat = DBEZ::find("chat", $chat_id, ["access"]);
 
 		if(!$chat)
 			return false;
@@ -60,11 +54,11 @@ class ChatModel implements Model{
 			return true;
 
 		//Else, check participation table
-		return !!$this->dbez->find("chat_participation", ["chat_id" => $chat_id, "participant_id" => $user_id], ["chat_participation_id"]);
+		return !!DBEZ::find("chat_participation", ["chat_id" => $chat_id, "participant_id" => $user_id], ["chat_participation_id"]);
 	}
 
 	public function is_creator($chat_id, $user_id){
-		$chat = $this->dbez->find("chat", $chat_id, ["creator_id"]);
+		$chat = DBEZ::find("chat", $chat_id, ["creator_id"]);
 
 		return $chat["creator_id"] == $user_id;
 	}
@@ -74,11 +68,11 @@ class ChatModel implements Model{
 			return array("ERROR" => "ERR_IS_ALREADY_PARTICIPATOR");
 		}
 
-		return !!$this->dbez->insert("chat_participation", ["chat_id" => $chat_id, "participant_id" => $user_id]);
+		return !!DBEZ::insert("chat_participation", ["chat_id" => $chat_id, "participant_id" => $user_id]);
 	}
 
 	public function remove_user($chat_id, $user_id){
-		return !!$this->dbez->delete("chat_participation", ["chat_id" => $chat_id, "user_id" => $user_id]);
+		return !!DBEZ::delete("chat_participation", ["chat_id" => $chat_id, "user_id" => $user_id]);
 	}
 
 	public function send($sender_id, $chat_session_id, $message){
@@ -94,7 +88,7 @@ class ChatModel implements Model{
 			return;
 		}
 
-		return $this->dbez->insert("chat_message", [
+		return DBEZ::insert("chat_message", [
 			"chat_id" => $chat_id, 
 			"user_id" => $sender_id, 
 			"chat_session_id" => $chat_session_id, 

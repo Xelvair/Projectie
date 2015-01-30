@@ -46,6 +46,32 @@ function abspath_lcl($path){
 	return preg_replace('#/+#','/', $_SERVER["DOCUMENT_ROOT"]."/".$path);
 }
 
+function cast($val, $type){
+	switch($type){
+		case "integer":
+			return (integer)$val;
+			break;
+		case "string":
+			return (string)$val;
+			break;
+		case "float":
+			return (float)$val;
+			break;
+		case "boolean":
+			return (boolean)$val;
+			break;
+		case "array":
+			return (array)$val;
+			break;
+		case "object":
+			return (object)$val;
+			break;
+		default:
+			throw new UnexpectedValueException();
+			break;
+	}
+}
+
 class Core{
 	function __construct($url){
 		global $mysqli;

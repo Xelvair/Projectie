@@ -6,9 +6,8 @@ class ChatController extends Controller{
 
 	//$_POST["title"] : the title of the chat
 	public function create_private(){
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 		
 		$user = $auth->get_current_user();
 
@@ -41,9 +40,8 @@ class ChatController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 
 		$user_to_be_added = $auth->get_user($_POST["user_id"]);
 
@@ -77,9 +75,8 @@ class ChatController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 		
 		$user = $auth->get_current_user();
 
@@ -105,9 +102,8 @@ class ChatController extends Controller{
 			return json_encode(array());
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 
 		$logged_in_user = $auth->get_current_user();
 
@@ -119,9 +115,8 @@ class ChatController extends Controller{
 	public function get_new($data){
 		// data[0] : chatsession id
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 
 		$logged_in_user = $auth->get_current_user();
 		$requester_id = $logged_in_user ? $logged_in_user["id"] : null;
@@ -135,9 +130,8 @@ class ChatController extends Controller{
 			return;
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 
 		$logged_in_user = $auth->get_current_user();
 
@@ -149,9 +143,8 @@ class ChatController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 
 		$user = $auth->get_current_user();
 		if($user != null){

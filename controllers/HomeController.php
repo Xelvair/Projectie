@@ -6,9 +6,8 @@ class HomeController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$user = $auth->get_current_user();
 		if($user != null){

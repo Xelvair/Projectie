@@ -7,9 +7,8 @@ class TagController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$tag = Core::model("Tag", $dbez);
+		$auth = Core::model("Auth");
+		$tag = Core::model("Tag");
 		
 		$current_user = $auth->get_current_user();
 

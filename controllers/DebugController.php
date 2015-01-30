@@ -3,8 +3,7 @@ require_once("../core/Controller.php");
 
 class DebugController extends Controller{
 	function index(){
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 		$user = $auth->get_current_user();
 
 		$content = Core::view("Debug");

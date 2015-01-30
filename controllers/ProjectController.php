@@ -3,9 +3,8 @@ require_once("../core/Controller.php");
 
 class ProjectController extends Controller{
 	public function create(){
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 
 		$logged_in_user = $auth->get_current_user();
 
@@ -14,7 +13,7 @@ class ProjectController extends Controller{
 		}
 
 		if(isset($_POST["title"]) && isset($_POST["subtitle"]) && isset($_POST["description"])){
-			$project = Core::model("project", $dbez);
+			$project = Core::model("project");
 
 			//Create public and private chat for project
 			$public_chat = $chat->create_public(0, $_POST["title"]." Public Chat");
@@ -52,13 +51,10 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
-		write_log(Logger::DEBUG, print_r($_POST, true));
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
+		$project = Core::model("Project");
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
-
-		$project = Core::model("Project", $dbez);
 		$current_user = $auth->get_current_user();
 
 		if(!$current_user){
@@ -84,9 +80,8 @@ class ProjectController extends Controller{
 
 	//$_POST["project_participation_request_id"]
 	public function accept_participation_request(){
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$current_user = $auth->get_current_user();
 
@@ -99,9 +94,8 @@ class ProjectController extends Controller{
 
 	//$_POST["project_position_id"]
 	public function cancel_participation(){
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$current_user = $auth->get_current_user();
 
@@ -125,9 +119,8 @@ class ProjectController extends Controller{
 		$project_id = (int)$_POST["project_id"];
 		$project_title = htmlentities($_POST["position_title"]);
 
-		$dbez = Core::model("DBEZ");
-		$project = Core::model("Project", $dbez);
-		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project");
+		$auth = Core::model("Auth");
 
 		$current_user = $auth->get_current_user();
 
@@ -140,9 +133,8 @@ class ProjectController extends Controller{
 
 	//$_POST["project_position_id"]
 	public function remove_position(){
-		$dbez = Core::model("DBEZ");
-		$project = Core::model("Project", $dbez);
-		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project");
+		$auth = Core::model("Auth");
 
 		$current_user = $auth->get_current_user();
 
@@ -183,10 +175,9 @@ class ProjectController extends Controller{
 			}
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
-		$tag = Core::model("Tag", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
+		$tag = Core::model("Tag");
 
 		$project_id = $_POST["project_id"];
 
@@ -207,8 +198,7 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
-		$dbez = Core::model("DBEZ");
-		$project = Core::model("Project", $dbez);
+		$project = Core::model("Project");
 		
 		return json_encode($project->get_tags((int)$data[0]));
 	}
@@ -225,10 +215,9 @@ class ProjectController extends Controller{
 		$project_id = (int)$data[0];
 		$tag_id = (int)$_POST["tag_id"];
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
-		$tag = Core::model("Tag", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
+		$tag = Core::model("Tag");
 
 		$current_user = $auth->get_current_user();
 
@@ -245,9 +234,8 @@ class ProjectController extends Controller{
 				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$user = $auth->get_current_user();
 
@@ -265,9 +253,8 @@ class ProjectController extends Controller{
 				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$user = $auth->get_current_user();
 
@@ -288,9 +275,8 @@ class ProjectController extends Controller{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$user = $auth->get_current_user();
 
@@ -313,9 +299,8 @@ class ProjectController extends Controller{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$user = $auth->get_current_user();
 
@@ -332,9 +317,8 @@ class ProjectController extends Controller{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$user = $auth->get_current_user();
 
@@ -345,9 +329,8 @@ class ProjectController extends Controller{
 	}
 
 	public function get_tag_meta($project_id){
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 
 		$user = $auth->get_current_user();
 
@@ -365,9 +348,8 @@ class ProjectController extends Controller{
 
 	//$_POST["project_participation_request_id"] : id of the participation request to be cancelled
 	public function cancel_participation_request(){
-		$dbez = Core::model("DBEZ");
-		$project = Core::model("Project", $dbez);
-		$auth = Core::model("Auth", $dbez);
+		$project = Core::model("Project");
+		$auth = Core::model("Auth");
 
 		$current_user = $auth->get_current_user();
 
@@ -384,9 +366,8 @@ class ProjectController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$project = Core::model("Project", $dbez);
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
 		if(!isset($data[0])){
 			return "No project id given.";
 		}
@@ -416,7 +397,7 @@ class ProjectController extends Controller{
 		$tag_box = Core::view("TagBox", $tags);
 		
 		$member_list = $project->get_positions((int)$data[0]);
-		$member_list = array_map(function($entry) use ($dbez, $auth, $project, $project_obj, $user){
+		$member_list = array_map(function($entry) use ($auth, $project, $project_obj, $user){
 			$result = array_merge($entry, array("user" => $auth->get_user($entry["user_id"])), array("project" => $project->get($entry["project_id"])));
 			$flags = array();
 
@@ -452,7 +433,7 @@ class ProjectController extends Controller{
 
 				if(
 					$project->exists_participation_request($project_obj["project_id"], $user["user_id"]) &&
-					!!$dbez->find("project_participation_request", ["project_position_id" => $entry["project_position_id"], "user_id" => $user["user_id"]],["project_participation_request_id"]) &&
+					!!DBEZ::find("project_participation_request", ["project_position_id" => $entry["project_position_id"], "user_id" => $user["user_id"]],["project_participation_request_id"]) &&
 					empty($entry["user_id"])
 				){
 					array_push($flags, "CANCEL_REQUEST");
@@ -555,8 +536,7 @@ class ProjectController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);

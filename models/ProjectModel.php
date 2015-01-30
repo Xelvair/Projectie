@@ -4,12 +4,6 @@ require_once("../core/Debug.php");
 require_once("../core/Model.php");
 
 class ProjectModel implements Model{
-	private $dbez = null;
-
-	public function __construct(DBEZModel $dbez){
-		$this->dbez = $dbez;
-	}
-
 	public function create($creator_id, $info){
 		// $info PARAMETERS
 		// [title]: Title of the Project
@@ -28,7 +22,7 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
 		}
 
-		$project_id = $this->dbez->insert("project", [
+		$project_id = DBEZ::insert("project", [
 			"creator_id" => $creator_id,
 			"create_time" => time(),
 			"title" => $info["title"],
@@ -39,7 +33,7 @@ class ProjectModel implements Model{
 			"active" => 1
 		]);
 
-		$project_position_id = $this->dbez->insert("project_position", [
+		$project_position_id = DBEZ::insert("project_position", [
 			"project_id" => $project_id,
 			"user_id" => $creator_id,
 			"job_title" => "Creator",
@@ -79,11 +73,11 @@ class ProjectModel implements Model{
 	}
 
 	public function get_positions($project_id){
-		return $this->dbez->find("project_position", ["project_id" => $project_id], "*");
+		return DBEZ::find("project_position", ["project_id" => $project_id], "*");
 	}
 
 	public function get($id){
-		$project = $this->dbez->find("project", $id, ["project_id", "creator_id", "create_time", "title", "subtitle", "description", "public_chat_id", "private_chat_id"]);
+		$project = DBEZ::find("project", $id, ["project_id", "creator_id", "create_time", "title", "subtitle", "description", "public_chat_id", "private_chat_id"]);
 
 		if(!$project){
 			write_log(Logger::WARNING, "Failed to retrieve project #".$id." from databaase!");
@@ -97,7 +91,7 @@ class ProjectModel implements Model{
 	}
 
 	public function exists($project_id){
-		return !!$this->dbez->find("project", $project_id, ["project_id"]);
+		return !!DBEZ::find("project", $project_id, ["project_id"]);
 	}
 
 	public function set($creator_id, $id, $info){
@@ -143,7 +137,7 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_INVALID_PARAMETERS");
 		}
 
-		$project_position_obj = $this->dbez->find("project_position", ["project_position_id" => $project_position_id], ["project_id"])[0];
+		$project_position_obj = DBEZ::find("project_position", ["project_position_id" => $project_position_id], ["project_id"])[0];
 
 		$project_id = $project_position_obj["project_id"];
 
@@ -169,7 +163,7 @@ class ProjectModel implements Model{
 
 		$recruitment_chat = $chat_obj->create_private(0, $recruitment_chat_title);
 
-		$project_participation_request_id = $this->dbez->insert("project_participation_request", [
+		$project_participation_request_id = DBEZ::insert("project_participation_request", [
 			"project_position_id" => $project_position_id,
 			"user_id" => $user_id,
 			"request_type" => $request_type,
@@ -197,7 +191,7 @@ class ProjectModel implements Model{
 	public function accept_participation_request($participation_req_id, $acceptor_id){
 		global $mysqli;
 
-		$result_participation = $this->dbez->find("project_participation_request", ["project_participation_request_id" => $participation_req_id], ["project_position_id", "user_id", "request_type"]);
+		$result_participation = DBEZ::find("project_participation_request", ["project_participation_request_id" => $participation_req_id], ["project_position_id", "user_id", "request_type"]);
 
 		//Check if participation request exists
 		if(!$result_participation){
@@ -207,7 +201,7 @@ class ProjectModel implements Model{
 
 		extract($result_participation[0], EXTR_OVERWRITE | EXTR_PREFIX_ALL, "res");
 
-		$result_position = $this->dbez->find("project_position", ["project_position_id" => $res_project_position_id], ["project_id"]);
+		$result_position = DBEZ::find("project_position", ["project_position_id" => $res_project_position_id], ["project_id"]);
 
 		if(!$result_position){
 			write_log(Logger::WARNING, "Tried to accept non-existent participation request!".callinfo());
@@ -265,7 +259,7 @@ class ProjectModel implements Model{
 		$is_requester = ($canceler_id == $result_load_row["user_id"]);
 
 		if($can_remove_from_project || $is_requester){
-			$this->dbez->delete("project_participation_request", ["project_participation_request_id" => $participation_id]);
+			DBEZ::delete("project_participation_request", ["project_participation_request_id" => $participation_id]);
 			return true;
 		}
 
@@ -275,13 +269,13 @@ class ProjectModel implements Model{
 	public function cancel_participation($canceled_position_id, $canceler_id){
 		global $mysqli;
 
-		$result_load_row = $this->dbez->find("project_position", $canceled_position_id, ["project_id", "user_id"]);
+		$result_load_row = DBEZ::find("project_position", $canceled_position_id, ["project_id", "user_id"]);
 
 		if(empty($result_load_row)){
 			return array("ERROR" => "ERR_NO_SUCH_PROJECT_POSITION");
 		}
 
-		$result_project = $this->dbez->find("project", $result_load_row["project_id"], ["creator_id"]);
+		$result_project = DBEZ::find("project", $result_load_row["project_id"], ["creator_id"]);
 
 		$is_said_participator = ($result_load_row["user_id"] == $canceler_id);
 		$can_remove_from_project = self::user_has_right($canceler_id, $result_load_row["project_id"], "remove_participants");
@@ -301,7 +295,7 @@ class ProjectModel implements Model{
 	}
 
 	public function user_has_right($project_id, $user_id, $right){
-		$result = $this->dbez->find("project_position", ["project_id" => $project_id, "user_id" => $user_id], "*");
+		$result = DBEZ::find("project_position", ["project_id" => $project_id, "user_id" => $user_id], "*");
 
 		if(!$result){
 			return false;
@@ -319,7 +313,7 @@ class ProjectModel implements Model{
 	public function create_participation($participation_req_id){
 		global $mysqli;
 
-		$result = $this->dbez->find("project_participation_request", $participation_req_id, ["project_position_id", "user_id"]);
+		$result = DBEZ::find("project_participation_request", $participation_req_id, ["project_position_id", "user_id"]);
 
 		if(!$result){
 			write_log(Logger::ERROR, "Participation request #".$participation_req_id."doesn't exist!");
@@ -334,7 +328,7 @@ class ProjectModel implements Model{
 		}
 
 		//Remove entry in participation request table, since we're going to create the real deal now
-		$this->dbez->delete("project_participation_request", $participation_req_id);
+		DBEZ::delete("project_participation_request", $participation_req_id);
 
 		$curr_time = time();
 
@@ -355,7 +349,7 @@ class ProjectModel implements Model{
 		foreach($result as &$result_entry){
 			write_log(Logger::DEBUG, print_r($result_entry, true));
 			$result_entry["user"] = $auth->get_user($result_entry["user_id"]);
-			$result_entry["project_position"] = $this->dbez->find("project_position", $result_entry["project_position_id"], ["project_position_id", "job_title"]);
+			$result_entry["project_position"] = DBEZ::find("project_position", $result_entry["project_position_id"], ["project_position_id", "job_title"]);
 		}
 
 		return $result;
@@ -366,7 +360,7 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_NO_RIGHTS");
 		} 
 
-		return $this->dbez->insert("project_position", [
+		return DBEZ::insert("project_position", [
 			"project_id" => $project_id,
 			"job_title" => $position_title,
 			"can_edit" => 0,
@@ -378,7 +372,7 @@ class ProjectModel implements Model{
 	}
 	
 	public function remove_position($project_position_id, $remover_id){
-		$position_result = $this->dbez->find("project_position", $project_position_id, ["project_id", "user_id"]);
+		$position_result = DBEZ::find("project_position", $project_position_id, ["project_id", "user_id"]);
 
 		if(!$position_result){
 			return array("ERROR" => "ERR_NO_SUCH_PROJECT_POSITION");
@@ -389,14 +383,14 @@ class ProjectModel implements Model{
 		}
 
 		if(self::user_has_right($position_result["project_id"], $remover_id, "edit")){
-			$this->dbez->delete("project_position", ["project_position_id" => $project_position_id]);
+			DBEZ::delete("project_position", ["project_position_id" => $project_position_id]);
 		} else {
 			return array("ERROR" => "ERR_NO_RIGHTS");
 		}
 	}
 
 	public function get_all_projects(){
-		return $this->dbez->find("project", [], "*");
+		return DBEZ::find("project", [], "*");
 	}
 
 	public function exists_participation_request($project_id, $user_id){
@@ -419,7 +413,7 @@ class ProjectModel implements Model{
 	}
 
 	public function exists_participation($project_id, $user_id){
-		return !!$this->dbez->find("project_position", ["project_id" => $project_id, "user_id" => $user_id], ["project_position_id"]);
+		return !!DBEZ::find("project_position", ["project_id" => $project_id, "user_id" => $user_id], ["project_position_id"]);
 	}
 
 	public function tag($tag_model, $project_id, $tag){
@@ -444,7 +438,7 @@ class ProjectModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		$this->dbez->insert("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id]);
+		DBEZ::insert("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id]);
 	
 		return array();
 	}
@@ -462,7 +456,7 @@ class ProjectModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		return !!$this->dbez->find("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id], ["project_tag_id"]);
+		return !!DBEZ::find("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id], ["project_tag_id"]);
 	}
 
 	public function untag($tag_model, $project_id, $tag){
@@ -470,7 +464,7 @@ class ProjectModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		return !!$this->dbez->delete("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id]);
+		return !!DBEZ::delete("project_tag", ["project_id" => $project_id, "tag_id" => $tag_id]);
 	}
 
 	public function get_tags($project_id){
@@ -487,7 +481,7 @@ class ProjectModel implements Model{
 	}
 
 	public function favorite($project_id, $user_id){
-		$is_faved_already = !!$this->dbez->find("project_fav", ["project_id" => $project_id, "user_id" => $user_id], ["project_fav_id"]);
+		$is_faved_already = !!DBEZ::find("project_fav", ["project_id" => $project_id, "user_id" => $user_id], ["project_fav_id"]);
 
 		if($is_faved_already)
 			return array("ERROR" => "ERR_PROJECT_ALREADY_FAVED");
@@ -497,11 +491,11 @@ class ProjectModel implements Model{
 		if(isset($project["ERROR"]))
 			return array("ERROR" => "ERR_PROJECT_NONEXISTENT");
 
-		return !!$this->dbez->insert("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
+		return !!DBEZ::insert("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
 	}
 
 	public function unfavorite($project_id, $user_id){
-		return $this->dbez->delete("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
+		return DBEZ::delete("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
 	}
 
 	public function get_fav_count($project_id){
@@ -526,7 +520,7 @@ class ProjectModel implements Model{
 	}
 
 	public function get_news($project_news_id){
-		return $this->dbez->find("project_news", $project_news_id, "*");
+		return DBEZ::find("project_news", $project_news_id, "*");
 	}
 
 	//$info["project_id"] : id of the project the news belong to
@@ -547,7 +541,7 @@ class ProjectModel implements Model{
 			return array("ERROR" => "ERR_NO_RIGHTS");
 		}
 
-		return $this->dbez->insert("project_news", [
+		return DBEZ::insert("project_news", [
 			"project_id" => $project_id, 
 			"author_id" => $author_id, 
 			"post_time" => time(), 
@@ -568,7 +562,7 @@ class ProjectModel implements Model{
 			throw new InvalidArgumentException();
 		}
 
-		$news = $this->dbez->find("project_news", (int)$info["project_news_id"], "*");
+		$news = DBEZ::find("project_news", (int)$info["project_news_id"], "*");
 
 		if(!$news){
 			return array("ERROR" => "ERR_NEWS_NONEXISTENT");
@@ -603,7 +597,7 @@ class ProjectModel implements Model{
 			throw new InvalidArgumentException();
 		}
 
-		$news = $this->dbez->find("project_news", (int)$info["project_news_id"], "*");
+		$news = DBEZ::find("project_news", (int)$info["project_news_id"], "*");
 
 		if(!$news){
 			return array("ERROR" => "ERR_NEWS_NONEXISTENT");
@@ -638,7 +632,7 @@ class ProjectModel implements Model{
 	}
 
 	public function find_related($search_tags){
-		$projects = $this->dbez->find("project", [], ["project_id"]);
+		$projects = DBEZ::find("project", [], ["project_id"]);
 
 		foreach ($projects as &$project){
 			$project["tag_matches"] = self::get_tag_matches($project["project_id"], $search_tags);

@@ -15,14 +15,12 @@
 	load_table_meta returns an array of these column metas.
 */
 
-require_once("../core/Model.php");
-
 define("DBEZ_SLCT_KEY_AS_INDEX", 1 << 0);
 define("DBEZ_INSRT_RETURN_ROW", 1 << 0);
 
-class DBEZModel implements Model{
+class DBEZ{
 
-	public function insert($table, $data, $flags = 0){
+	public static function insert($table, $data, $flags = 0){
 		global $mysqli;
 
 		if(!$table || !$data){
@@ -44,7 +42,7 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find($table, $search, $result_format, $flags = 0){
+	public static function find($table, $search, $result_format, $flags = 0){
 		if(!$table || !$result_format){
 			throw new Exception("Invalid parameter sent to DBEZ::find()!");
 		}
@@ -62,7 +60,7 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function delete($table, $search){
+	public static function delete($table, $search){
 		if(!$table || !$search){
 			throw new Exception("Invalid parameter sent to DBEZ::find()!");
 		}
@@ -80,7 +78,7 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_by_id($table, $search_id, $result_format, $flags = 0){
+	public static function find_by_id($table, $search_id, $result_format, $flags = 0){
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
@@ -88,7 +86,7 @@ class DBEZModel implements Model{
 		return $result ? $result[0] : array();
 	}
 
-	public function find_by_array($table, $search_array, $result_format, $flags = 0){
+	public static function find_by_array($table, $search_array, $result_format, $flags = 0){
 		global $mysqli;
 
 		$query = self::generate_select_query_string($table, $search_array, $result_format);
@@ -121,14 +119,14 @@ class DBEZModel implements Model{
 		return $result_arr;
 	}
 
-	public function delete_by_id($table, $search_id){
+	public static function delete_by_id($table, $search_id){
 		$table_meta = self::load_table_meta($table);
 		$primary_key_field = self::find_primary_key($table_meta);
 
 		return self::delete_by_array($table, [$primary_key_field["Field"] => $search_id]);
 	}
 
-	public function delete_by_array($table, $search_array){
+	public static function delete_by_array($table, $search_array){
 		global $mysqli;
 
 		if(!$table || !$search_array){
@@ -146,14 +144,14 @@ class DBEZModel implements Model{
 		return true;
 	}
 
-	public function load_table_meta($table){
+	public static function load_table_meta($table){
 		global $mysqli;
 
 		$result = $mysqli->query("SHOW COLUMNS FROM ".$table);
 		return $result->fetch_all(MYSQLI_ASSOC);
 	}
 
-	public function get_field_meta($table_meta, $field_name){
+	public static function get_field_meta($table_meta, $field_name){
 		foreach($table_meta as $field_meta){
 			if($field_meta["Field"] == $field_name){
 				return $field_meta;
@@ -162,7 +160,7 @@ class DBEZModel implements Model{
 		throw new Exception("Field not found!");
 	}
 
-	public function get_field_type($field_meta){
+	public static function get_field_type($field_meta){
 		if(strpos($field_meta["Type"], "varchar") === 0){
 			return "string";
 		} else if (strpos($field_meta["Type"], "text") === 0){
@@ -177,6 +175,8 @@ class DBEZModel implements Model{
 			return "boolean";
 		} else if (strpos($field_meta["Type"], "enum") === 0){
 			return "string";
+		} else if (strpos($field_meta["Type"], "float") === 0){
+			return "float";
 		} else {
 			throw new Exception("Failed to find type of field: ".$field_meta["Type"]);
 		}
@@ -184,7 +184,7 @@ class DBEZModel implements Model{
 
 	//turns anything that shouldn't be a string into a not-string
 	//dammit, mysqli.
-	public function fix_types(&$result_array, $table_meta){
+	public static function fix_types(&$result_array, $table_meta){
 		foreach($result_array as &$result_entry){
 			foreach($result_entry as $field_key => &$field_value){
 				$field_meta = self::find_field($table_meta, $field_key);
@@ -204,7 +204,7 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_primary_key($table_meta){
+	public static function find_primary_key($table_meta){
 		$primary_key = null;
 
 		foreach($table_meta as $field_meta){
@@ -224,7 +224,7 @@ class DBEZModel implements Model{
 		}
 	}
 
-	public function find_field($table_meta, $field){
+	public static function find_field($table_meta, $field){
 		foreach($table_meta as $field_meta){
 			if($field_meta["Field"] == $field){
 				return $field_meta;
@@ -233,7 +233,7 @@ class DBEZModel implements Model{
 		throw new Exception("Field not found!");
 	}
 
-	public function generate_select_query_string($table, $search_array, $result_format){
+	public static function generate_select_query_string($table, $search_array, $result_format){
 		global $mysqli;
 
 		if(gettype($result_format) == "array"){
@@ -277,7 +277,7 @@ class DBEZModel implements Model{
 		return $query_str;
 	}
 
-	public function generate_insert_query_string($table, $data){
+	public static function generate_insert_query_string($table, $data){
 		global $mysqli;
 
 		$table_meta = self::load_table_meta($table);
@@ -311,7 +311,7 @@ class DBEZModel implements Model{
 		return $query_str;
 	}
 
-	public function generate_delete_query_string($table, $search){
+	public static function generate_delete_query_string($table, $search){
 		global $mysqli;
 
 		$table_meta = self::load_table_meta($table);

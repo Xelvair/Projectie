@@ -13,14 +13,12 @@ class AuthController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 		return json_encode($auth->login($_POST["email"], $_POST["password"]));
 	}
 
 	public function logout(){
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 		$auth->logout();
 		return json_encode(array());
 	}
@@ -37,8 +35,7 @@ class AuthController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 		$result_register = $auth->register($_POST["email"], $_POST["username"], $_POST["lang"], $_POST["password"]);
 		if(isset($result_register["ERROR"])){
 			return json_encode($result_register);
@@ -50,8 +47,7 @@ class AuthController extends Controller{
 	
 	//data[0] : id of the requested user
 	public function get_user($data){
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 
 		if(isset($data[0]) && !!$data[0]){
 			return json_encode($auth->get_user($data[0]));
@@ -70,8 +66,7 @@ class AuthController extends Controller{
 			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
 		}	
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 
 		$user = $auth->get_current_user();
 

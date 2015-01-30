@@ -6,9 +6,9 @@ class AboutController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 		$user = $auth->get_current_user();
+		
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
 

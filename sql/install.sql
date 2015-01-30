@@ -8,7 +8,7 @@ CREATE TABLE user (
 	password_salt varchar(8) NOT NULL,
 	password_hash varchar(32) NOT NULL,
 	is_admin      boolean NOT NULL DEFAULT 0,
-	active        boolean NOT NULL,
+	active        boolean NOT NULL DEFAULT 1,
 	PRIMARY KEY (user_id)
 );
 

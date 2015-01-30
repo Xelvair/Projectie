@@ -6,8 +6,7 @@ class MyProjectsController extends Controller{
 		global $locale;
 		global $CONFIG;
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
@@ -43,7 +42,7 @@ class MyProjectsController extends Controller{
 			$content = Core::view("ListPage", array("list" => $list, "list_title" => $locale["my_projects"], "user_review" => $user_review));
 			
 			$contentwrap = Core::view("ContentWrapper", array(	"content" => $content, 
-															"user" => $user),
+															"user" => $user,
 															"login_modal" => $login_modal,
 															"footer" => $footer));
 		

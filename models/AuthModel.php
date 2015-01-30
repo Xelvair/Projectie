@@ -4,12 +4,9 @@ require_once("../core/Model.php");
 
 class AuthModel implements Model{
 	private $loggedInUser;
-	private $dbez;
 
-	function __construct(DBEZModel $dbez){
+	function __construct(){
 		global $mysqli;
-
-		$this->dbez = $dbez;
 
 		if(isset($_SESSION["login_user_id"])){
 
@@ -79,7 +76,7 @@ class AuthModel implements Model{
 
 		$password_hash = md5($password.$password_salt);
 
-		$result = $this->dbez->insert("user", [
+		$result = DBEZ::insert("user", [
 			"create_time" => time(), 
 			"email" => $email, 
 			"username" => $username, 
@@ -106,7 +103,7 @@ class AuthModel implements Model{
 	public function login($email, $password){
 		global $mysqli;
 
-		$result = $this->dbez->find("user", ["email" => $email, "active" => 1], ["user_id", "password_hash", "password_salt"]);
+		$result = DBEZ::find("user", ["email" => $email, "active" => 1], ["user_id", "password_hash", "password_salt"]);
 
 		if(!$result){
 			write_log(Logger::WARNING, "Failed to login, email '".$email."' not found!");
@@ -141,11 +138,11 @@ class AuthModel implements Model{
 	}
 
 	public function email_exists($email){
-		return !!$this->dbez->find("user", ["email" => $email, "active" => 1], ["user_id"]);
+		return !!DBEZ::find("user", ["email" => $email, "active" => 1], ["user_id"]);
 	}
 
 	public function username_exists($username){
-		return !!$this->dbez->find("user", ["username" => $username, "active" => 1], ["user_id"]);
+		return !!DBEZ::find("user", ["username" => $username, "active" => 1], ["user_id"]);
 	}
 
 	public function get_current_user(){
@@ -162,7 +159,7 @@ class AuthModel implements Model{
 	}
 
 	public function get_created_projects($user_id){
-		return $this->dbez->find("project", ["creator_id" => (int)$user_id, "active" => 1], ["project_id", "create_time", "title", "subtitle"], DBEZ_SLCT_KEY_AS_INDEX);
+		return DBEZ::find("project", ["creator_id" => (int)$user_id, "active" => 1], ["project_id", "create_time", "title", "subtitle"], DBEZ_SLCT_KEY_AS_INDEX);
 	}
 
 	public function get_user_participations($user_id){
@@ -202,15 +199,15 @@ class AuthModel implements Model{
 	}	
 
 	public function get_chat_participations($user_id){
-		return $this->dbez->find("chat_participation", ["participant_id" => (int)$user_id], ["chat_participation_id", "chat_id"], DBEZ_SLCT_KEY_AS_INDEX);
+		return DBEZ::find("chat_participation", ["participant_id" => (int)$user_id], ["chat_participation_id", "chat_id"], DBEZ_SLCT_KEY_AS_INDEX);
 	}
 
 	public function exists($user_id){
-		return !!$this->dbez->find("user", $user_id, ["user_id"]);
+		return !!DBEZ::find("user", $user_id, ["user_id"]);
 	}
 
 	public function get_user($user_id){
-		$result = $this->dbez->find("user", ["user_id" => (int)$user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "is_admin"]);
+		$result = DBEZ::find("user", ["user_id" => (int)$user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "is_admin"]);
 
 		if(!$result)
 			return array();
@@ -274,7 +271,7 @@ class AuthModel implements Model{
 			}
 
 			if(validate($info, ["old_password" => "string", "new_password" => "string"])){
-				$user_info = $this->dbez->find("User", $info["user_id"], ["password_hash", "password_salt"]);
+				$user_info = DBEZ::find("User", $info["user_id"], ["password_hash", "password_salt"]);
 
 				if(self::password_check($info["old_password"], $user_info["password_hash"], $user_info["password_salt"])){
 					self::validate_password($info["new_password"]);
@@ -321,7 +318,7 @@ class AuthModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		$this->dbez->insert("user_tag", ["user_id" => $user_id, "tag_id" => $tag_id]);
+		DBEZ::insert("user_tag", ["user_id" => $user_id, "tag_id" => $tag_id]);
 	
 		return array();
 	}
@@ -339,7 +336,7 @@ class AuthModel implements Model{
 
 		$tag_id = $tag_entry["tag_id"];
 
-		return !!$this->dbez->find("user_tag", ["user_id" => $user_id, "tag_id" => $tag_id], ["user_tag_id"]);
+		return !!DBEZ::find("user_tag", ["user_id" => $user_id, "tag_id" => $tag_id], ["user_tag_id"]);
 	}
 
 	public function untag($tag_model, $user_id, $tag){
@@ -370,7 +367,7 @@ class AuthModel implements Model{
 	}
 
 	public function get_fav_projects($user_id){
-		return $this->dbez->find("project_fav", ["user_id" => (int)$user_id], "*");
+		return DBEZ::find("project_fav", ["user_id" => (int)$user_id], "*");
 	}
 }
 

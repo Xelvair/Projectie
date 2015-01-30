@@ -3,11 +3,6 @@
 require_once("../core/Model.php");
 
 class TagModel implements Model{
-	private $dbez = null;
-
-	public function __construct(DBEZModel $dbez){
-		$this->dbez = $dbez;
-	}
 
 	public function create_tag($name){
 		global $mysqli;
@@ -55,10 +50,10 @@ class TagModel implements Model{
 	public function get_tag($tag){
 		switch(gettype($tag)){
 			case "integer":
-				return $this->dbez->find("tag", $tag, ["tag_id", "name"]);
+				return DBEZ::find("tag", $tag, ["tag_id", "name"]);
 				break;
 			case "string":
-				$result = $this->dbez->find("tag", ["name" => $tag], ["tag_id", "name"]);
+				$result = DBEZ::find("tag", ["name" => $tag], ["tag_id", "name"]);
 				return $result ? $result[0] : array();
 				break;
 			default:
@@ -106,7 +101,7 @@ class TagModel implements Model{
 		$tag_entry = self::get_tag($tag);
 
 		if($tag_entry){
-			return $this->dbez->delete("tag", $tag_entry["tag_id"]);
+			return DBEZ::delete("tag", $tag_entry["tag_id"]);
 		}
 
 		return false;

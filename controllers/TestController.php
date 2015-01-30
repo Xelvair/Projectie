@@ -9,8 +9,7 @@ class TestController extends Controller{
 
 		$locale->load("en-us");
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
+		$auth = Core::model("Auth");
 		$logged_in_user = $auth->get_current_user();
 		if($logged_in_user){
 			$login_name = $logged_in_user["username"];
@@ -23,8 +22,7 @@ class TestController extends Controller{
 	}
 
 	public function project(){
-		$dbez = Core::model("dbez");
-		$project = Core::model("Project", $dbez);
+		$project = Core::model("Project");
 	
 		$project_list = $project->get_all_projects();
 
@@ -50,9 +48,8 @@ class TestController extends Controller{
 
 		$locale->load("en-us");
 
-		$dbez = Core::model("DBEZ");
-		$auth = Core::model("Auth", $dbez);
-		$chat = Core::model("Chat", $dbez);
+		$auth = Core::model("Auth");
+		$chat = Core::model("Chat");
 		$user = $auth->get_current_user();
 
 		$chat_list = array();
@@ -75,6 +72,23 @@ class TestController extends Controller{
 		return Core::view("HtmlBase", array(	"title" => "ParticipationList Test",
 												"body" => $content,
 												"body_padding" => false));
+	}
+
+	public function test(){
+		//return nl2br(var_export(TableMeta::load("test_table"), true));
+
+		$user = new User();
+
+		$user->username = "faget";
+		$user->password_hash = "faygt";
+		$user->password_salt = "lel";
+		$user->create_time = 1;
+		$user->email = "faget@fagetfaget.faget";
+		$user->lang = "de-de";
+		$user->is_admin = 1;
+		//$user->active = 1;
+
+		return json_encode(User::store($user));
 	}
 }
 
