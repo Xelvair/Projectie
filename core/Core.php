@@ -18,6 +18,21 @@ $mysqli = null;
 
 require_once("Db.php");
 
+function __autoload($classname_full){
+	$classname_parts = explode("\\", $classname_full);
+
+	$classname = end($classname_parts);
+	$classname_folder = implode("/", array_slice($classname_parts, 0, sizeof($classname_parts) - 1));
+
+	$class_path = abspath_lcl("/models/".$classname_folder."/".$classname.".php");
+
+	if(!file_exists($class_path)){
+		write_log(Logger::ERROR, "Failed to load class '".$classname_full."'! Path: ".$class_path);
+	} else {
+		require_once($class_path);
+	}
+}
+
 function write_log($loglevel, $message){
 	global $logger;
 	$logger->log($loglevel, $message);
