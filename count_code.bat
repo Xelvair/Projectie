@@ -1,0 +1,2 @@
+cloc C:\Users\Marvin\projectie\controllers C:\Users\Marvin\projectie\views C:\Users\Marvin\projectie\models C:\Users\Marvin\projectie\core C:\Users\Marvin\projectie\public\js C:\Users\Marvin\projectie\public\css C:\Users\Marvin\projectie\templates --not-match-f=bootstrap 
+PAUSE

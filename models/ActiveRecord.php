@@ -26,7 +26,27 @@ abstract class ActiveRecord{
 		}
 	}
 
-	public static final function store($activerecord){
+	public static final function store($content){
+		switch(gettype($content)){
+			case "object":
+				self::storeSingle($content);
+				break;
+			case "array":
+				self::storeArray($content);
+				break;
+			default:
+				throw new InvalidArgumentError("Invalid argument passed to ActiveRecord::store()! either array or object!");
+				break;
+		}
+	}
+
+	private static final function storeArray($activerecord_array){
+		foreach($activerecord_array as $activerecord){
+			self::storeSingle($activerecord);
+		}
+	}
+
+	private static final function storeSingle($activerecord){
 		$store_operation_info = self::getStoreOperationInfo($activerecord);
 
 		$fields = $store_operation_info["fields"];
@@ -48,7 +68,11 @@ abstract class ActiveRecord{
 				$update_array[$field] = $activerecord->$field;
 			}
 
-			return !!DBEZ::update($activerecord->getTableName(), $update_array);
+			$index_field = $store_operation_info["index_field"];
+
+			write_log(Logger::DEBUG, $activerecord->$index_field);
+
+			return !!DBEZ::update($activerecord->getTableName(), $activerecord->$index_field, $update_array);
 			
 		} else {
 			throw new RuntimeError("Something very bad happened.");
@@ -58,7 +82,8 @@ abstract class ActiveRecord{
 	private static final function getStoreOperationInfo($activerecord){
 		$store_operation_info = [
 			"operation_type" => self::INSERT,
-			"fields" => array()
+			"fields" => array(),
+			"index_field" => null
 		];
 
 		$table_meta = TableMeta::load(self::getTableName());
@@ -85,6 +110,7 @@ abstract class ActiveRecord{
 				//If an ID is set, we update
 				if($field_is_primary_key){
 					$store_operation_info["operation_type"] = self::UPDATE;
+					$store_operation_info["index_field"] = $field_name;
 				}
 
 				array_push($store_operation_info["fields"], $field_name);
@@ -94,6 +120,7 @@ abstract class ActiveRecord{
 		return $store_operation_info;
 	}
 
+	//returns a single instance of the called class which extends ActiveRecord
 	private static final function getById($id){
 		$row = DBEZ::find(self::getTableName(), $id, "*");
 
@@ -107,6 +134,7 @@ abstract class ActiveRecord{
 		return $obj;
 	}
 
+	//returns an array of the called class which extends ActiveRecords
 	private static final function getByArray($filter){
 		$result = DBEZ::find(self::getTableName(), $filter, "*");
 

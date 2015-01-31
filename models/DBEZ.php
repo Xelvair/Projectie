@@ -23,7 +23,7 @@ class DBEZ{
 	public static function insert($table, $data, $flags = 0){
 		global $mysqli;
 
-		if(!$table || !$data){
+		if(!$table || $data){
 			throw new Exception("Invalid parameter sent to DBEZ::insert()!");
 		}
 
@@ -74,6 +74,24 @@ class DBEZ{
 				break;
 			default:
 				throw new Exception("Invalid parameter sent to DBEZ::delete()!");
+				break;
+		}
+	}
+
+	public static function update($table, $search, $update){
+		if(!$table || !$update){
+			throw new Exception("Invalid parameter sent to DBEZ::update()!");
+		}
+
+		switch(gettype($search)){
+			case "integer":
+				return self::update_by_id($table, $search, $update);
+				break;
+			case "array":
+				return self::update_by_array($table, $search, $update);
+				break;
+			default:
+				throw new Exception("Invalid parameter sent to DBEZ::update()!");
 				break;
 		}
 	}
@@ -134,6 +152,31 @@ class DBEZ{
 		}
 
 		$query = self::generate_delete_query_string($table, $search_array);
+
+		$result = $mysqli->query($query);
+
+		if(!$result){
+			throw new Exception("Query '".$query."' failed!");
+		}
+
+		return true;
+	}
+
+	public static function update_by_id($table, $search_id, $update){
+		$table_meta = self::load_table_meta($table);
+		$primary_key_field = self::find_primary_key($table_meta);
+
+		return self::update_by_array($table, [$primary_key_field["Field"] => $search_id], $update);
+	}
+
+	public static function update_by_array($table, $search_array, $update){
+		global $mysqli;
+
+		if(!$table || !$search_array){
+			throw new Exception("Invalid parameter sent to DBEZ::update()!");
+		}
+
+		$query = self::generate_update_query_string($table, $search_array, $update);
 
 		$result = $mysqli->query($query);
 
@@ -316,9 +359,7 @@ class DBEZ{
 
 		$table_meta = self::load_table_meta($table);
 
-		$query_str = "DELETE FROM ".$table;
-
-		$query_str .= " WHERE";
+		$query_str = "DELETE FROM ".$table." WHERE";
 
 		$is_first = true;
 		foreach($search as $field => $value){
@@ -341,6 +382,62 @@ class DBEZ{
 			if($field_type == "string")
 				$query_str .= '"';
 
+		}
+
+		return $query_str;
+	}
+
+	public static function generate_update_query_string($table, $search, $update){
+		global $mysqli;
+
+		$table_meta = self::load_table_meta($table);
+
+		$query_str = "UPDATE ".$table." SET ";
+
+		$is_first = true;
+		foreach($update as $field => $value){
+			$field_meta = self::get_field_meta($table_meta, $field);
+			$field_type = self::get_field_type($field_meta);
+
+			if(gettype($value) != $field_type){
+				throw new Exception("Type mismatch! ".$field_type." required but ".gettype($value)." given for field '".$field_meta["Field"]."'!");
+			}
+
+			$is_first ? $is_first = false : $query_str .= ", ";
+
+			$query_str .= $mysqli->real_escape_string($field)." = ";
+
+			if($field_type == "string")
+				$query_str .= '"';
+
+			$query_str .= $mysqli->real_escape_string($value);
+
+			if($field_type == "string")
+				$query_str .= '"';
+		}
+
+		$query_str .= " WHERE ";
+
+		$is_first = true;
+		foreach($search as $field => $value){
+			$field_meta = self::get_field_meta($table_meta, $field);
+			$field_type = self::get_field_type($field_meta);
+
+			if(gettype($value) != $field_type){
+				throw new Exception("Type mismatch! ".$field_type." required but ".gettype($value)." given for field '".$field_meta["Field"]."'!");
+			}
+
+			$is_first ? $is_first = false : $query_str .= " AND ";
+
+			$query_str .= $mysqli->real_escape_string($field)." = ";
+
+			if($field_type == "string")
+				$query_str .= '"';
+
+			$query_str .= $mysqli->real_escape_string($value);
+
+			if($field_type == "string")
+				$query_str .= '"';
 		}
 
 		return $query_str;

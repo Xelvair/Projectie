@@ -75,20 +75,14 @@ class TestController extends Controller{
 	}
 
 	public function test(){
-		//return nl2br(var_export(TableMeta::load("test_table"), true));
 
-		$user = new User();
+		$users = User::get(["username" => "faget"]);
 
-		$user->username = "faget";
-		$user->password_hash = "faygt";
-		$user->password_salt = "lel";
-		$user->create_time = 1;
-		$user->email = "faget@fagetfaget.faget";
-		$user->lang = "de-de";
-		$user->is_admin = 1;
-		//$user->active = 1;
+		foreach($users as $user){
+			$user->username = "da real mcfaggit";
+		}
 
-		return json_encode(User::store($user));
+		User::store($users);
 	}
 }
 
