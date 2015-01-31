@@ -5,6 +5,8 @@ abstract class ActiveRecord{
 	const UPDATE = 0;
 	const INSERT = 1;
 
+
+	/* PUBLIC STATIC */
 	public static final function getTableMeta(){
 		return TableMeta::load(self::getTableName());
 	}
@@ -40,6 +42,7 @@ abstract class ActiveRecord{
 		}
 	}
 
+	/* PRIVATE STATIC */
 	private static final function storeArray($activerecord_array){
 		foreach($activerecord_array as $activerecord){
 			self::storeSingle($activerecord);
@@ -153,6 +156,14 @@ abstract class ActiveRecord{
 		}
 
 		return $obj_array;
+	}
+
+	/* PUBLIC */
+	public function __construct($idx){
+		$table_meta = TableMeta::load(self::getTableName());
+		$primary_key = $table_meta->getPrimaryKey();
+
+		$this->$primary_key = $idx;
 	}
 }
 

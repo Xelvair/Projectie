@@ -75,14 +75,11 @@ class TestController extends Controller{
 	}
 
 	public function test(){
+		$user = new User(1);
+		$user->username = "faget";
 
-		$users = User::get(["username" => "faget"]);
-
-		foreach($users as $user){
-			$user->username = "da real mcfaggit";
-		}
-
-		User::store($users);
+		User::store($user);
+		return print_r($user, true);
 	}
 }
 
