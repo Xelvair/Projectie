@@ -20,28 +20,19 @@ class AboutController extends Controller{
 		}
 		
 		$content = Core::view("About");
-		
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = Core::view("Footer", $footer_array);
-		
-		$login_modal = Core::view("LoginModal");
 			
-			$contentwrap = Core::view("ContentWrapper", array(	
-				"content" => $content, 
-				"user" => $user,
-				"login_modal" => $login_modal,
-				"footer" => $footer)
-			);
+		$contentwrap = Core::view("ContentWrapper", array(	
+			"content" => $content, 
+			"user" => $user)
+		);
 		
-			$html = Core::view("HtmlBase", array(	
-				"title" => "Projectie - Driving Development", 
-				"body" => $contentwrap, 
-				"body_padding" => true,
-				"current_user" => $user)
-			);
-		
-		
-	return $html;
-		
+		$html = Core::view("HtmlBase", array(	
+			"title" => "Projectie - Driving Development", 
+			"body" => $contentwrap, 
+			"body_padding" => true,
+			"current_user" => $user)
+		);
+
+		return $html;
 	}
 }

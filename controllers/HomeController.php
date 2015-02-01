@@ -26,9 +26,7 @@ class HomeController extends Controller{
 		$news = array();
 		
 		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		
 		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		
 		array_push($news, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
 		
 		$html_news = array();
@@ -40,9 +38,7 @@ class HomeController extends Controller{
 		
 		$new = array();
 		array_push($new, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		
 		array_push($new, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
-		
 		array_push($new, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
 		
 		$html_new = array();
@@ -54,7 +50,6 @@ class HomeController extends Controller{
 		$trending = array();
 		array_push($trending, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
 		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		
 		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
 		
 		$html_trending = array();
@@ -62,11 +57,6 @@ class HomeController extends Controller{
 		foreach($trending as $trending){
 			array_push($html_trending, Core::view("ProjectReview", $trending));
 		}
-		
-	
-		
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = Core::view("Footer", $footer_array);
 		
 		$user_review = Core::view('UserReview', "");
 	
@@ -77,17 +67,18 @@ class HomeController extends Controller{
 
 		$content = Core::view("MainPageContent", $mainpagelists);
 
-		$login_modal = Core::view("LoginModal", "");
+		$contentwrap = Core::view("ContentWrapper", array(	
+			"content" => $content, 
+			"user" => ($user == null ? null : $user)
+		));
 
-		$contentwrap = Core::view("ContentWrapper", array(	"content" => $content, 
-															"user" => ($user == null ? null : $user),
-															"login_modal" => $login_modal,
-															"footer" => $footer));
+		$html = Core::view("HtmlBase", array(	
+			"title" => "Projectie - Driving Development", 
+			"body" => $contentwrap, 
+			"body_padding" => true,
+			"current_user" => $user
+		));
 
-		$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-												"body" => $contentwrap, 
-												"body_padding" => true,
-												"current_user" => $user));
 		return $html;
 	}
 }

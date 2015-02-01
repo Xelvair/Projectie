@@ -276,12 +276,17 @@ hr{
 	font-size: 3em;
 }
 
-
+.list-headline>span{
+	font-size: .75em;
+	margin-right: 10px;
+	color: gray;
+	position: relative;
+	top: 3px;
+}
 
 .row{
     margin-left: 0px;
     margin-right: 0px;
-    
 }
 
 .modal-dialog{

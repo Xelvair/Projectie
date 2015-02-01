@@ -157,9 +157,6 @@ class ChatController extends Controller{
 			$locale->load("en-us");
 			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
 		}
-		
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = Core::view("Footer", $footer_array);
 
 		$chat_list = array();
 		array_push($chat_list, $chat->get_chat(1));
@@ -171,17 +168,18 @@ class ChatController extends Controller{
 		
 		$content = Core::view("Chat", array("chat_list" => $chat_list, "user_id" => $user["id"], "username" => $user["username"]));
 
-		$login_modal = Core::view("LoginModal", "");
+		$contentwrap = Core::view("ContentWrapper", array(	
+			"content" => $content, 
+			"user" => $user
+		));
 
-		$contentwrap = Core::view("ContentWrapper", array(	"content" => $content, 
-															"user" => $user,
-															"login_modal" => $login_modal,
-															"footer" => $footer));
+		$html = Core::view("HtmlBase", array(	
+			"title" => "Projectie - Driving Development", 
+			"body" => $contentwrap, 
+			"body_padding" => true,
+			"current_user" => $user
+		));
 
-		$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-												"body" => $contentwrap, 
-												"body_padding" => true,
-												"current_user" => $user));
 		return $html;
 	}
 

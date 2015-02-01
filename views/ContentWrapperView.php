@@ -169,7 +169,7 @@ function settings_updated(data){
 }
 </script>
 
-<?=$_DATA['login_modal']?>
+<?=Core::view("LoginModal")?>
 
 <div id="AdvancedSearchModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
    <div class="modal-dialog">
@@ -376,7 +376,7 @@ function settings_updated(data){
   <div id="page-content-wrapper"> 
   	<div class="max_width">
   		<?php echo $_DATA["content"]; ?>
-		<?php echo $_DATA["footer"]; ?>
+		<?=Core::view("Footer", ["user" => $_DATA["user"]["username"] ?: "Guest"])?>
   	</div>  
   </div>
 </div>

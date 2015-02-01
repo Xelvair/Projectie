@@ -389,8 +389,6 @@ class ProjectController extends Controller{
 			return "No project found for id ".$data[0];
 		}
 		
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		
 		$tags = array("tags" => array(), "tag_box_title" => false);
 		array_push($tags["tags"], array("tag_id" => 12, "name" => "dafuq r u?"));
 		
@@ -521,11 +519,8 @@ class ProjectController extends Controller{
 					),
 					"tag_box" => $tag_box
 				)), 
-				"user" => $user,
-				"login_modal" => Core::view("LoginModal"),
-				"footer" => Core::view("Footer", array(
-					"user" => ($user == null ? null : $user["username"]))
-				))
+				"user" => $user
+				)
 			), 
 			"body_padding" => true,
 			"current_user" => $user
@@ -548,25 +543,23 @@ class ProjectController extends Controller{
 			$locale->load("en-us");
 		}
 		
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = Core::view("Footer", $footer_array);
-		
 		$upload_picture_modal = Core::view("UploadPictureModal", "");
 		
 		
 		$content = Core::view("CreateProject", array("upload_picture_modal" => $upload_picture_modal));
 
-		$login_modal = Core::view("LoginModal", "");
+		$contentwrap = Core::view("ContentWrapper", array(	
+			"content" => $content, 
+			"user" => $user
+		));
 
-		$contentwrap = Core::view("ContentWrapper", array(	"content" => $content, 
-															"user" => $user,
-															"login_modal" => $login_modal,
-															"footer" => $footer));
+		$html = Core::view("HtmlBase", array(	
+			"title" => "Projectie - Driving Development", 
+			"body" => $contentwrap, 
+			"body_padding" => true,
+			"current_user" => $user
+		));
 
-		$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-												"body" => $contentwrap, 
-												"body_padding" => true,
-												"current_user" => $user));
 		return $html;
 	}
 }

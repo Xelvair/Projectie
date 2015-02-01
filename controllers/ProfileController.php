@@ -29,12 +29,6 @@ class ProfileController extends Controller{
 			header("Location: /home");
 			return;
 		}
-
-		$footer_array = array("username" => "");
-		$footer = Core::view("Footer", $footer_array);
-
-		$footer_array = array("user" => ($user == null ? null : $user["username"]));
-		$footer = Core::view("Footer", $footer_array);
 		
 		$projects_involved = array();
 		
@@ -75,18 +69,18 @@ class ProfileController extends Controller{
 		);
 
 		$content = Core::view("Profile", $profile_content);
-		
-		$login_modal = Core::view("LoginModal", "");
 
-		$contentwrap = Core::view("ContentWrapper", array(	"content" => $content, 
-															"user" => $user,
-															"login_modal" => $login_modal,
-															"footer" => $footer));
+		$contentwrap = Core::view("ContentWrapper", array(
+			"content" => $content, 
+			"user" => $user
+		));
 
-		$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-												"body" => $contentwrap, 
-												"body_padding" => true,
-												"current_user" => $user));
+		$html = Core::view("HtmlBase", array(	
+			"title" => "Projectie - Driving Development", 
+			"body" => $contentwrap, 
+			"body_padding" => true,
+			"current_user" => $user
+		));
 		
 		
 		return $html;
