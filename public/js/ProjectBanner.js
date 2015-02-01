@@ -86,11 +86,11 @@ $(document).ready(function(){
 				scroll_banner(this, 1, 500);
 			}.bind(this);
 
-			var interval = setInterval(interval_fn, 10000);
+			var interval = setInterval(interval_fn, 3000);
 
-			$(".project-banner").on("click", function(){
+			$(".project-banner").on("click mousemove", function(){
 				clearInterval(interval);
-				interval = setInterval(interval_fn, 10000);
+				interval = setInterval(interval_fn, 3000);
 			});
 
 		} else {

@@ -17,8 +17,6 @@ class FavoritesController extends Controller{
 		} else {
 			$locale->load("en-us");
 		}
-			
-		$user_review = Core::view("UserReview", "");
 		
 		$list_content = array();
 		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
@@ -32,7 +30,7 @@ class FavoritesController extends Controller{
 			array_push($list, Core::view("ProjectReview", $entry));
 		}
 		
-		$content = Core::view("ListPage", array("list" => $list, "list_title" => $locale["favorites"], "user_review" => $user_review));
+		$content = Core::view("ListPage", array("list" => $list, "list_title" => $locale["favorites"]));
 		
 		$contentwrap = Core::view("ContentWrapper", array(	
 			"content" => $content, 

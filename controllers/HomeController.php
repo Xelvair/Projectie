@@ -25,9 +25,9 @@ class HomeController extends Controller{
 		
 		$news = array();
 		
-		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
-		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
-		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($news, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($news, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($news, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
 		
 		$html_news = array();
 		foreach($news as $news){
@@ -37,8 +37,6 @@ class HomeController extends Controller{
 		
 		$new = $project->get_new_projects(3);
 
-		write_log(Logger::DEBUG, print_r($new, true));
-
 		$html_new = array();
 		
 		foreach($new as $new){
@@ -46,19 +44,17 @@ class HomeController extends Controller{
 		}
 				
 		$trending = array();
-		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
-		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
-		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($trending, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($trending, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($trending, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
 		
 		$html_trending = array();
 		
 		foreach($trending as $trending){
 			array_push($html_trending, Core::view("ProjectReview", $trending));
 		}
-		
-		$user_review = Core::view('UserReview', "");
 	
-    $mainpagelists = array("top_project" => array("projects" => array()), "new" => $html_new, "trending" => $html_trending, "news" => $html_news, "user_review" => $user_review);
+    $mainpagelists = array("top_project" => array("projects" => array()), "new" => $html_new, "trending" => $html_trending, "news" => $html_news);
 		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 1, "fav_count" => 25423, "participator_count" => 13));
 		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 2, "fav_count" => 13423, "participator_count" => 7));
 		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 3, "fav_count" => 6847, "participator_count" => 5));

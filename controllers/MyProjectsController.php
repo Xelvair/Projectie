@@ -18,8 +18,6 @@ class MyProjectsController extends Controller{
 			$locale->load("en-us");
 		
 		}
-			
-		$user_review = Core::view("UserReview", "");
 		
 		$list_content = array();
 		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
@@ -32,7 +30,7 @@ class MyProjectsController extends Controller{
 			array_push($list, Core::view("ProjectReview", $entry));
 		}
 		
-		$content = Core::view("ListPage", array("list" => $list, "list_title" => $locale["my_projects"], "user_review" => $user_review));
+		$content = Core::view("ListPage", array("list" => $list, "list_title" => $locale["my_projects"]));
 		
 		$contentwrap = Core::view("ContentWrapper", array(	
 			"content" => $content, 
