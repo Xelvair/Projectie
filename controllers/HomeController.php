@@ -25,22 +25,20 @@ class HomeController extends Controller{
 		
 		$news = array();
 		
-		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		array_push($news, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
+		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
 		
 		$html_news = array();
-		
 		foreach($news as $news){
 			array_push($html_news, Core::view("ProjectReview", $news));
 		}
 		
 		
-		$new = array();
-		array_push($new, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		array_push($new, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
-		array_push($new, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		
+		$new = $project->get_new_projects(3);
+
+		write_log(Logger::DEBUG, print_r($new, true));
+
 		$html_new = array();
 		
 		foreach($new as $new){
@@ -48,9 +46,9 @@ class HomeController extends Controller{
 		}
 				
 		$trending = array();
-		array_push($trending, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
-		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
-		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
+		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
 		
 		$html_trending = array();
 		

@@ -1137,6 +1137,8 @@ box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 
 .preview_content > h3{
 	margin-top: 0px;
+	color: #666;
+	font-weight: bold;
 }
 
 .head_wrap{

@@ -85,6 +85,7 @@ class ProjectModel implements Model{
 		}
 
 		$project["participators"] = self::get_participators($id);
+		$project["participator_count"] = sizeof($project["participators"]);
 		$project["fav_count"] = self::get_fav_count($id);
 
 		return $project;
@@ -646,11 +647,18 @@ class ProjectModel implements Model{
 	public function get_new_projects($count){
 		global $mysqli;
 
-		$stmt_get_projects = $mysqli->prepare("SELECT * FROM project ORDER BY create_time DESC LIMIT ?");
+		$stmt_get_projects = $mysqli->prepare("SELECT project_id FROM project ORDER BY create_time DESC LIMIT ?");
 		$stmt_get_projects->bind_param("i", $count);
 		$stmt_get_projects->execute();
 
-		return $stmt_get_projects->get_result()->fetch_all(MYSQL_ASSOC);
+		$project_rows = $stmt_get_projects->get_result()->fetch_all(MYSQL_ASSOC);
+
+		$projects = array();
+		foreach($project_rows as $project_row){
+			array_push($projects, $this->get($project_row["project_id"]));
+		}
+
+		return $projects;
 	}
 
 	public function add_picture($id, $picture_id){}
