@@ -1,7 +1,7 @@
 function fit_backdrop(){
 	$(".project-banner-backdrop").each(function(){
-		var backdrop_height = $($(this).siblings(".project-banner")[0]).outerHeight();
-		console.log(backdrop_height);
+		var backdrop_height = $($(this).siblings(".project-banner")[0]).outerHeight() + $($(this).siblings(".project-banner")[0]).position().top;
+
 		$(this).css({height: backdrop_height});
 	});
 }

@@ -477,6 +477,7 @@ class ProjectController extends Controller{
 						)
 					)), 
 					"project" => array(
+						"project_id" => $project_obj["project_id"],
 						"participators" => $project->get_participators($data[0]), 
 						"description" => $project_obj["description"], 
 						"subtitle" =>  $project_obj["subtitle"], 

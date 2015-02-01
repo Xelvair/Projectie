@@ -127,6 +127,7 @@ class Core{
 		if(!$function_name){
 			$function_name = "index";
 		}
+		
 		if(method_exists($controller, $function_name)){
 			$controller_result = call_user_func(array($controller, $function_name), $parsed_url["params"]);
 

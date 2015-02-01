@@ -91,32 +91,19 @@ function exit_desc(desc){
 		$('#desc_wrap').text(desc);
 	}
 }
-/*RESPONSIVE FONT TEST
-textfit();
-$(window).on('resize', textfit);
 
-function textfit() {
-    $('.text-fitter').css('font-size', 'medium');
-    var w1 = $('.container-fitter').width()-10;
-    var w2 = $('.text-fitter').width();
-    var wRatio = Math.round(w1 / w2 * 10) / 10;
-
-    var h1 = $('.container-fitter').height()-10;
-    var h2 = $('.text-fitter').height();
-    var hRatio = Math.round(h1 / h2 * 10) / 10;
-
-    var constraint = Math.min(wRatio, hRatio);
-	alert(constraint);
-    $('.text-fitter').css('font-size', constraint + 'em');
-}
-*/
 </script>
-<div class="row" id="banner_wrap">
-        <img class="img-responsive banner" src="<?=$_DATA['project']['header']?>"/>
-		<div id="project-title" class="container-fitter">
-			<span class="text-fitter"><?=$_DATA['project']['title']?></span>
-		</div>
-</div>
+<?php
+echo Core::view("ProjectBanner", [
+	"projects" => [
+		[
+			"project_id" => $_DATA["project"]["project_id"],
+			"fav_count" => $_DATA["project"]["fav_count"],
+			"participator_count" => sizeof($_DATA["project"]["participators"])
+		]
+	]
+]);
+?>
 <div class="row" style="margin-top: 15px; margin-bottom: 20px;">
 	<div class="col-md-12">
 		<div class="row">
