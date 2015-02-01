@@ -104,5 +104,8 @@ $(document).ready(function(){
 
 	$(window).on("resize", function(){
 		fit_images();
+		$(".project-banner").each(function(){
+			scroll_banner(this, 0, 0);
+		});
 	});
 });
