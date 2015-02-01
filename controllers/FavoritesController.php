@@ -26,16 +26,15 @@ class FavoritesController extends Controller{
 			$user_review = Core::view("UserReview", "");
 			
 			$list_content = array();
-			array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
-			array_push($list_content, array("title" => "Test 2", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
-			array_push($list_content, array("title" => "Test 3", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
-			array_push($list_content, array("title" => "Test 4", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
-			array_push($list_content, array("title" => "Test 5", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
-			array_push($list_content, array("title" => "Test 6", "desc" => "Test desc", "thumb" => abspath("/public/images/default-profile-pic.png"), "time" => "20:23"));
+			array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+			array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+			array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+			array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+
 			
 			$list = array();
 			foreach($list_content as $entry){
-				array_push($list, Core::view("Entry", $entry));
+				array_push($list, Core::view("ProjectReview", $entry));
 			}
 			
 			$content = Core::view("ListPage", array("list" => $list, "list_title" => $locale["favorites"], "user_review" => $user_review));

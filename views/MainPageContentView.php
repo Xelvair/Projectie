@@ -9,7 +9,7 @@
 #title: project title
 #desc: project description
 
-
+global $locale;
 ?>
 
   <div class="row" id="carousel_row">
@@ -64,20 +64,28 @@
                 <div id="page_list_wrapper">
                     <div class="row">
                         <div class="col-md-4 content_list">
-                        
-                            <?=$_DATA['left_col']?>
+                    
+                            <h3><?=$locale['new_projects']?></h3><hr>
+							<?php for($i = 0; $i < sizeof($_DATA["new"]); $i++){
+										echo $_DATA["new"][$i];
+								} ?>
                             
                         </div><!--col-md-4-->
                         
                         <div class="col-md-4 content_list">
                         
-                          <?=$_DATA['mid_col']?>
+                          	<h3><?=$locale['trending_projects']?></h3><hr>
+							<?php for($i = 0; $i < sizeof($_DATA["trending"]); $i++){
+										echo $_DATA["trending"][$i];
+								}  ?>
                         
                         </div><!--col-md-4-->
                         
                         <div class="col-md-4 content_list">
-                        
-                           <?=$_DATA['right_col']?>
+							<h3><?=$locale['news']?></h3><hr>
+							<?php for($i = 0; $i < sizeof($_DATA["news"]); $i++){
+										echo $_DATA["news"][$i];
+								}   ?>
                         
                         </div><!--col-md-4-->
                     </div><!--row-->

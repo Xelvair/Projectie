@@ -36,16 +36,31 @@ class ProfileController extends Controller{
 		$footer_array = array("user" => ($user == null ? null : $user["username"]));
 		$footer = Core::view("Footer", $footer_array);
 		
-		$projects_involved = array("entries" => array(), "list_title" => $locale["projects_involved"]);
-		array_push($projects_involved["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		$projects_involved_list = Core::view("TitleDescriptionList", $projects_involved);
+		$projects_involved = array();
 		
-		$projects_created = array("entries" => array(), "list_title" => $locale["projects_created"]);
-		array_push($projects_created["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($projects_created["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
-		array_push($projects_created["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png"), "creator" => array("id" => "1", "name" => "admin"), "source" => array("id" => "1", "name" => "Test Project"), "time" => "09:12"));
+		array_push($projects_involved, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+		array_push($projects_involved, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+		array_push($projects_involved, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+		array_push($projects_involved, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
 		
-		$projects_created_list = Core::view("TitleDescriptionList", $projects_created);
+		$projects_involved_list = array();
+		
+		foreach($projects_involved as $entry){
+			array_push($projects_involved_list, Core::view("ProjectReview", $entry));
+		}
+		
+		$projects_created = array();
+		
+		array_push($projects_created, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+		array_push($projects_created, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+		array_push($projects_created, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+		array_push($projects_created, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
+		
+		$projects_created_list = array();
+		
+		foreach($projects_created as $entry){
+			array_push($projects_created_list, Core::view("ProjectReview", $entry));
+		}
 		
 		$tags = array("tags" => array(), "tag_box_title" => true);
 		array_push($tags["tags"], array("tag_id" => 12, "name" => "dafuq r u?"));

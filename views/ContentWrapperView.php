@@ -23,9 +23,9 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 			});
 		});
 		
-		$('#btn_advanced_search').on('click', function(){
+		$('#btn_search').on('click', function(){
 			
-			var search_val = $('#advanced_search_input').val();
+			var search_val = $('#search_input').val();
 			var search_for = $("input[name='radio_search_for']:checked").val();
 			var sorted_by = $("input[name='radio_sorted_by']:checked").val();
 			
@@ -33,12 +33,12 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 			
 			alert('search_val: '+search_val+'search_for: '+search_for+'sorted_by: '+sorted_by)
 			}else{
-				$('#advanced_search_group').addClass('has-error');
+				$('#search_group').addClass('has-error');
 			}
 			
 		});
 		
-		$('#advanced_search_input').keypress(function(){
+		$('#search_input').keypress(function(){
 			$(this).parent().removeClass('has-error');
 		});
 		
@@ -176,14 +176,14 @@ function settings_updated(data){
        <div class="modal-content">
            <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
-              <h2 class="text-center"><?=$locale["advanced_search"]?></h2>
+              <h2 class="text-center"><?=$locale["search"]?></h2>
           </div>
           <div class="modal-body">
 			<div class="row">
 				<div class="col-md-12">
 					<form>
-						<div class="form-group" id="advanced_search_group">
-							<input type="text" id="advanced_search_input" class="form-control" placeholder="<?=$locale['placeholder_search']?>"/>
+						<div class="form-group" id="search_group">
+							<input type="text" id="search_input" class="form-control" placeholder="<?=$locale['placeholder_search']?>"/>
 						</div> 
 						<div class="row text-center">
 							<div class="col-xs-12">
@@ -192,9 +192,6 @@ function settings_updated(data){
 									<div class="btn-group" data-toggle="buttons">
 									  <label class="btn btn-default active">
 										<input type="radio" name="radio_search_for" value="projects" autocomplete="off" checked><?=$locale['projects']?>
-									  </label>
-									  <label class="btn btn-default">
-										<input type="radio" name="radio_search_for" value="users" autocomplete="off"><?=$locale['users']?>
 									  </label>
 									  <label class="btn btn-default">
 										<input type="radio" name="radio_search_for" value="tags" autocomplete="off"><?=$locale['tags']?>
@@ -229,7 +226,7 @@ function settings_updated(data){
 			</div>
 			<div class="row">     
 				  <div class="col-md-12 text-right">
-					<button type="button" id="btn_advanced_search" class="btn btn-default"><?=$locale["search"]?></button>
+					<button type="button" id="btn_search" class="btn btn-default"><?=$locale["search"]?></button>
 				  </div>
 			</div>
           </div>
@@ -307,7 +304,7 @@ function settings_updated(data){
 </div>
 
 <nav class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container-fluid">
+  <div class="container-fluid max_width">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -333,17 +330,11 @@ function settings_updated(data){
 					<?php } else { ?>
 						<a href="#registerModal" role="button" data-toggle="modal" class="btn btn-create-project"><span class="glyphicon glyphicon-plus" style="margin-right: 5px;"></span><?=$locale["create_a_project"]?></a>
 					<?php } ?>
-			<div class="form-group">
-				<input type="text" class="form-control" placeholder="<?=$locale['placeholder_search']?>">
-			</div>
-			<div class="btn-group">
-				<button type="button" class="btn btn-default"><?=$locale["search"];?></button>
-				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#AdvancedSearchModal"><?=$locale["advanced"] ?></button>
-			</div>
         </form>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$locale["more"]?><span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
+			<li><a href="#" data-toggle="modal" data-target="#AdvancedSearchModal"><?=$locale["placeholder_search"]?></a></li>
             <li><a href="<?=abspath('about')?>"><?=$locale["about"]?></a></li>
             <li class="divider"></li>
 			<?php if($user_logged_in){?>
@@ -382,12 +373,10 @@ function settings_updated(data){
 	  </div>
 	<?php } ?>
   <div id="page-content-wrapper"> 
-  	<div id="page-content-div">
+  	<div class="max_width">
   		<?php echo $_DATA["content"]; ?>
-  	</div>
-  	<div id="page-footer-div">
-  		<?php echo $_DATA["footer"]; ?>
-  	</div>   
+		<?php echo $_DATA["footer"]; ?>
+  	</div>  
   </div>
 </div>
 

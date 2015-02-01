@@ -78,5 +78,6 @@
 	"about_us" : "Über Uns",
 	"contact" : "Kontakt",
 	"change_password" : "Passwort Ändern",
-	"old_password" : "Altes Passwort"
+	"old_password" : "Altes Passwort",
+	"view_project" : "View Project"
 }
