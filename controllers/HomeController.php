@@ -23,27 +23,57 @@ class HomeController extends Controller{
 		$new_list = array("entries" => $project->get_new_projects(3), "list_title" => $locale["new_projects"]);
 		$html_new = Core::view("TitleDescriptionList", $new_list);
 		
-		$news_list = array("entries" => array(), "list_title" => $locale["news"]);
-		array_push($news_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
-		array_push($news_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
-		array_push($news_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
-		$html_news = Core::view("TitleDescriptionList", $news_list);
+		$news = array();
 		
-		$trending_list = array("entries" => array(), "list_title" => $locale["trending_projects"]);
-		array_push($trending_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
-		array_push($trending_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
-		array_push($trending_list["entries"], array("title" => "Trending Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/default-profile-pic.png")));
-		$html_trending = Core::view("TitleDescriptionList", $trending_list);
+		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
+		
+		array_push($news, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
+		
+		array_push($news, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
+		
+		$html_news = array();
+		
+		foreach($news as $news){
+			array_push($html_news, Core::view("ProjectReview", $news));
+		}
+		
+		
+		$new = array();
+		array_push($new, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
+		
+		array_push($new, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
+		
+		array_push($new, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
+		
+		$html_new = array();
+		
+		foreach($new as $new){
+			array_push($html_new, Core::view("ProjectReview", $new));
+		}
+				
+		$trending = array();
+		array_push($trending, array("thumb" => abspath("/public/images/default-banner.png"), "favs" => 30, "members" => 42, "title" => "Protestie", "desc" => "I just came to say hello, but with more text so i can test the overflow and max-height css property 'n stuff. and know i am just sitting here writing this unnessecery text waiting for a better life. wow i'm getting deep again. such overflow. oh god this takes me half of my  life time. I have to do something against it. Ok let me see: lsakfdjasd fasflkdöaslfkdl sdöflkasölkfd safdlmöaslfkd sadöflasöf asödlföslafwe fpasf aefoijasfpoka efasofkosafe safüokaefa sfokasef saüosakefnasüf saefpküasefajsef aseofasekfknasf asoefköoasef asefpmsfkasöfekmöslamf safoeasöof asöfmalsf awefölmasf  asödlmsf asödlfölasdf. Maybe this helps a bit.", "id" => 1));
+		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 103432, "members" => 12, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
+		
+		array_push($trending, array("thumb" => abspath("/public/images/header.jpg"), "favs" => 14, "members" => 75, "title" => "Protestie", "desc" => "I just came to say hello", "id" => 1));
+		
+		$html_trending = array();
+		
+		foreach($trending as $trending){
+			array_push($html_trending, Core::view("ProjectReview", $trending));
+		}
+		
+	
 		
 		$footer_array = array("user" => ($user == null ? null : $user["username"]));
 		$footer = Core::view("Footer", $footer_array);
 		
 		$user_review = Core::view('UserReview', "");
 	
-    $mainpagelists = array("top_project" => array(), "left_col" => $html_new, "mid_col" => $html_trending, "right_col" => $html_news, "user_review" => $user_review);
-		array_push($mainpagelists["top_project"], array("title" => "Test Project 1", "description" => "Test Desc 1", "thumb" => abspath("/public/images/header.jpg")));
-		array_push($mainpagelists["top_project"], array("title" => "Test Project 2", "description" => "Test Desc 2", "thumb" => abspath("/public/images/header.jpg")));
-		array_push($mainpagelists["top_project"], array("title" => "Test Project 3", "description" => "Test Desc 3", "thumb" => abspath("/public/images/header.jpg")));
+    $mainpagelists = array("top_project" => array("projects" => array()), "new" => $html_new, "trending" => $html_trending, "news" => $html_news, "user_review" => $user_review);
+		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 1, "fav_count" => 25423, "participator_count" => 13));
+		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 2, "fav_count" => 13423, "participator_count" => 7));
+		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 3, "fav_count" => 6847, "participator_count" => 5));
 
 		$content = Core::view("MainPageContent", $mainpagelists);
 

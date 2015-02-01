@@ -73,5 +73,6 @@
 	"retype_new_password" : "Retype Password",
 	"delete_account" : "Delete Account",
 	"save_changes" : "Save Changes",
-	"lang" : "Language"	
+	"lang" : "Language",
+	"discover_projectie" : "Discover Projectie"
 }

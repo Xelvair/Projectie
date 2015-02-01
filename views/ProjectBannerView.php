@@ -4,7 +4,9 @@
 #		fav_count : number of favs
 #		participator_count : number of participators
 ?>
-
+<div class="project-banner-backdrop">
+	
+</div>
 <div class="project-banner">
 	<div class="project-banner-inner">
 		<div class="project-banner-arrow-left"></div>

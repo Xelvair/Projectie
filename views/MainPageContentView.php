@@ -9,76 +9,37 @@
 #title: project title
 #desc: project description
 
-
+global $locale;
 ?>
 
-  <div class="row" id="carousel_row">
-                	<div class="col-md-12">
-                    
-                    	<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                          <!-- Indicators -->
-                          <ol class="carousel-indicators">
-                       	<?php 
-						$i = 0;
-						foreach($_DATA["top_project"] as $entry){ ?>
-                            <li data-target="#carousel-example-generic" data-slide-to="<?=$i?>"></li>
-                          	<?php $i++;
-							
-							}?>
-                          </ol>
-                        
-                          <!-- Wrapper for slides -->
-                          <div class="carousel-inner">
-                          	
-                          	<?php
-							 $i = 0;
-							 
-							 foreach($_DATA["top_project"] as $entry){ ?>
-                            
-                            <div class="item <?php if($i==0){
-								echo "active";
-							}?>">
-                              <img src="<?=$entry['thumb']?>" alt="..." class="img-responsive">
-                              <div class="carousel-caption">
-                                <h4><?=$entry['title']?></h4>
-                                <p><?=$entry['description']?></p>
-                              </div>
-                            </div>
-                           
-                            <?php $i++; }?> 
-                            
-                          </div><!--carousell-inner-->
-                        
-                          <!-- Controls -->
-                          <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left"></span>
-                          </a>
-                          <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right"></span>
-                          </a>
-                        </div><!--carousell-->
-                
-            		    
-                	</div><!--col-md-12-->
-                </div><!--carousel_row-->
-                <div id="page_list_wrapper">
-                    <div class="row">
-                        <div class="col-md-4 content_list">
-                        
-                            <?=$_DATA['left_col']?>
-                            
-                        </div><!--col-md-4-->
-                        
-                        <div class="col-md-4 content_list">
-                        
-                          <?=$_DATA['mid_col']?>
-                        
-                        </div><!--col-md-4-->
-                        
-                        <div class="col-md-4 content_list">
-                        
-                           <?=$_DATA['right_col']?>
-                        
-                        </div><!--col-md-4-->
-                    </div><!--row-->
-                </div>
+<div class="row" class="carousel-row">
+	<div class="col-md-12 project-banner-wrapper">
+    <?=Core::view("ProjectBanner", $_DATA["top_project"])?>           		    
+	</div><!--col-md-12-->
+</div><!--carousel_row-->
+
+<div id="page_list_wrapper">
+  <div class="row">
+    <div class="col-md-4 content_list">
+      <span class="list-headline"><?=$locale['new_projects']?></span>
+      <hr>
+      <?php for($i = 0; $i < sizeof($_DATA["new"]); $i++){
+    		echo $_DATA["new"][$i];
+      } ?>
+    </div><!--col-md-4-->
+    <div class="col-md-4 content_list">
+      <span class="list-headline"><?=$locale['trending_projects']?></span>
+      <hr>
+      <?php for($i = 0; $i < sizeof($_DATA["trending"]); $i++){
+      		echo $_DATA["trending"][$i];
+      }  ?>
+    </div><!--col-md-4-->
+    <div class="col-md-4 content_list">
+      <span class="list-headline"><?=$locale['news']?></span>
+      <hr>
+      <?php for($i = 0; $i < sizeof($_DATA["news"]); $i++){
+      		echo $_DATA["news"][$i];
+      }   ?>
+    </div><!--col-md-4-->
+  </div><!--row-->
+</div>

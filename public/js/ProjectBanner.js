@@ -1,3 +1,11 @@
+function fit_backdrop(){
+	$(".project-banner-backdrop").each(function(){
+		var backdrop_height = $($(this).siblings(".project-banner")[0]).outerHeight();
+		console.log(backdrop_height);
+		$(this).css({height: backdrop_height});
+	});
+}
+
 function fit_images(){
 	$(".project-banner-content-list-item").each(function(){
 		var container_width = $(this).closest(".project-banner-content").width();
@@ -58,6 +66,7 @@ function scroll_banner(elem, magnitude, animate_time){
 
 $(document).ready(function(){
 	fit_images();
+	fit_backdrop();
 
 	$(".project-banner").each(function(){
 		var content_list = $(this).find(".project-banner-content-list");
@@ -107,5 +116,6 @@ $(document).ready(function(){
 		$(".project-banner").each(function(){
 			scroll_banner(this, 0, 0);
 		});
+		fit_backdrop();
 	});
 });
