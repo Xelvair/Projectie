@@ -81,6 +81,27 @@ class TestController extends Controller{
 		User::store($user);
 		return print_r($user, true);
 	}
+
+	public function carousel(){
+		return Core::view("HtmlBase", [
+			"title" => "Projectie Carousel Test",
+			"body" => Core::view("ProjectBanner", [
+				"projects" => [
+					[
+						"project_id" => 1,
+						"fav_count" => 24233,
+						"participator_count" => 13
+					],
+					[
+						"project_id" => 5,
+						"fav_count" => 1233,
+						"participator_count" => 5
+					]
+				]
+			]),
+			"body_padding" => false
+		]);
+	}
 }
 
 ?>
