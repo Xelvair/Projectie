@@ -31,12 +31,16 @@ $(document).ready(function(){
 			result_obj = JSON.parse(result);
 
 			result_obj.forEach(function(tag){
-				var tag_elem = $("<li class='tag' data-tag-id='"+tag.tag_id+"'>"+tag.name+"<span style='display: none;' class='tag-remove glyphicon glyphicon-remove'></span></li>");
+				var tag_elem = $("<div class='tag' data-tag-id='"+tag.tag_id+"'>"+tag.name+"<span style='display: none;' class='tag-remove glyphicon glyphicon-remove'></span></div>");
 
 				$(this).find(".tagbox-list").append(tag_elem);
 
 				tag_elem.trigger("pj.tagadd");
 			}.bind(this));
 		}.bind(this));
+	});
+
+	$(".tagbox").on("click", ".tag-btn", function(e){
+		$(e.delegateTarget).find(".tagbox-overlay").fadeToggle();
 	});
 });

@@ -271,6 +271,8 @@ hr{
 .list-headline{
 	font-family: 'Source Sans Pro', sans-serif;
 	font-size: 3em;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .list-headline>span{
@@ -347,38 +349,35 @@ width: 100%;
 
 
 .tagbox{
-    width:100%;
-    height: 100%;
-    border:solid;
-    border-width: 1px;
-    border-color: #AAAAAA;  
-    padding: 5px;
-    max-height: 320px;
-    overflow-y: auto;
-    margin-top: 10px;
-    
-    -webkit-box-shadow: 2px 2px 5px 0px rgba(50, 48, 50, 0.5);
-    -moz-box-shadow:    2px 2px 5px 0px rgba(50, 48, 50, 0.5);
-    box-shadow:         2px 2px 5px 0px rgba(50, 48, 50, 0.5);
-    
+	display: inline-block;
+  border:solid;
+  border-width: 1px;
+  border-color: #AAAAAA;  
+  padding: 9px 5px 9px 5px;
+  max-height: 320px;
+  overflow-y: auto;
+  margin-top: 10px;
+  position: relative;
+ 	min-height: 200px;
+	min-width: 600px;
+	white-space: nowrap;
+  
+  #-webkit-box-shadow: 2px 2px 5px 0px rgba(50, 48, 50, 0.5);
+  #-moz-box-shadow:    2px 2px 5px 0px rgba(50, 48, 50, 0.5);
+  #box-shadow:         2px 2px 5px 0px rgba(50, 48, 50, 0.5);
+  
 }
-
-.tagbox>h1{
-	color: #AAA;
-	margin: 0;
-	font-size: 1em;
-}
-
 .tagbox-list{
 	min-height: 10px;
 	margin: 0;
 	display: block;
+	padding-bottom: 15px;
 }
 
 .tag{
 	color: #555;
 	font-size: 14px;
-	display: inline-block;
+	display: inline;
 	background-color:#C1F15B;
 	border-radius: 5px;
 	margin: 2.5px;
@@ -393,16 +392,24 @@ width: 100%;
 	cursor: pointer;
 }
 
-.tag_btn{
-	color: #AAAAAA;
-	border:none;
-	background-color: #FFF;
+.tag-btn{
+	border-top-left-radius: 5px;
+	border: 0;
+	padding: 3px 5px 0 7px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	font-size: 12px;
+	background-color: #C1F15B;
+	color: #555;
 }
 
-.tag_btn:hover{
-	color: #5B8600;
-	border:none;
-	background-color: #FFF;
+.tag-btn:focus{
+	outline: 0;
+}
+
+.tag-btn:active{
+	background-color: #99D913;
 }
 
 .tag_a{
@@ -414,13 +421,14 @@ width: 100%;
 	text-decoration:none;
 }
 
-
-.tagbox-bottom{
-	height: 30px;
-	bottom: 0px;
-	text-align:right;
-	color:#AAAAAA;
-	margin-bottom: -10px;
+.tagbox-overlay{
+	position: absolute;
+	left: 10px;
+	right: 10px;
+	top: 10px;
+	bottom: 25px;
+	background-color: white;
+	border: 1px solid #AAAAAA;
 }
 
 a{
