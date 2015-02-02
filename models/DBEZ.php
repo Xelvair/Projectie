@@ -23,7 +23,7 @@ class DBEZ{
 	public static function insert($table, $data, $flags = 0){
 		global $mysqli;
 
-		if(!$table || $data){
+		if(!$table || !$data){
 			throw new Exception("Invalid parameter sent to DBEZ::insert()!");
 		}
 

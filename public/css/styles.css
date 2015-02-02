@@ -717,7 +717,7 @@ color: #E6E506 !important;
 	background: -o-linear-gradient(top, rgba(73,172,255,1) 0%, rgba(73,172,255,1) 70%, rgba(55,131,196,1) 100%);
 	background: -ms-linear-gradient(top, rgba(73,172,255,1) 0%, rgba(73,172,255,1) 70%, rgba(55,131,196,1) 100%);
 	background: linear-gradient(to bottom, rgba(73,172,255,1) 0%, rgba(73,172,255,1) 70%, rgba(55,131,196,1) 100%);
-	background-color: #93D706;
+	background-color: rgba(73,172,255,1);
 	font-weight: bold;
 	border-style: none;
 	color: #323232;
