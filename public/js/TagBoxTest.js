@@ -1,3 +1,25 @@
+function fit_divs(){
+	$(".tagbox").each(function(){
+		var parent_height = $(this).innerHeight();
+		var parent_width = $(this).innerWidth();
+
+		$(this).children(".tagbox-list, .tagbox-recommend").each(function(){
+			$(this).height(parent_height - ($(this).outerHeight(true) - $(this).height()));
+			$(this).width(parent_width - ($(this).outerWidth(true) - $(this).width()));
+		});
+	});
+}
+
+function scroll_divs(){
+	$(".tagbox").each(function(){
+		var state = $(this).attr("data-state");
+		var left_mult = (state == "recommend" ? 1 : 0);
+		var new_left = -$(this).width() * left_mult;
+
+		$(this).find(".tagbox-inner").animate({left : new_left});
+	});
+}
+
 $(document).ready(function(){
 	$(".tagbox").on("mouseover", ".tag", function(e){
 		$(e.currentTarget).children("span.tag-remove").show(50);
@@ -40,7 +62,15 @@ $(document).ready(function(){
 		}.bind(this));
 	});
 
+	$(window).on("resize", fit_divs);
+
+	fit_divs();
+
 	$(".tagbox").on("click", ".tag-btn", function(e){
-		$(e.delegateTarget).find(".tagbox-overlay").fadeToggle();
-	});
+		var invert_state = function(state){return (state == "list" ? "recommend" : "list");}
+
+		$(e.delegateTarget).attr("data-state", invert_state($(e.delegateTarget).attr("data-state")));
+
+		scroll_divs();
+	})
 });

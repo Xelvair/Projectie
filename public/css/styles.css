@@ -1,4 +1,4 @@
-﻿@charset "utf-8";
+@charset "utf-8";
 /* CSS Document */
 
 *{
@@ -347,38 +347,48 @@ width: 100%;
 
 }
 
-
 .tagbox{
+	overflow: hidden;
 	display: inline-block;
   border:solid;
   border-width: 1px;
   border-color: #AAAAAA;  
-  padding: 9px 5px 9px 5px;
-  max-height: 320px;
-  overflow-y: auto;
   margin-top: 10px;
   position: relative;
- 	min-height: 200px;
-	min-width: 600px;
-	white-space: nowrap;
-  
-  #-webkit-box-shadow: 2px 2px 5px 0px rgba(50, 48, 50, 0.5);
-  #-moz-box-shadow:    2px 2px 5px 0px rgba(50, 48, 50, 0.5);
-  #box-shadow:         2px 2px 5px 0px rgba(50, 48, 50, 0.5);
-  
+  width: 100%;
+  height: 100%;
+	white-space: nowrap;  
+	font-size: 0;
 }
-.tagbox-list{
-	min-height: 10px;
-	margin: 0;
+
+.tagbox-inner{
+	position: relative;
+	height: 100%;
+}
+
+.tagbox-list,
+.tagbox-recommend{
+	height: 100%;
+	width: 100%;
 	display: block;
-	padding-bottom: 15px;
+	padding: 3px 3px 25px 3px;
+	display: inline-block;
+}
+
+.tagbox-list{
+
+}
+
+.tagbox-recommend{
+
 }
 
 .tag{
 	color: #555;
 	font-size: 14px;
-	display: inline;
+	display: block;
 	background-color:#C1F15B;
+	float: left;
 	border-radius: 5px;
 	margin: 2.5px;
 	padding: 2px 5px 2px 5px;
@@ -421,16 +431,6 @@ width: 100%;
 	text-decoration:none;
 }
 
-.tagbox-overlay{
-	position: absolute;
-	left: 10px;
-	right: 10px;
-	top: 10px;
-	bottom: 25px;
-	background-color: white;
-	border: 1px solid #AAAAAA;
-}
-
 a{
     color: #323232;
 	text-decoration:none;
@@ -438,9 +438,7 @@ a{
 
 a:hover{
     color: #93D706 ;
-	text-decoration:none;
-    
-    
+	text-decoration:none;   
 }
 
 #select-chat-box{
@@ -1168,50 +1166,4 @@ box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 a.neutral{
 	text-decoration: none;
 	color: black;
-}
-
-.post{
-	width: 100%;
-	max-height: 390px;
-	padding: 5px;
-	margin: 20px 5px 20px 5px;
-	border-left: 1px solid #CCC;
-	overflow: hidden;
-}
-
-.post h3{
-margin-top: 0px;
-margin-bottom: 5px;
-line-height: 0.9;
-width: 90%;
-}
-
-.post h4{
-	font-weight: 400;
-}
-
-.post span{
-	margin-right: 5px;
-}
-
-.post a:hover{
-	color: #ccc;
-}
-
-.post img{
- width: 50px;
- height: 50px;
- margin-right: 5px;
-}
-
-.post-head{
-	padding-bottom: 5px;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-bottom-color: #d2d2d2;
-	margin-bottom: 5px;
-}
-
-.post-body{
-	padding-top: 5px;
 }
