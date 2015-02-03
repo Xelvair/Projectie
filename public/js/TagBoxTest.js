@@ -91,40 +91,85 @@ $(document).ready(function(){
 
 				if(!result.ERROR){
 					$(e.currentTarget).find(".tag[data-tag-id="+tag.tag_id+"]").remove();
+					$(e.currentTarget).siblings(".tagbox-recommend").trigger("pj.tagboxlistrecommend.refresh");
 				} else {
 					alert(result.ERROR);
 				}
 			});
 		} else {
 			$(e.currentTarget).find(".tag[data-tag-id="+tag.tag_id+"]").remove();
+			$(e.currentTarget).siblings(".tagbox-recommend").trigger("pj.tagboxlistrecommend.refresh");
 		}
 	});
 
 	$(document).on("pj.tagboxlist.addtag", ".tagbox-list", function(e, tag){
+		var tag_elem = $("<div class='tag'></div>").attr("data-tag-id", tag.tag_id).text(tag.name);
 
+		var tagadd = $(this).attr("data-tagadd");
+
+		if(tagadd){
+			$.post(Projectie.server_addr + tagadd, tag, function(result){
+				var result = JSON.parse(result);
+
+				if(result.ERROR){
+					alert(result.ERROR);
+				} else {
+					if($(e.currentTarget).attr("data-editable") == 1){
+						var remove_elem = $("<span style='display: none;' class='tag-remove glyphicon glyphicon-remove'></span>");
+						$(tag_elem).append(remove_elem);
+					}
+					$(this).append(tag_elem);
+				}
+			}.bind(this));
+		} else {
+			if($(e.currentTarget).attr("data-editable") == 1){
+				var remove_elem = $("<span style='display: none;' class='tag-remove glyphicon glyphicon-remove'></span>");
+				$(tag_elem).append(remove_elem);
+			}
+			$(this).append(tag_elem);
+		}
 	});
 	
 	$(document).on("pj.tagboxlistrecommend.refresh", ".tagbox-recommend", function(e){
+		console.log("pj.tagboxlistrecommend.refresh");
 		var search_string = $(e.currentTarget).find(".tagbox-recommend-search").val();
 
 		$.post(Projectie.server_addr + "/tag/get_recommendations", {search_string : search_string}, function(result){
 			var result_obj = JSON.parse(result);
 
 			$(e.currentTarget).trigger("pj.tagboxlist.replacetags", [result_obj]);
+
+			var tags_elem = $(e.currentTarget).siblings(".tagbox-tags").get(0);
+
+			$(tags_elem).find(".tag").each(function(){
+				console.log("yolo");
+				$(e.currentTarget).find(".tag[data-tag-id="+ $(this).attr("data-tag-id") +"]").addClass("tag-exists-already");
+			});
 		});
-	})
+	});
 
 	$(document).on("click", ".tag-remove", function(e){
 		var parent = $(e.currentTarget).closest(".tagbox-list").get();
 		var tag_id = $(e.currentTarget).closest(".tag").attr("data-tag-id");
 
 		$(parent).trigger("pj.tagboxlist.removetag", {tag_id : tag_id});
-	})
+	});
 
 	$(document).on("keyup", ".tagbox-recommend-search", function(e){
 		var tagbox_recommend_elem = $(e.currentTarget).closest(".tagbox-recommend");
 
 		$(tagbox_recommend_elem).trigger("pj.tagboxlistrecommend.refresh");
+	});
+
+	$(document).on("click", ".tagbox-recommend .tag:not(.tag-exists-already)", function(){
+		$(this).addClass("tag-exists-already");
+
+		var tags_elem = $(this).closest(".tagbox-recommend").siblings(".tagbox-tags").get(0);
+
+		var tag_id = $(this).attr("data-tag-id");
+		var name = $(this).text();
+
+		$(tags_elem).trigger("pj.tagboxlist.addtag", {tag_id : tag_id, name : name});
 	});
 
 	$(".tagbox-list").trigger("pj.tagboxlist.loadtags");

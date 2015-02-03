@@ -409,6 +409,11 @@ width: 100%;
 	cursor: default;
 }
 
+.tag.tag-exists-already{
+	background-color: #AAA !important;
+	cursor: default !important;
+}
+
 .tagbox-tags .tag{
 	background-color:#C1F15B;
 }

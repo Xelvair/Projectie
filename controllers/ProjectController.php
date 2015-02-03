@@ -151,16 +151,15 @@ class ProjectController extends Controller{
 		return json_encode($project->remove_position($project_position_id, $current_user["user_id"]));
 	}
 
-	# $_POST["project_id"]
 	# $_POST["tag_id"] || $_POST["tag_name"]
-	public function tag(){
+	public function tag($data){
 		$exists_and_filled_out = function(&$var){
 			return (isset($var) && !empty($var));
 		};
 
 		if
 		(
-			!$exists_and_filled_out($_POST["project_id"]) ||
+			!$exists_and_filled_out($data[0]) ||
 			!(
 				$exists_and_filled_out($_POST["tag_id"]) ||
 				$exists_and_filled_out($_POST["tag_name"])
@@ -179,7 +178,13 @@ class ProjectController extends Controller{
 		$project = Core::model("Project");
 		$tag = Core::model("Tag");
 
-		$project_id = $_POST["project_id"];
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		$project_id = (integer)$data[0];
 
 		$current_user_id = $auth->get_current_user()["id"];
 
@@ -187,9 +192,7 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
 		}
 
-		$tag_expr = $exists_and_filled_out($_POST["tag_id"]) ? (integer)$_POST["tag_id"] : (string)$_POST["tag_name"];
-
-		return json_encode($project->tag($tag, $project_id, $tag_expr));
+		return json_encode($project->tag($tag, $project_id, (integer)$_POST["tag_id"]));
 
 	}
 
