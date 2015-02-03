@@ -22,26 +22,6 @@ class TagModel implements Model{
 		}
 	}
 
-	public function autocomplete_tag($name){ 
-		global $mysqli;
-
-		$autocomplete_term = $name."%";
-
-		$stmt_autocomplete = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE name LIKE ?");
-		$stmt_autocomplete->bind_param("s", $autocomplete_term);
-		$stmt_autocomplete->execute();
-
-		$stmt_autocomplete->bind_result($res_tag_id, $res_name);
-
-		$autocomplete_obj = array();
-
-		while($stmt_autocomplete->fetch()){
-			array_push($autocomplete_obj, array($res_tag_id, $res_name));
-		}
-
-		return $autocomplete_obj;
-	}
-
 	//returns an associative array of the requested tag
 	//if the tag in question doesn't exist, returns an empty array
 	//parameter may be a string, in which case the tag is searched by name
@@ -105,6 +85,20 @@ class TagModel implements Model{
 		}
 
 		return false;
+	}
+
+	public function get_recommendations($search_string){
+		global $mysqli;
+
+		$search_string = "%".$search_string."%";
+
+		$stmt_get_tags = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE name LIKE ? LIMIT 25");
+		$stmt_get_tags->bind_param("s", $search_string);
+		$stmt_get_tags->execute();
+
+		$result = $stmt_get_tags->get_result()->fetch_all(MYSQLI_ASSOC);
+
+		return $result;
 	}
 }
 

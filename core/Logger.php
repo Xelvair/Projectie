@@ -30,7 +30,6 @@ class Logger{
 		fwrite($logfile, $datestring.$typestring.$call.": ".$message."\n");
 
 		fclose($logfile);
-
 	}
 
 	private $filename;

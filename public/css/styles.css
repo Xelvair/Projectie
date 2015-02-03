@@ -366,33 +366,56 @@ width: 100%;
 	height: 100%;
 }
 
-.tagbox-list,
-.tagbox-recommend{
+.tagbox-list{
 	height: 100%;
 	width: 100%;
-	display: block;
 	padding: 3px 3px 25px 3px;
 	display: inline-block;
+	vertical-align: top;
+	position: relative;
 }
 
-.tagbox-list{
-
+.tagbox-recommend-search{
+	padding-left: 5px;
+	padding-right: 5px;
+	background-image: url(/public/images/magnifier.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: right center;
+	border: 0;
+	position: absolute;
+	border-radius: 5px;
+	background-color: #DDD;
+	width: calc(100% - 45px);
+	font-size: 14px;
+	height: 30px;
+	bottom: 5px;
+	left: 5px;
+	box-shadow: 0px 0px 5px #666;
 }
 
-.tagbox-recommend{
-
+.tagbox-recommend-search:focus{
+	outline: 0;
 }
 
 .tag{
 	color: #555;
 	font-size: 14px;
 	display: block;
-	background-color:#C1F15B;
 	float: left;
 	border-radius: 5px;
 	margin: 2.5px;
 	padding: 2px 5px 2px 5px;
 	cursor: default;
+}
+
+.tagbox-tags .tag{
+	background-color:#C1F15B;
+}
+
+.tagbox-recommend .tag{
+	background-color: rgba(93,192,255,1);
+	cursor: pointer;
 }
 
 .tag-remove{
@@ -403,12 +426,13 @@ width: 100%;
 }
 
 .tag-btn{
-	border-top-left-radius: 5px;
+	border-radius: 5px;
 	border: 0;
-	padding: 3px 5px 0 7px;
+	width: 30px;
+	height: 30px;
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	bottom: 5px;
+	right: 5px;
 	font-size: 12px;
 	background-color: #C1F15B;
 	color: #555;
