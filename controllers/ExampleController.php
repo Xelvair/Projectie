@@ -5,10 +5,13 @@ class ExampleController extends Controller{
 	function index(){
 		$auth = Core::model("Auth");
 		$user = $auth->get_current_user();
-		return Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-										"body" => "fagit", 
-										"body_padding" => true,
-										"current_user" => $user));
+		return Core::view("HtmlBase", array(
+			"title" => "Projectie - Driving Development", 
+			"body" => "fagit", 
+			"body_padding" => true,
+			"current_user" => $user,
+			"dark" => true
+		));
 	}
 
 	function ExampleFunction($data){

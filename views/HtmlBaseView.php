@@ -4,7 +4,13 @@
 //body : body of the page
 //body_padding : whether to add padding to the navbar
 //current_user : assoc array of all information about the current user
+//dark : set when you want to to use dark theme for body
+
+$body_class = "";
+if(!empty($_DATA["body_padding"])){$body_class .= 'body-padding';}
+if(!empty($_DATA["dark"])){$body_class .= ' dark';}
 ?>
+
 
 <!DOCTYPE HTML>
 <html>
@@ -31,7 +37,7 @@
     <script src="<?=abspath("public/js/ProjectBanner.js")?>"></script>
     <title><?=$_DATA["title"];?></title>
 </head>    
-<body <?php if($_DATA["body_padding"]){echo "class='body-padding'";} ?>>
+<body class="<?=$body_class?>">
     <?php echo $_DATA["body"]; ?>
 </body>
 </html>

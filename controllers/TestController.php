@@ -18,7 +18,13 @@ class TestController extends Controller{
 		}
 
 		$content = Core::view("LoginTest", array("login" => $login_name));
-		return Core::view("HtmlBase", array("title" => "Login Test", "body" => $content, "body_padding" => false, "current_user" => $logged_in_user));
+		return Core::view("HtmlBase", array(
+			"title" => "Login Test", 
+			"body" => $content, 
+			"body_padding" => false, 
+			"current_user" => $logged_in_user,
+			"dark" => true
+		));
 	}
 
 	public function project(){

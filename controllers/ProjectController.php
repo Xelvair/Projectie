@@ -383,6 +383,20 @@ class ProjectController extends Controller{
 		return json_encode($project->cancel_participation_request($req_id, $current_user["user_id"]));
 	}
 
+	public function search_by_tags(){
+		if(!validate($_POST, ["tags" => "array"], VALIDATE_CAST)){
+			return array("ERROR" => "ERR_INVALID_PARAMETERS");
+		}
+
+		foreach($_POST["tags"] as &$tag_id){
+			$tag_id = (integer)$tag_id;
+		}
+
+		$project = Core::model("Project");
+
+		return json_encode($project->find_related($_POST["tags"], 9));
+	}
+
 	public function show($data){
 		global $locale;
 		global $CONFIG;
@@ -539,7 +553,8 @@ class ProjectController extends Controller{
 				)
 			), 
 			"body_padding" => true,
-			"current_user" => $user
+			"current_user" => $user,
+			"dark" => true
 		));
 	}
 
@@ -573,7 +588,8 @@ class ProjectController extends Controller{
 			"title" => "Projectie - Driving Development", 
 			"body" => $contentwrap, 
 			"body_padding" => true,
-			"current_user" => $user
+			"current_user" => $user,
+			"dark" => true
 		));
 
 		return $html;

@@ -623,23 +623,29 @@ class ProjectModel implements Model{
 		$project_tags_raw = self::get_tags($project_id);
 
 		$project_tags = array_map(function($entry){
-			return $entry["name"];
+			return (integer)$entry["tag_id"];
 		}, $project_tags_raw);
 
 		$matches = array_intersect($project_tags, $search_tags);
 
 		return sizeof($matches);
-
 	}
 
-	public function find_related($search_tags){
+	public function find_related($search_tags, $count){
 		$projects = DBEZ::find("project", [], ["project_id"]);
 
 		foreach ($projects as &$project){
+			$project = self::get($project["project_id"]);
 			$project["tag_matches"] = self::get_tag_matches($project["project_id"], $search_tags);
 			$project["fav_count"] = self::get_fav_count($project["project_id"]);
 			$project["relevance"] = $project["tag_matches"] * (log($project["fav_count"] + 1) * 5 + 1); //5: GAIN value, needs to be lower for more users
 		}
+
+		usort($projects, function($lhs, $rhs){
+			return $lhs["relevance"]>$rhs["relevance"] ? -1 : 1;
+		});
+
+		$projects = array_slice($projects, 0, $count);
 
 		return $projects;
 	}

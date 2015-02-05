@@ -8,10 +8,13 @@ class DebugController extends Controller{
 
 		$content = Core::view("Debug");
 
-		$html = Core::view("HtmlBase", array(	"title" => "Projectie - Driving Development", 
-												"body" => $content, 
-												"body_padding" => false,
-												"current_user" => $user));
+		$html = Core::view("HtmlBase", array(	
+			"title" => "Projectie - Driving Development", 
+			"body" => $content, 
+			"body_padding" => false,
+			"current_user" => $user,
+			"dark" => true
+		));
 
 		return $html;
 	}

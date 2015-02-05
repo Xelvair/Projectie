@@ -177,7 +177,8 @@ class ChatController extends Controller{
 			"title" => "Projectie - Driving Development", 
 			"body" => $contentwrap, 
 			"body_padding" => true,
-			"current_user" => $user
+			"current_user" => $user,
+			"dark" => true
 		));
 
 		return $html;

@@ -27,7 +27,8 @@ class DiscoverController extends Controller{
 				"user" => $user,
 				"content" => Core::view("Discover")
 			]),
-			"body_padding" => true
+			"body_padding" => true,
+			"dark" => true
 		]);
 	}
 }

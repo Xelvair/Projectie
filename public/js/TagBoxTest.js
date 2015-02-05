@@ -85,6 +85,8 @@ $(document).ready(function(){
 
 			$(e.currentTarget).append(tag_elem);
 		});
+
+		$(e.currentTarget).trigger("pj.tagboxlist.change");
 	});
 
 	$(document).on("pj.tagboxlist.removetag", ".tagbox-list", function(e, tag){
@@ -96,6 +98,7 @@ $(document).ready(function(){
 
 				if(!result.ERROR){
 					$(e.currentTarget).find(".tag[data-tag-id="+tag.tag_id+"]").remove();
+					$(e.currentTarget).trigger("pj.tagboxlist.change");
 					$(e.currentTarget).siblings(".tagbox-recommend").trigger("pj.tagboxlistrecommend.refresh");
 				} else {
 					alert(result.ERROR);
@@ -103,6 +106,7 @@ $(document).ready(function(){
 			});
 		} else {
 			$(e.currentTarget).find(".tag[data-tag-id="+tag.tag_id+"]").remove();
+			$(e.currentTarget).trigger("pj.tagboxlist.change");
 			$(e.currentTarget).siblings(".tagbox-recommend").trigger("pj.tagboxlistrecommend.refresh");
 		}
 	});
@@ -124,6 +128,7 @@ $(document).ready(function(){
 						$(tag_elem).append(remove_elem);
 					}
 					$(this).append(tag_elem);
+					$(e.currentTarget).trigger("pj.tagboxlist.change");
 				}
 			}.bind(this));
 		} else {
@@ -132,6 +137,7 @@ $(document).ready(function(){
 				$(tag_elem).append(remove_elem);
 			}
 			$(this).append(tag_elem);
+			$(e.currentTarget).trigger("pj.tagboxlist.change");
 		}
 	});
 	

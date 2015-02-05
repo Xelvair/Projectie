@@ -116,6 +116,7 @@ box-shadow:         0px 3px 4px 0px rgba(50, 50, 50, 0.71);
     width: 100%;
     float:left; 
     position: relative;
+    background-color: white;
 }
 #page-list-wrapper {
     width: 100%;
@@ -968,7 +969,10 @@ margin: 5px;
 border-left: 1px solid #CCC;
 }
 
-.post_group input, textarea, input:focus, textarea:focus{
+.post_group input, 
+.post-group textarea, 
+.post-group input:focus, 
+.post-group textarea:focus{
 	border: none;
 	outline-width: 0;
 	width: 100%;
@@ -1040,6 +1044,7 @@ box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 	margin: 0 auto 0 auto;
 	position: relative;
 	padding-bottom: 42%; /* 2.39:1 */
+	z-index: 2;
 }
 
 .project-banner-inner{
@@ -1127,8 +1132,8 @@ box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 }
 
 .project-banner-backdrop{
-	z-index: -1;
-	background-color: rgba(0, 0, 0, 0.75);
+	z-index: 1;
+	background-color: #333;
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -1264,7 +1269,11 @@ a.neutral{
 }
 
 .dark{
-	background-color: rgba(0, 0, 0, 0.75);
+	background-color: #333;
+}
+
+.light{
+	background-color: white;
 }
 
 .footer{
