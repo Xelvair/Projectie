@@ -17,8 +17,8 @@ global $locale;
 				<th>
 					<?=$locale["adress"]?>:
 				</th>
-				<td>©Projectie GmbH<br>
-					Zernattostraße 2<br>
+				<td>Â©Projectie GmbH<br>
+					ZernattostraÃŸe 2<br>
 					9800 Spittal an der Drau<br>
 					Austria
 				</td>

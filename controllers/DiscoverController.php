@@ -25,7 +25,7 @@ class DiscoverController extends Controller{
 			"title" => $locale["discover_projectie"],
 			"body" => Core::view("ContentWrapper", [
 				"user" => $user,
-				"content" => "faget"
+				"content" => Core::view("Discover")
 			]),
 			"body_padding" => true
 		]);

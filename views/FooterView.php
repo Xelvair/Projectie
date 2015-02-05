@@ -2,7 +2,7 @@
 global $locale;
 ?>
 
-<div class="row" style="padding-left: 20px; padding-right: 20px; margin-top: 20px;">
+<div class="row footer">
 	<div class="col-md-4 text-left col-xs-4">
     	<ul class="list-inline">
         	<li>©2014 - <?php echo date("Y"); ?> Projectie</li>
@@ -33,4 +33,3 @@ global $locale;
         </ul>
     </div>
 <div>
-<hr style="margin-top: -10px;"/>

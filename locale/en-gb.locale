@@ -74,5 +74,6 @@
 	"delete_account" : "Delete Account",
 	"save_changes" : "Save Changes",
 	"lang" : "Language",
-	"discover_projectie" : "Discover Projectie"
+	"discover_projectie" : "Discover Projectie",
+	"search_tags" : "Search Tags"
 }

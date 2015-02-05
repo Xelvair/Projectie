@@ -92,7 +92,7 @@ class TagModel implements Model{
 
 		$search_string = "%".$search_string."%";
 
-		$stmt_get_tags = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE name LIKE ? LIMIT 50");
+		$stmt_get_tags = $mysqli->prepare("SELECT tag_id, name FROM tag WHERE name LIKE ? LIMIT 30");
 		$stmt_get_tags->bind_param("s", $search_string);
 		$stmt_get_tags->execute();
 

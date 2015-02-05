@@ -25,6 +25,11 @@ function scroll_divs(instant){
 }
 
 $(document).ready(function(){
+	$(".tagbox").each(function(){
+		if ($(this).find(".tagbox-tags").attr("data-editable") == 0){
+			$(this).find(".tag-btn").remove();
+		}
+	});
 
 	$(".tagbox").on("mouseover", ".tag", function(e){
 		$(e.currentTarget).children("span.tag-remove").show(50);
