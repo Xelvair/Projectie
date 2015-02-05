@@ -384,8 +384,8 @@ class ProjectController extends Controller{
 	}
 
 	public function search_by_tags(){
-		if(!validate($_POST, ["tags" => "array"], VALIDATE_CAST)){
-			return array("ERROR" => "ERR_INVALID_PARAMETERS");
+		if(empty($_POST["tags"])){
+			$_POST["tags"] = array();
 		}
 
 		foreach($_POST["tags"] as &$tag_id){

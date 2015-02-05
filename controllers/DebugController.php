@@ -12,8 +12,7 @@ class DebugController extends Controller{
 			"title" => "Projectie - Driving Development", 
 			"body" => $content, 
 			"body_padding" => false,
-			"current_user" => $user,
-			"dark" => true
+			"current_user" => $user
 		));
 
 		return $html;

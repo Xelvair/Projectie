@@ -970,9 +970,9 @@ border-left: 1px solid #CCC;
 }
 
 .post_group input, 
-.post-group textarea, 
-.post-group input:focus, 
-.post-group textarea:focus{
+.post_group textarea, 
+.post_group input:focus, 
+.post_group textarea:focus{
 	border: none;
 	outline-width: 0;
 	width: 100%;
