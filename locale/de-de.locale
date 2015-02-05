@@ -80,5 +80,6 @@
 	"change_password" : "Passwort Ändern",
 	"old_password" : "Altes Passwort",
 	"view_project" : "Projekt Ansehen",
-	"discover_projectie" : "Projectie Entdecken"
+	"discover_projectie" : "Projectie Entdecken",
+	"search_tags" : "Suchtags"
 }

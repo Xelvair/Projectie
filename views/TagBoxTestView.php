@@ -1,7 +1,7 @@
 <?php
 
 $editable = $_DATA["editable"];
-$project_id = $_DATA["project_id"];
+$project_id = isset($_DATA["project_id"]) ? $_DATA["project_id"] : null;
 
 global $locale;
 ?>
@@ -11,9 +11,11 @@ global $locale;
 		<div 
 			class="tagbox-list tagbox-tags" 
 			data-editable="<?=($editable ? 1 : 0)?>" 
-			data-tagsource="/project/get_tags/<?=$project_id?>" 
+			<?php if($project_id){?>
+			data-tagsource="/project/get_tags/<?=$project_id?>"
 			data-tagremove="/project/untag/<?=$project_id?>" 
 			data-tagadd="/project/tag/<?=$project_id?>"
+			<?php } ?>
 		>
 		</div>
 		<div class="tagbox-list tagbox-recommend" data-editable="false">

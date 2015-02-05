@@ -388,8 +388,9 @@ class ProjectController extends Controller{
 		}
 
 		$project_obj = $project->get((int)$data[0]);
-		if(!$project_obj){
+		if(!isset($project_obj["project_id"])){
 			return "No project found for id ".$data[0];
+			die();
 		}
 		
 		$tags = array("tags" => array(), "tag_box_title" => false);

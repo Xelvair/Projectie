@@ -376,8 +376,12 @@ function settings_updated(data){
   <div id="page-content-wrapper"> 
   	<div class="max_width">
   		<?php echo $_DATA["content"]; ?>
-		<?=Core::view("Footer", ["user" => $_DATA["user"]["username"] ?: "Guest"])?>
-  	</div>  
+  	</div> 
+	<div class="dark">
+		<div class="max_width"> 
+	 		<?=Core::view("Footer", ["user" => $_DATA["user"]["username"] ?: "Guest"])?>
+	 	</div>
+ 	</div>
   </div>
 </div>
 

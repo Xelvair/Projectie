@@ -683,6 +683,7 @@ color: #E6E506 !important;
 	width: 100%;
 	height: 20px;
 	margin-top: 15px;
+
 }
 .media-time-container{
 	margin-right: 10px;
@@ -1241,4 +1242,22 @@ a.neutral{
 
 #desc_area{
 	resize: vertical;
+}
+
+.dark{
+	background-color: rgba(0, 0, 0, 0.75);
+}
+
+.footer{
+	padding-top: 25px;
+	padding-bottom: 15px;
+	color: #CCC !important;
+}
+
+.footer a{
+	color: #CCC;
+}
+
+.footer a:hover{
+	color: white;
 }
