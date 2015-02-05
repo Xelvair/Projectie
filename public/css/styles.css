@@ -423,6 +423,11 @@ width: 100%;
 	cursor: pointer;
 }
 
+.tagbox-recommend .tag:hover{
+	background-color: rgba(73,172,235,1);
+	cursor: pointer;
+}
+
 .tag-remove{
 	opacity: 0.5;
 	font-size: 12px;

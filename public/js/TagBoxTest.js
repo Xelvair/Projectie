@@ -131,7 +131,6 @@ $(document).ready(function(){
 	});
 	
 	$(document).on("pj.tagboxlistrecommend.refresh", ".tagbox-recommend", function(e){
-		console.log("pj.tagboxlistrecommend.refresh");
 		var search_string = $(e.currentTarget).find(".tagbox-recommend-search").val();
 
 		$.post(Projectie.server_addr + "/tag/get_recommendations", {search_string : search_string}, function(result){
@@ -142,7 +141,6 @@ $(document).ready(function(){
 			var tags_elem = $(e.currentTarget).siblings(".tagbox-tags").get(0);
 
 			$(tags_elem).find(".tag").each(function(){
-				console.log("yolo");
 				$(e.currentTarget).find(".tag[data-tag-id="+ $(this).attr("data-tag-id") +"]").addClass("tag-exists-already");
 			});
 		});
