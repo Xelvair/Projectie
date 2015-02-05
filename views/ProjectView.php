@@ -67,8 +67,45 @@ $(document).ready(function(){
 
 	});
 	
+	$('#post_btn').on('click', function(){
+		post();
+	});
+	
 	
 });
+
+function post(){
+	var title = $('#post_title').val();
+	var content = $('#post_content').val();
+	
+	if(content != ""){
+		$('#post_title').val('');
+		$('#post_content').val('');
+		$.post( "<?=abspath('/project/post_news')?>",{
+			title: title,
+			content: content,
+			project_id : <?=$_DATA["project"]["project_id"]?>
+			}).done(function(data){
+				var result = JSON.parse(data);
+				var title_result = "is ka titel";
+				var content_result	= result.content;
+				var post_id_result = result.project_news_id;
+				var time_result = result.post_time;
+				
+				//alert(title_result + "|" +content_result+ "|" +post_id_result+ "|" +time_result );
+				
+				$.post("<?=abspath('/project/post_html')?>",{
+					title : title_result,
+					content : content_result,
+					time : time_result,
+					post_id : post_id_result }).done(function(data){
+						//alert(data);
+						$('.post').before(data);
+					});
+				
+			});
+	}
+}
 
 function update_desc(){
 	var desc = $('#desc_area').val();
@@ -150,11 +187,16 @@ echo Core::view("ProjectBanner", [
 								<div class="col-md-12">
 									<form>
 										<div class="input-group post_group">
-											<input type="text" class="form-control custom-control no_right_border" placeholder="<?=$locale['post_title']?>..." id="post_title"/>
-											<textarea class="form-control custom-control no_right_border" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="post_input"></textarea>     
-											<span class="input-group-addon btn btn-default" style="border-style: none;" id="post_btn">Post</span>
+											<input type="text" class="" placeholder="<?=$locale['post_title']?>..." id="post_title"/>
+											<textarea class="" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="post_content"></textarea>
+											<span class="btn btn-default pull-right" style="border-style: none;" id="post_btn">Post</span>
 										</div>
 									</form>
+								</div>
+							</div>
+							<div class="row" style="margin-top: 20px;">
+								<div class="col-md-12">
+									<h2><?=$locale['news_feed']?></h2>
 									<?=$_DATA['news_feed']?>
 								</div>
 							</div>

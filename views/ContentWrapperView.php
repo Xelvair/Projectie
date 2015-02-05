@@ -183,26 +183,8 @@ function settings_updated(data){
 				<div class="col-md-12">
 					<form>
 						<div class="form-group" id="search_group">
-							<input type="text" id="search_input" class="form-control" placeholder="<?=$locale['placeholder_search']?>"/>
+							<input type="text" id="search_input" class="form-control" placeholder="<?=$locale['project_title']?>..."/>
 						</div> 
-						<div class="row text-center">
-							<div class="col-xs-12">
-								<h3><?=$locale['search_for']?>...</h3>
-								<div class="form-group">
-									<div class="btn-group" data-toggle="buttons">
-									  <label class="btn btn-default active">
-										<input type="radio" name="radio_search_for" value="projects" autocomplete="off" checked><?=$locale['projects']?>
-									  </label>
-									  <label class="btn btn-default">
-										<input type="radio" name="radio_search_for" value="tags" autocomplete="off"><?=$locale['tags']?>
-									  </label>
-									  <label class="btn btn-default">
-										<input type="radio" name="radio_search_for" value="skills" autocomplete="off"><?=$locale['skills']?>
-									  </label>
-									</div>
-								</div>
-							</div>
-						</div>
 						<div class="row  text-center">
 							<div class="col-xs-12">
 								<h3><?=$locale['sorted_by']?>...</h3>
@@ -255,10 +237,6 @@ function settings_updated(data){
 								<input id="input-1" type="file" class="file">
 							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<label><?=$locale["username"]?></label>
-						<input id="settings_username" type="text" class="form-control" value="<?=$_DATA["user"]["username"]?>">
 					</div>
 					<div class="form-group">
 						<label>E-mail</label>
