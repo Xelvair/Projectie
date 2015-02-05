@@ -1,7 +1,8 @@
-<?php
-#Parameters
+﻿<?php
+#PARAMETERS
+#
 #title
-#desc
+#content
 #thumb
 #time
 #creator

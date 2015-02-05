@@ -34,7 +34,7 @@ class TestController extends Controller{
 	}
 
 	public function tagbox(){
-		$content = Core::view("TagBoxTest", ["project_id" => 5]);
+		$content = Core::view("TagBoxTest", ["project_id" => 1, "editable" => true]);
 
 		return Core::view("HtmlBase", [ 
 			"title" => "Tagbox Test",

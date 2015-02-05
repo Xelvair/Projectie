@@ -151,16 +151,15 @@ class ProjectController extends Controller{
 		return json_encode($project->remove_position($project_position_id, $current_user["user_id"]));
 	}
 
-	# $_POST["project_id"]
 	# $_POST["tag_id"] || $_POST["tag_name"]
-	public function tag(){
+	public function tag($data){
 		$exists_and_filled_out = function(&$var){
 			return (isset($var) && !empty($var));
 		};
 
 		if
 		(
-			!$exists_and_filled_out($_POST["project_id"]) ||
+			!$exists_and_filled_out($data[0]) ||
 			!(
 				$exists_and_filled_out($_POST["tag_id"]) ||
 				$exists_and_filled_out($_POST["tag_name"])
@@ -179,7 +178,13 @@ class ProjectController extends Controller{
 		$project = Core::model("Project");
 		$tag = Core::model("Tag");
 
-		$project_id = $_POST["project_id"];
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		$project_id = (integer)$data[0];
 
 		$current_user_id = $auth->get_current_user()["id"];
 
@@ -187,9 +192,7 @@ class ProjectController extends Controller{
 			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
 		}
 
-		$tag_expr = $exists_and_filled_out($_POST["tag_id"]) ? (integer)$_POST["tag_id"] : (string)$_POST["tag_name"];
-
-		return json_encode($project->tag($tag, $project_id, $tag_expr));
+		return json_encode($project->tag($tag, $project_id, (integer)$_POST["tag_id"]));
 
 	}
 
@@ -445,37 +448,29 @@ class ProjectController extends Controller{
 
 		$user_can_add_position = $user ? $project->user_has_right($project_obj["project_id"], $user["user_id"], "edit") : false;
 		$user_is_participator = $user ? $project->exists_participation($project_obj["project_id"], $user["user_id"]) : false;
+		
+		$post = array();
+		array_push($post, array("project" => array("title" => "Project Title", "id" => 1), "creator" => array("id" => 1, "name" => "Max"), "time" => "10:23", "content" => "This is a standard Post without title."));
+		array_push($post, array("creator" => array("id" => 1, "name" => "Max"), "time" => "10:23", "content" => "This post is used to show up in projects. The usernamme is larger and the project title is gone.", "title" => ""));
+		array_push($post, array("project" => array("title" => "Project Title", "id" => 1), "creator" => array("id" => 1, "name" => "Max"), "time" => "10:23", "content" => "
+		You always wanted a title? Here it is! <br> And all that shit is in one View is that awesome or am I on drugs? :)<br>
+		Also a max height of 390px is set here a demo:
+		<br><br>
+		Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
+		<br><br>
+		Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
+		<br><br>
+		Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer
+		Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. <br>
+		Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer", "title" => "Wow a title appears!"));
+		
+		$news_feed =Core::view("Post", array( "post" => $post));
 
 		return Core::view("HtmlBase", array(	
 			"title" => "Projectie - Driving Development", 
 			"body" => Core::view("ContentWrapper", array(	
 				"content" => Core::view("Project", array(
-					"news_feed" => Core::view("TitleDescriptionList", array(
-						"list_title" =>  $locale['news_feed'],
-						"entries" => array(
-							array(
-								"title" => "Project News 1",
-								"description" => "Test Desc 1",
-								"thumb" => abspath("/public/images/default-profile-pic.png"),
-								"creator" => array("id" => "1", "name" => "admin"),
-								"time" => "09:12"
-							),
-							array(
-								"title" => "Project News 2",
-								"description" => "Test Desc 2",
-								"thumb" => abspath("/public/images/default-profile-pic.png"),
-								"creator" => array("id" => "1", "name" => "admin"),
-								"time" => "09:12"
-							),
-							array(
-								"title" => "Project News 3",
-								"description" => "Test Desc 3",
-								"thumb" => abspath("/public/images/default-profile-pic.png"),
-								"creator" => array("id" => "1", "name" => "admin"),
-								"time" => "09:12"
-							)
-						)
-					)), 
+					"news_feed" => $news_feed, 
 					"project" => array(
 						"project_id" => $project_obj["project_id"],
 						"participators" => $project->get_participators($data[0]), 

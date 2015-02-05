@@ -18,5 +18,13 @@ class TagController extends Controller{
 
 		return json_encode($tag->create_tag($_POST["tag_name"]));
 	}
+
+	function get_recommendations(){
+		global $mysqli;
+
+		$tag = Core::model("Tag");
+
+		return json_encode($tag->get_recommendations($_POST["search_string"]));
+	}
 }
 ?>

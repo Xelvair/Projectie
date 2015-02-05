@@ -134,3 +134,9 @@ CREATE TABLE project_news (
 	active          boolean NOT NULL DEFAULT 1,
 	PRIMARY KEY(project_news_id)
 );
+
+/* PRESET TAGS */
+INSERT INTO tag (name) VALUES 
+("C++"),("C#"),("JavaScript"),("PHP"),("Java"),("Ruby"),("Perl"),("Objective-C"),("Python"),("SQL"),("MATLAB"),("ABAP"),("COBOL"),("Assembly"),
+("VisualBasic"),("R"),("D"),("Delphi"),("SocialMedia"),("Administrative"),("Backend"),("Frontend"),("Server"),("3D"),("2D"),("OpenGL"),("DirectX"),
+("SDL"),("Music"),("Sports"),("Recreative"),("Art"),("Economics"),("Politics"),("Learning"),("Technology"),("Robotics"),("ArtificialIntelligence"),("SystemsProgramming")
