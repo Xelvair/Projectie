@@ -275,7 +275,7 @@ class ProjectController extends Controller{
 		if(!isset($_POST["project_id"]) ||
 			 !isset($_POST["content"]))
 		{
-			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
 		$auth = Core::model("Auth");
@@ -446,7 +446,7 @@ class ProjectController extends Controller{
 			return array("project_position" => $result, "flags" => $flags);
 		}, $member_list);
 
-		$user_can_add_position = $user ? $project->user_has_right($project_obj["project_id"], $user["user_id"], "edit") : false;
+		$user_can_edit = $user ? $project->user_has_right($project_obj["project_id"], $user["user_id"], "edit") : false;
 		$user_is_participator = $user ? $project->exists_participation($project_obj["project_id"], $user["user_id"]) : false;
 		
 		$post = array();
@@ -471,6 +471,7 @@ class ProjectController extends Controller{
 			"body" => Core::view("ContentWrapper", array(	
 				"content" => Core::view("Project", array(
 					"news_feed" => $news_feed, 
+					"user_can_edit" => $user_can_edit,
 					"project" => array(
 						"project_id" => $project_obj["project_id"],
 						"participators" => $project->get_participators($data[0]), 
@@ -502,7 +503,7 @@ class ProjectController extends Controller{
 							"members_panel" => array(
 								"content" => Core::view("MemberPanel", array(
 									"member_list" => Core::view_batch("ParticipationListTest", $member_list),
-									"can_add_position" => $user_can_add_position,
+									"can_add_position" => $user_can_edit,
 									"project_id" => $project_obj["project_id"]
 								)),
 								"viewable" => true

@@ -9,6 +9,12 @@
 .body-padding{
     padding-top:50px;
 }
+
+@font-face{
+	font-family: "Source Sans Pro";
+	src: url("/public/fonts/SourceSansPro-Regular.woff") format("woff");
+}
+
 .navbar{
     margin-bottom: 0px;
 }
@@ -343,20 +349,20 @@ hr{
 }
 
 #PicUploadModal .modal-content{
-width: 100%;
-
+	width: 100%;
 }
 
 .tagbox{
+	border-radius: 4px;
 	overflow: hidden;
 	display: inline-block;
-  border:solid;
-  border-width: 1px;
-  border-color: #AAAAAA;  
-  margin-top: 10px;
-  position: relative;
-  width: 100%;
-  height: 100%;
+	  border:solid;
+	  border-width: 1px;
+	  border-color: #EEE;  
+	  margin-top: 10px;
+	  position: relative;
+	  width: 100%;
+	  height: 100%;
 	white-space: nowrap;  
 	font-size: 0;
 }
@@ -901,6 +907,8 @@ text-align: left;
 .panel-body{
 	border-style: none;
 	box-shadow: none;
+	padding: 0;
+	margin-bottom: 10px;
 }
 
 .panel-title{
@@ -1198,7 +1206,6 @@ a.neutral{
 }
 
 .nav-tabs{
-	margin: 0 -15px 0 -15px;
 	border: 0;
 }
 
@@ -1218,4 +1225,20 @@ a.neutral{
 	border-style: solid;
 	border-color: rgba(193,241,91,1);
 	border-width: 0 0 5px 0;
+}
+
+.project-heading{
+	height: 300px;
+}
+
+.stretch-vertical{
+	height: 100%;
+}
+
+.content-col{
+	padding: 0;
+}
+
+#desc_area{
+	resize: vertical;
 }
