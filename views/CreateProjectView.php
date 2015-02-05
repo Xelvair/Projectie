@@ -61,12 +61,7 @@ global $locale;
         </div>
 </div>
 <div class="row" style="margin-top:20px; margin-bottom:20px;">
-    <div class="col-xs-2">
-    <a href='#PicUploadModal' data-toggle='modal'>
-    	<img class="img-rounded img-responsive" src="../public/images/default-profile-pic.png"/>
-     </a>
-    </div>
-    <div class="col-xs-10" style="padding-left: 5%; padding-right: 5%;">
+    <div class="col-xs-12" style="padding-left: 5%; padding-right: 5%;">
     <form id="create_project_form" action="<?=abspath("/project/create")?>&redirect=/index" method="POST">
             <div class="form-group" id="title_group">
                 <input type="text" name="title" class="form-control .input-lg" 

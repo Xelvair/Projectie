@@ -275,7 +275,7 @@ class ProjectController extends Controller{
 		if(!isset($_POST["project_id"]) ||
 			 !isset($_POST["content"]))
 		{
-			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
 		}
 
 		$auth = Core::model("Auth");
@@ -329,6 +329,24 @@ class ProjectController extends Controller{
 			"project_news_id" => (int)$_POST["project_news_id"],
 			"remover_id" => (int)$user["user_id"]
 		]));
+	}
+	
+	public function post_html(){
+		$auth = Core::model("Auth");
+		$user = $auth->get_current_user();
+		$post = array();
+		if(isset($_POST)){
+		
+		array_push($post, array(
+			"creator" => array("id" => $user["user_id"], "name" => $user["username"]),
+			"time" => $_POST["time"],
+			"content" => $_POST["content"], 
+			"title" => $_POST["title"]));
+			
+		
+			return Core::view("Post", array("post" => $post));
+		}
+	
 	}
 
 	public function get_tag_meta($project_id){
