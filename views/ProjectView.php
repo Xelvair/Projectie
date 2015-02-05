@@ -104,7 +104,7 @@ echo Core::view("ProjectBanner", [
 	]
 ]);
 ?>
-<div class="row" style="margin-top: 15px; margin-bottom: 20px;">
+<div class="row" style="margin-bottom: 20px;">
 	<div class="col-md-12">
 		<div class="row">
 			<div class="tabpanel">

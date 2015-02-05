@@ -1161,3 +1161,26 @@ a.neutral{
 	text-decoration: none;
 	color: black;
 }
+
+.nav-tabs{
+	margin: 0 -15px 0 -15px;
+	border: 0;
+}
+
+.nav-tabs>li>a{
+	border: 0;
+	border-radius: 0;
+	border-bottom: 5px solid white;
+}
+
+.nav-tabs>li>a:hover{
+	color: black;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus{
+	border-style: solid;
+	border-color: rgba(193,241,91,1);
+	border-width: 0 0 5px 0;
+}
