@@ -8,16 +8,16 @@ class Picture extends ActiveRecord{
 		if($file["error"] != UPLOAD_ERR_OK){
 			switch($file["error"]){
 				case UPLOAD_ERR_INI_SIZE:
-					return array("ERROR" => "ERR_FILE_TOO_BIG");
+					throw new RuntimeException("ERR_FILE_TOO_BIG");
 					break;
 				case UPLOAD_ERR_FORM_SIZE:
-					return array("ERROR" => "ERR_FILE_TOO_BIG");
+					throw new RuntimeException("ERR_FILE_TOO_BIG");
 					break;
 				case UPLOAD_ERR_NO_FILE:
-					return array("ERROR" => "ERR_NO_FILE");
+					throw new RuntimeException("ERR_NO_FILE");
 					break;
 				default:
-					return array("ERROR" => "ERR_UNKNOWN");
+					throw new RuntimeException("ERR_UNKNOWN");
 					break;
 			}
 		}

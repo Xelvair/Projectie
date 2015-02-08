@@ -397,6 +397,32 @@ class ProjectController extends Controller{
 		return json_encode($project->find_related($_POST["tags"], 9));
 	}
 
+	public function add_title_picture(){
+		if(empty($_POST["project_id"]) || empty($_FILES["picture"])){
+			return print_r($_FILES, true);
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+
+		$project_id = (integer)$_POST["project_id"];
+
+		$auth = Core::model("Auth");
+		$project = Core::model("Project");
+
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		if(!$project->user_has_right($project_id, $current_user["user_id"], "edit")){
+			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
+		}
+
+		$picture = Picture::storeFromPost($_FILES["picture"], $current_user["user_id"]);
+
+		DBEZ::update("project", $project_id, ["title_picture_id" => $picture->picture_id]);
+	}
+
 	public function show($data){
 		global $locale;
 		global $CONFIG;

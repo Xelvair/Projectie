@@ -1,0 +1,38 @@
+<div id="upload_picture_modal" class="modal fade" tabindex="-1" role="dialog" data-project-position-id="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Upload a Title Picture</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/project/add_title_picture/" method="post" enctype="multipart/form-data">
+                    <input id="upload_picture_modal_project_id" name="project_id" type="hidden" value="">
+                    <input type="file" name="picture">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-default confirm">Upload</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+$(document).ready(function(){
+    $("#upload_picture_modal").on("show.bs.modal", function(event){
+        $(event.currentTarget).find("#upload_picture_modal_project_id").val($(event.relatedTarget).attr("data-project-id"));
+    });
+
+    $("#upload_picture_modal").on("click", ".confirm", function(e){
+        var form_elem = $(e.delegateTarget).find("form");
+        var project_id = $("#upload_picture_modal_project_id").val();
+
+        $(form_elem).attr("action", $(form_elem).attr("action") + "&redirect=/project/show/" + project_id);
+        $(form_elem).submit();
+    });
+});
+
+</script>
