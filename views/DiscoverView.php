@@ -50,6 +50,7 @@ global $locale;
 						$(project_preview_elem).find(".members").prepend(project.participator_count);
 						$(project_preview_elem).find(".preview_content>h3").prepend(project.title);
 						$(project_preview_elem).find(".preview_content").append(project.description);
+						$(project_preview_elem).find("img").attr("src", Projectie.server_addr + project.title_picture.file_path);
 
 						$(search_result_entry_elem).append(project_preview_elem);
 
