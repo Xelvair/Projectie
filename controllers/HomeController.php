@@ -19,10 +19,7 @@ class HomeController extends Controller{
 		} else {
 			$locale->load("en-us");
 		}
-	
-		$new_list = array("entries" => $project->get_new_projects(3), "list_title" => $locale["new_projects"]);
-		$html_new = Core::view("TitleDescriptionList", $new_list);
-		
+
 		$news = array();
 		
 		array_push($news, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
@@ -33,7 +30,6 @@ class HomeController extends Controller{
 		foreach($news as $news){
 			array_push($html_news, Core::view("ProjectReview", $news));
 		}
-		
 		
 		$new = $project->get_new_projects(3);
 
@@ -54,10 +50,7 @@ class HomeController extends Controller{
 			array_push($html_trending, Core::view("ProjectReview", $trending));
 		}
 	
-    $mainpagelists = array("top_project" => array("projects" => array()), "new" => $html_new, "trending" => $html_trending, "news" => $html_news);
-		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 1, "fav_count" => 25423, "participator_count" => 13));
-		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 2, "fav_count" => 13423, "participator_count" => 7));
-		array_push($mainpagelists["top_project"]["projects"], array("project_id" => 3, "fav_count" => 6847, "participator_count" => 5));
+    $mainpagelists = array("top_project" => array("projects" => $project->get_new_projects(3), "editable" => false), "new" => $html_new, "trending" => $html_trending, "news" => $html_news);
 
 		$content = Core::view("MainPageContent", $mainpagelists);
 

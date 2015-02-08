@@ -26,7 +26,7 @@ foreach($_DATA["entries"] as $entry){ ?>
 
 	<a class="title-desc-list" href="<?=$project_href?>">
     <div class="media">
-        <img class="media-object pull-left img-responsive" src="<?=abspath("/public/images/default-profile-pic.png")?>" alt="...">
+        <img class="media-object pull-left img-responsive" src="<?=$entry['title_picture']?>" alt="...">
       <div class="media-body">
         <h4 class="media-heading"><?=$entry['title'];?></h4>
         <?=$entry['description'];?>

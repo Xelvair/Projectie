@@ -14,7 +14,7 @@ global $locale;
 	<div class="project_preview">
 		<div class="preview_head">
 			<div class="head_wrap">
-				<img src="/public/images/header.jpg">
+				<img src="<?=$_DATA['title_picture']['file_path']?>">
 				<div class="preview_properties pull-right">
 					<div class="favs">
 						<?=number_format($_DATA["fav_count"], 0, ",", ".")?>

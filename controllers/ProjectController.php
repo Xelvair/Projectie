@@ -507,6 +507,8 @@ class ProjectController extends Controller{
 					"user_can_edit" => $user_can_edit,
 					"project" => array(
 						"project_id" => $project_obj["project_id"],
+						"participator_count" => $project_obj["participator_count"],
+						"title_picture" => $project_obj["title_picture"],
 						"participators" => $project->get_participators($data[0]), 
 						"description" => $project_obj["description"], 
 						"subtitle" =>  $project_obj["subtitle"], 

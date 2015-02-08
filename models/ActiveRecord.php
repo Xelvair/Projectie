@@ -73,8 +73,6 @@ abstract class ActiveRecord{
 
 			$index_field = $store_operation_info["index_field"];
 
-			write_log(Logger::DEBUG, $activerecord->$index_field);
-
 			return !!DBEZ::update($activerecord->getTableName(), $activerecord->$index_field, $update_array);
 			
 		} else {
@@ -128,7 +126,7 @@ abstract class ActiveRecord{
 		$row = DBEZ::find(self::getTableName(), $id, "*");
 
 		$subclass_name = get_called_class();
-		$obj = new $subclass_name();
+		$obj = new $subclass_name($id);
 
 		foreach($row as $field_name => $field_val){
 			$obj->$field_name = $field_val;

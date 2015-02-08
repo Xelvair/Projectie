@@ -28,6 +28,7 @@ class ProjectModel implements Model{
 			"title" => $info["title"],
 			"subtitle" => $info["subtitle"],
 			"description" => $info["description"],
+			"title_picture_id" => 1,
 			"public_chat_id" => $info["public_chat_id"],
 			"private_chat_id" => $info["private_chat_id"],
 			"active" => 1
@@ -77,7 +78,7 @@ class ProjectModel implements Model{
 	}
 
 	public function get($id){
-		$project = DBEZ::find("project", $id, ["project_id", "creator_id", "create_time", "title", "subtitle", "description", "public_chat_id", "private_chat_id"]);
+		$project = DBEZ::find("project", $id, ["project_id", "creator_id", "create_time", "title", "subtitle", "description", "title_picture_id", "public_chat_id", "private_chat_id"]);
 
 		if(!$project){
 			write_log(Logger::WARNING, "Failed to retrieve project #".$id." from databaase!");
@@ -87,6 +88,7 @@ class ProjectModel implements Model{
 		$project["participators"] = self::get_participators($id);
 		$project["participator_count"] = sizeof($project["participators"]);
 		$project["fav_count"] = self::get_fav_count($id);
+		$project["title_picture"] = DBEZ::find("picture", $project["title_picture_id"], ["*"]);
 
 		return $project;
 	}

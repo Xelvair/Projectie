@@ -108,6 +108,28 @@ class TestController extends Controller{
 			"body_padding" => false
 		]);
 	}
+
+	public function picture_upload(){
+		$auth = Core::model("Auth");
+
+		$current_user = $auth->get_current_user();
+
+		if(isset($_FILES["picture"])){
+
+			if(!$current_user){
+				return array("ERROR" => "ERR_NOT_LOGGED_IN");
+			}
+
+			return var_export(Picture::storeFromPost($_FILES["picture"], $current_user["user_id"]), true);
+
+		} else {
+			return Core::view("HtmlBase", [
+				"title" => "Picture Upload",
+				"body" => Core::view("PictureUploadTest"),
+				"body_padding" => false
+			]);
+ 		}
+	}
 }
 
 ?>

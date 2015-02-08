@@ -24,34 +24,7 @@ $show_members = isset($_DATA["project"]["panels"]["members_panel"]["viewable"]) 
 <script>
 var desc_click = 0;
 
-$(document).ready(function(){
-	
-	$('#btn_add_fav').on('click', function(){
-		if($(this).hasClass('fav_btn_selected')){
-			$(this).removeClass('fav_btn_selected');
-		}else{
-			$(this).addClass('fav_btn_selected');
-		}
-	});
-	
-	$('#btn_upvote').on('click', function(){
-		$('#btn_downvote').removeClass('downvote_selected');
-		if($(this).hasClass('upvote_selected')){
-			$(this).removeClass('upvote_selected');
-		}else{
-			$(this).addClass('upvote_selected');
-		}	
-	});
-	
-	$('#btn_downvote').on('click', function(){
-		$('#btn_upvote').removeClass('upvote_selected');
-		if($(this).hasClass('downvote_selected')){
-			$(this).removeClass('downvote_selected');
-		}else{
-			$(this).addClass('downvote_selected');
-		}	
-	});
-	
+$(document).ready(function(){	
 	$('#desc_area').keypress(function(){
 		$(this).parent().removeClass('has-error');
 	});
@@ -70,8 +43,6 @@ $(document).ready(function(){
 	$('#post_btn').on('click', function(){
 		post();
 	});
-	
-	
 });
 
 function post(){
@@ -133,11 +104,11 @@ function exit_desc(desc){
 <?php
 echo Core::view("ProjectBanner", [
 	"projects" => [
-		[
-			"project_id" => $_DATA["project"]["project_id"],
-			"fav_count" => $_DATA["project"]["fav_count"],
-			"participator_count" => sizeof($_DATA["project"]["participators"])
-		]
+		array_merge(
+			$_DATA["project"], [
+				"editable" => $_DATA["user_can_edit"]
+			]
+		)
 	]
 ]);
 ?>

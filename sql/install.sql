@@ -17,20 +17,21 @@ VALUES (1, 'admin@projectie.com', 'admin', 'de-de', 'a77239ba', '73bfd1bfe49f8b4
 
 DROP TABLE IF EXISTS project;
 CREATE TABLE project (
-	project_id      int NOT NULL AUTO_INCREMENT,
-	creator_id      int NOT NULL,
-	create_time     int NOT NULL,
-	title           varchar(256) NOT NULL,
-	subtitle        varchar(124) NOT NULL,
-	description     text NOT NULL,
-	public_chat_id  int NOT NULL,
-	private_chat_id int NOT NULL,
-	active          boolean NOT NULL DEFAULT 1,
+	project_id      	int NOT NULL AUTO_INCREMENT,
+	creator_id      	int NOT NULL,
+	create_time     	int NOT NULL,
+	title           	varchar(256) NOT NULL,
+	subtitle        	varchar(124) NOT NULL,
+	description     	text NOT NULL,
+	title_picture_id	int NOT NULL,
+	public_chat_id  	int NOT NULL,
+	private_chat_id 	int NOT NULL,
+	active          	boolean NOT NULL DEFAULT 1,
 	PRIMARY KEY(project_id)
 );
 
-INSERT INTO project (creator_id, create_time, title, subtitle, description, active)
-VALUES(1, UNIX_TIMESTAMP(), "Sample Project", "Sample Subtitle", "Sample Description", true);
+INSERT INTO project (creator_id, create_time, title, subtitle, description, title_picture_id, active)
+VALUES(1, UNIX_TIMESTAMP(), "Sample Project", "Sample Subtitle", "Sample Description", 1, true);
 
 DROP TABLE IF EXISTS project_position;
 CREATE TABLE project_position(
@@ -134,6 +135,17 @@ CREATE TABLE project_news (
 	active          boolean NOT NULL DEFAULT 1,
 	PRIMARY KEY(project_news_id)
 );
+
+DROP TABLE IF EXISTS picture;
+CREATE TABLE picture (
+	picture_id 			int NOT NULL AUTO_INCREMENT,
+	file_path 			varchar(128) NOT NULL,
+	upload_date 		int NOT NULL,
+	uploader_id 		int NOT NULL,		
+	PRIMARY KEY(picture_id)				
+);
+
+INSERT INTO picture (picture_id, file_path, upload_date, uploader_id) VALUES (1, "/public/images/default-banner.png", 0, 0);
 
 /* PRESET TAGS */
 INSERT INTO tag (name) VALUES 
