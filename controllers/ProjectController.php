@@ -289,6 +289,7 @@ class ProjectController extends Controller{
 		return json_encode($project->post_news([
 			"author_id" => (int)$user["user_id"],
 			"project_id" => (int)$_POST["project_id"],
+			"title" => $_POST["title"],
 			"content" => $_POST["content"]
 		]));
 	}
@@ -310,6 +311,7 @@ class ProjectController extends Controller{
 		return json_encode($project->edit_news([
 			"project_news_id" => (int)$_POST["project_news_id"],
 			"editor_id" => (int)$user["user_id"],
+			"title" => $_POST["title"],
 			"content" => $_POST["content"]
 		]));
 	}

@@ -1206,7 +1206,9 @@ box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 	font-size: 25px;
 	color: #FFF;
 	font-weight: bold;
+	z-index: 2;
 }
+
 .preview_properties > .members, .favs{
 	float: right;
 	font-size: 15px;

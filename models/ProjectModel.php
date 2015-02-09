@@ -494,7 +494,7 @@ class ProjectModel implements Model{
 		if(isset($project["ERROR"]))
 			return array("ERROR" => "ERR_PROJECT_NONEXISTENT");
 
-		return !!DBEZ::insert("project_fav", ["project_id" => $project_id, "user_id" => $user_id]);
+		return !!DBEZ::insert("project_fav", ["project_id" => $project_id, "user_id" => $user_id, "fav_time" => time()]);
 	}
 
 	public function unfavorite($project_id, $user_id){
@@ -532,6 +532,7 @@ class ProjectModel implements Model{
 	public function post_news($info){
 		if(!isset($info["project_id"]) ||
 			 !isset($info["author_id"]) ||
+			 !isset($info["title"]) ||
 			 !isset($info["content"]))
 		{
 			print_r(json_encode($info));
@@ -548,6 +549,7 @@ class ProjectModel implements Model{
 			"project_id" => $project_id, 
 			"author_id" => $author_id, 
 			"post_time" => time(), 
+			"title" => htmlentities($title),
 			"content" => htmlentities($content)
 		], DBEZ_INSRT_RETURN_ROW);
 	}
@@ -560,7 +562,8 @@ class ProjectModel implements Model{
 
 		if(!isset($info["project_news_id"]) ||
 			 !isset($info["editor_id"]) ||
-			 !isset($info["content"]))
+			 !isset($info["content"]) ||
+			 !isset($info["title"])) 
 		{
 			throw new InvalidArgumentException();
 		}
@@ -579,9 +582,10 @@ class ProjectModel implements Model{
 
 		$edit_time = time();
 		$escaped_content = htmlentities($content);
+		$escaped_title = htmlentities($title);
 
-		$query_edit_news = $mysqli->prepare("UPDATE project_news SET content = ?, last_editor = ?, last_edit_time = ? WHERE project_news_id = ?");
-		$query_edit_news->bind_param("siii", $escaped_content, $editor_id, $edit_time, $info["project_news_id"]);
+		$query_edit_news = $mysqli->prepare("UPDATE project_news SET content = ?, title = ?, last_editor = ?, last_edit_time = ? WHERE project_news_id = ?");
+		$query_edit_news->bind_param("ssiii", $escaped_content, $escaped_title, $editor_id, $edit_time, $info["project_news_id"]);
 		if(!$query_edit_news->execute()){
 			return array("ERROR" => "ERR_DB_UPDATE_FAILED");
 		}

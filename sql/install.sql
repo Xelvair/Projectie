@@ -120,6 +120,7 @@ CREATE TABLE project_fav (
 	project_fav_id int NOT NULL AUTO_INCREMENT,
 	project_id     int NOT NULL,
 	user_id        int NOT NULL,
+	fav_time       int NOT NULL,
 	PRIMARY KEY(project_fav_id)
 );
 
@@ -129,6 +130,7 @@ CREATE TABLE project_news (
 	project_id      int NOT NULL,
 	author_id       int NOT NULL,
 	post_time       int NOT NULL,
+	title 					varchar(128) NOT NULL,
 	content         text NOT NULL,
 	last_editor     int DEFAULT NULL,
 	last_edit_time  int DEFAULT NULL,
