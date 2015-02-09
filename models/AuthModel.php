@@ -271,7 +271,7 @@ class AuthModel implements Model{
 			}
 
 			if(validate($info, ["old_password" => "string", "new_password" => "string"])){
-				$user_info = DBEZ::find("User", $info["user_id"], ["password_hash", "password_salt"]);
+				$user_info = DBEZ::find("User", (int)$info["user_id"], ["password_hash", "password_salt"]);
 
 				if(self::password_check($info["old_password"], $user_info["password_hash"], $user_info["password_salt"])){
 					self::validate_password($info["new_password"]);
@@ -288,7 +288,7 @@ class AuthModel implements Model{
 				}
 			}
 		} catch (Exception $e){
-			return array("ERROR" => $e->getMessage());
+			return array("ERROR" => $e->getMessage().print_r($e->getTrace(), true));
 		}
 
 		foreach($on_success_queries as $stmt){

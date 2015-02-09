@@ -14,6 +14,7 @@
 #tag_box
 
 global $locale;
+$project = Core::model("Project");
 
 $show_requests = isset($_DATA["project"]["panels"]["requests_panel"]["viewable"]) && $_DATA["project"]["panels"]["requests_panel"]["viewable"];
 $show_private_conversation = isset($_DATA["project"]["panels"]["private_conversation_panel"]["viewable"]) && $_DATA["project"]["panels"]["private_conversation_panel"]["viewable"];
@@ -67,8 +68,61 @@ $(document).ready(function(){
 
 	});
 	
+	$('#post_btn').on('click', function(){
+		post();
+	});
+	
 	
 });
+<?php if($_DATA["user"]["user_id"] != null){
+									if($project->user_has_right($_DATA["project"]["project_id"], $_DATA["user"]["user_id"], "communicate")){ ?>
+function post(){
+	var title = $('#post_title').val();
+	var content = $('#post_content').val();
+	
+	if(content != ""){
+		$('#post_title').val('');
+		$('#post_content').val('');
+		$.post( "<?=abspath('/project/post_news')?>",{
+			title: title,
+			content: content,
+			project_id : <?=$_DATA["project"]["project_id"]?>
+			}).done(function(data){
+				//console.log(data);
+				var result = JSON.parse(data);
+				var title_result = result.title;
+				var content_result	= result.content;
+				var post_id_result = result.project_news_id;
+				var time_result = result.post_time;
+				
+				//alert(title_result + "|" +content_result+ "|" +post_id_result+ "|" +time_result );
+				if("ERROR" in result){
+					switch(result.ERROR){
+						case "ERR_NOT_LOGGED_IN":
+						alert("You are not logged in!");
+						break;
+						case "ERR_NO_RIGHTS":
+						alert("You have no permission to post to this project!");
+						break;
+						default: 
+						alert("Error");
+						break;
+					}
+				}else{
+					$.post("<?=abspath('/project/post_html')?>",{
+					title : title_result,
+					content : content_result,
+					time : time_result,
+					post_id : post_id_result }).done(function(data){
+						//alert(data);
+						$('.post').first().before(data);
+					});
+				}
+			});
+	}
+}
+<?php }}?>
+
 
 function update_desc(){
 	var desc = $('#desc_area').val();
@@ -104,8 +158,8 @@ echo Core::view("ProjectBanner", [
 	]
 ]);
 ?>
-<div class="row" style="margin-top: 15px; margin-bottom: 20px;">
-	<div class="col-md-12">
+<div class="row" style="margin-bottom: 20px;">
+	<div class="col-md-12 content-col">
 		<div class="row">
 			<div class="tabpanel">
 					<ul class="nav nav-tabs">
@@ -130,87 +184,39 @@ echo Core::view("ProjectBanner", [
 					</ul>
 					<div class="tab-content project-desc-tab">
 						<div role="tabpanel" class="tab-pane fade in active" id="home">
-							<div class="row">
-								<div class="col-md-8">
-									<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-										<div class="panel panel-default">
-											<div class="panel-heading" role="tab" id="headingOne">
-												
-													<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-													<h4 class="panel-title">
-													<?=$locale['project_desc']?>
-													</h4>
-													</a>
-												
-											</div>
-											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-												<div class="panel-body" id="desc_panel">
-													<div id="desc_wrap"><?=$_DATA['project']['description']?></div>
-													<div id="desc_update_wrap" class="form-group" style="display: none;">
-														<textarea name="desc" rows="6" class="form-control" id="desc_area" style="margin-bottom: 15px;"></textarea>
-														<button onclick="update_desc()" class="btn btn-default pull-left"><?=$locale['update']?></button>
-														<button onclick="exit_desc();" class="btn pull-right"><?=$locale['close']?></button>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="panel-heading tag-heading" role="tab" id="headingTwo">
-											<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-												<h4 class="panel-title">
-													<?=$locale['tags']?>
-												</h4>
-											</a>
-										</div>
-										<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-											<div class="panel-body" id="tag_panel">
-												<?=$_DATA['tag_box']?>
-											</div>
+							<div class="row project-heading">
+								<div class="col-md-7">
+									<h1 class="project-title"><?=$_DATA["project"]["title"]?></h1>
+									<div class="panel-body" id="desc_panel">
+										<div id="desc_wrap"><?=$_DATA['project']['description']?></div>
+										<div id="desc_update_wrap" class="form-group" style="display: none;">
+											<textarea name="desc" rows="6" class="form-control" id="desc_area" style="margin-bottom: 15px;"></textarea>
+											<button onclick="update_desc()" class="btn btn-default pull-left"><?=$locale['update']?></button>
+											<button onclick="exit_desc();" class="btn pull-right"><?=$locale['close']?></button>
 										</div>
 									</div>
 								</div><!--COl END-->
-								<div class="col-md-4">
-									<div class="project-property">
-										<div class="property-title property-item"><?=$locale['favorites']?>:</div><div class="property-item"><?=$_DATA['project']['fav_count']?></div>
-									</div>
-									<div class="project-property">
-										<div class="property-title property-item"><?=$locale['created_on']?>:</div><div class="property-item"><?=$_DATA['project']['time']?></div>
-									</div>
-									<div class="project-property">
-										<div class="property-title property-item">Voting:</div>
-										<div class="property-item">
-											<div class="progress">
-												<div class="progress-bar progress-bar-danger" role="progressbar" style="width: 30%;" id="down_vote_bar">
-												30%
-												</div>
-											  
-												<div class="progress-bar progress-bar-success" role="progressbar" style="width: 70%;" id="up_vote_bar">
-												70%
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row project-property">
-										<div class="col-xs-6">
-											<div class="btn-group" role="group" aria-label="...">
-											  <button type="button" class="btn btn-vote" id="btn_upvote"><span class="glyphicon glyphicon-chevron-up"></span></button>
-											  <button type="button" class="btn btn-vote" id="btn_downvote"><span class="glyphicon glyphicon-chevron-down"></span></button>
-											</div>
-										</div>
-										<div class="col-xs-6">
-											 <button type="button" class="btn btn-vote" id="btn_add_fav"><span class="glyphicon glyphicon-star"></span></button>
-										</div>
-									</div>
+								<div class="col-md-5 stretch-vertical">
+									<?=Core::view("TagBoxTest", ["project_id" => $_DATA["project"]["project_id"], "editable" => $_DATA["user_can_edit"]]);?>
 								</div><!-- COL END-->
 							</div><!--Row End-->
+							<?php if($_DATA["user"]["user_id"] != null){
+									if($project->user_has_right($_DATA["project"]["project_id"], $_DATA["user"]["user_id"], "communicate")){ ?>
 							<div class="row" style="margin-top: 20px;">
 								<div class="col-md-12">
 									<form>
 										<div class="input-group post_group">
-											<input type="text" class="form-control custom-control no_right_border" placeholder="<?=$locale['post_title']?>..." id="post_title"/>
-											<textarea class="form-control custom-control no_right_border" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="post_input"></textarea>     
-											<span class="input-group-addon btn btn-default" style="border-style: none;" id="post_btn">Post</span>
+											<input type="text" class="" placeholder="<?=$locale['post_title']?>..." id="post_title"/>
+											<textarea class="" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="post_content"></textarea>
+											<span class="btn btn-default pull-right" style="border-style: none;" id="post_btn">Post</span>
 										</div>
 									</form>
+								</div>
+							</div>
+							<?php }} ?>
+							<div class="row" style="margin-top: 20px;">
+								<div class="col-md-12">
+									<h2><?=$locale['news_feed']?></h2>
 									<?=$_DATA['news_feed']?>
 								</div>
 							</div>

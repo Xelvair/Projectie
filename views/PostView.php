@@ -26,16 +26,16 @@
 				<h3>
 					<small>
 						<a href="<?=abspath('/profile/show/').$post['creator']['id']?>">
-							<span><?=$post["creator"]["name"]?></span>
+							<span class="user" user-id="<?=$post["creator"]["id"]?>"><?=$post["creator"]["name"]?></span>
 						</a>
-						<span><?=$post["time"]?></span>
+						<span><?=date("d.m.Y\ H:i",$post["time"])?></span>
 					</small>
 				</h3>
 			<?php }else{?>
 				<a href="<?=abspath("/profile/show/").$post["creator"]["id"]?>">
-					<h3><?=$post["creator"]["name"]?></h3>
+					<h3><span class="user" user-id="<?=$post["creator"]["id"]?>"><?=$post["creator"]["name"]?></span></h3>
 				</a>
-				<h3><small><span><?=$post["time"]?></span></small></h3>
+				<h3><small><span><?=date("d.m.Y\ H:i",$post["time"])?></span></small></h3>
 			<?php } ?>
 		</div>
 		<div class="post-body">
