@@ -421,7 +421,7 @@ hr{
 	cursor: default !important;
 }
 
-.tagbox-tags .tag{
+.tagbox-tags .tag, .user-review .tag{
 	background-color:#C1F15B;
 }
 
@@ -966,6 +966,7 @@ text-align: left;
 width: 100%;
 padding: 10px;
 margin: 5px;
+<<<<<<< HEAD
 border-left: 1px solid #CCC;
 }
 
@@ -973,6 +974,12 @@ border-left: 1px solid #CCC;
 .post_group textarea, 
 .post_group input:focus, 
 .post_group textarea:focus{
+=======
+border-left: 5px solid #C1F15B;
+}
+
+.post_group input, .post_group textarea, .post_group textarea:focus{
+>>>>>>> maxistuff
 	border: none;
 	outline-width: 0;
 	width: 100%;
@@ -1295,11 +1302,15 @@ a.neutral{
 }
 
 .dark{
+<<<<<<< HEAD
 	background-color: #333;
 }
 
 .light{
 	background-color: white;
+=======
+	background-color: rgba(0, 0, 0, 0.75);
+>>>>>>> maxistuff
 }
 
 .footer{
@@ -1321,7 +1332,11 @@ a.neutral{
 	max-height: 390px;
 	padding: 5px;
 	margin: 20px 5px 20px 5px;
+<<<<<<< HEAD
 	border-left: 1px solid #CCC;
+=======
+	border-left: 5px solid #C1F15B;
+>>>>>>> maxistuff
 	overflow: hidden;
 }
 

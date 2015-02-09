@@ -234,7 +234,7 @@ class ProjectController extends Controller{
 	//$_POST["project_id"] : id of the project to fav
 	public function favorite(){
 		if(!filter_var($_POST["project_id"], FILTER_VALIDATE_INT)){
-				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
+			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
 		}
 
 		$auth = Core::model("Auth");
@@ -253,7 +253,7 @@ class ProjectController extends Controller{
 	//$_POST["project_id"] : id of the project to unfav
 	public function unfavorite(){
 		if(!filter_var($_POST["project_id"], FILTER_VALIDATE_INT)){
-				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
+			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
 		}
 
 		$auth = Core::model("Auth");
@@ -269,86 +269,88 @@ class ProjectController extends Controller{
 		return json_encode($project->unfavorite($project_id, $user["user_id"]));
 	}
 
-	//$_POST["project_id"] : project to post the news to
-	//$_POST["content"] : content of the news post
-	public function post_news(){
-		if(!isset($_POST["project_id"]) ||
-			 !isset($_POST["content"]))
-		{
-			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
-		}
+ 	//$_POST["project_id"] : project to post the news to
+ 	//$_POST["content"] : content of the news post
+  public function post_news(){
+    if(!isset($_POST["project_id"]) ||
+       !isset($_POST["content"]))
+    {
+      return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+    }
 
-		$auth = Core::model("Auth");
-		$project = Core::model("Project");
+    $auth = Core::model("Auth");
+    $project = Core::model("Project");
 
-		$user = $auth->get_current_user();
+    $user = $auth->get_current_user();
 
-		if(!$user)
-			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+    if(!$user)
+      return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
 
-		return json_encode($project->post_news([
-			"author_id" => (int)$user["user_id"],
-			"project_id" => (int)$_POST["project_id"],
-			"title" => $_POST["title"],
-			"content" => $_POST["content"]
-		]));
-	}
+    return json_encode($project->post_news([
+      "author_id" => (int)$user["user_id"],
+      "project_id" => (int)$_POST["project_id"],
+      "title" => $_POST["title"],
+      "content" => $_POST["content"]
+    ]));
+  }
+
+  //$_POST["project_news_id"] : id of the news to edit
+  //$_POST["content"] : content of the new post
+  public function edit_news(){
+	  if(!isset($_POST["project_news_id"]) ||
+       !isset($_POST["content"]))
+	  {
+      return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
+	  }
+
+	  $auth = Core::model("Auth");
+	  $project = Core::model("Project");
+
+	  $user = $auth->get_current_user();
+
+	  return json_encode($project->edit_news([
+	    "project_news_id" => (int)$_POST["project_news_id"],
+	    "editor_id" => (int)$user["user_id"],
+	    "title" => $_POST["title"],
+	    "content" => $_POST["content"]
+	  ]));
+  }
+
+  //$_POST["project_news_id"] : id of the news to remove
+  public function remove_news(){
+    if(!isset($_POST["project_news_id"])){
+      return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
+    }
+
+    $auth = Core::model("Auth");
+    $project = Core::model("Project");
+
+    $user = $auth->get_current_user();
+
+    return json_encode($project->remove_news([
+	    "project_news_id" => (int)$_POST["project_news_id"],
+	    "remover_id" => (int)$user["user_id"]
+    ]));
+  }
 
 	//$_POST["project_news_id"] : id of the news to edit
 	//$_POST["content"] : content of the new post
-	public function edit_news(){
-		if(!isset($_POST["project_news_id"]) ||
-			 !isset($_POST["content"]))
-		{
-			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
-		}
-
-		$auth = Core::model("Auth");
-		$project = Core::model("Project");
-
-		$user = $auth->get_current_user();
-
-		return json_encode($project->edit_news([
-			"project_news_id" => (int)$_POST["project_news_id"],
-			"editor_id" => (int)$user["user_id"],
-			"title" => $_POST["title"],
-			"content" => $_POST["content"]
-		]));
-	}
-
-	//$_POST["project_news_id"] : id of the news to remove
-	public function remove_news(){
-		if(!isset($_POST["project_news_id"])){
-			return array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS");
-		}
-
-		$auth = Core::model("Auth");
-		$project = Core::model("Project");
-
-		$user = $auth->get_current_user();
-
-		return json_encode($project->remove_news([
-			"project_news_id" => (int)$_POST["project_news_id"],
-			"remover_id" => (int)$user["user_id"]
-		]));
-	}
-	
 	public function post_html(){
 		$auth = Core::model("Auth");
 		$user = $auth->get_current_user();
+
 		$post = array();
 		if(isset($_POST)){
 		
-		array_push($post, array(
-			"creator" => array("id" => $user["user_id"], "name" => $user["username"]),
-			"time" => $_POST["time"],
-			"content" => $_POST["content"], 
-			"title" => $_POST["title"]));
+			array_push($post, array(
+				"creator" => array("id" => $user["user_id"], "name" => $user["username"]),
+				"time" => $_POST["time"],
+				"content" => $_POST["content"], 
+				"title" => $_POST["title"])
+			);
 			
-		
 			return Core::view("Post", array("post" => $post));
 		}
-	
 	}
 
 	public function get_tag_meta($project_id){
@@ -508,6 +510,7 @@ class ProjectController extends Controller{
 		}, $member_list);
 
 		$user_can_edit = $user ? $project->user_has_right($project_obj["project_id"], $user["user_id"], "edit") : false;
+		$user_can_communicate = $user ? $project->user_has_right($project_obj["project_id"], $user["user_id"], "communicate") : false;
 		$user_is_participator = $user ? $project->exists_participation($project_obj["project_id"], $user["user_id"]) : false;
 		
 		$post = array();
@@ -531,8 +534,10 @@ class ProjectController extends Controller{
 			"title" => "Projectie - Driving Development", 
 			"body" => Core::view("ContentWrapper", array(	
 				"content" => Core::view("Project", array(
+					"user" => $user,
 					"news_feed" => $news_feed, 
 					"user_can_edit" => $user_can_edit,
+					"user_can_communicate" => $user_can_communicate,
 					"project" => array(
 						"project_id" => $project_obj["project_id"],
 						"participator_count" => $project_obj["participator_count"],

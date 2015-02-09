@@ -523,75 +523,75 @@ class ProjectModel implements Model{
 	}
 
 	public function get_news($project_news_id){
-		return DBEZ::find("project_news", $project_news_id, "*");
+	  return DBEZ::find("project_news", $project_news_id, "*");
 	}
+ 
+  //$info["project_id"] : id of the project the news belong to
+  //$info["author_id"] : id of the author
+  //$info["content"] : content of the news
+  public function post_news($info){
+    if(!isset($info["project_id"]) ||
+       !isset($info["author_id"]) ||
+       !isset($info["title"]) ||
+       !isset($info["content"]))
+    {
+      print_r(json_encode($info));
+      throw new InvalidArgumentException();
+    }
 
-	//$info["project_id"] : id of the project the news belong to
-	//$info["author_id"] : id of the author
-	//$info["content"] : content of the news
-	public function post_news($info){
-		if(!isset($info["project_id"]) ||
-			 !isset($info["author_id"]) ||
-			 !isset($info["title"]) ||
-			 !isset($info["content"]))
-		{
-			print_r(json_encode($info));
-			throw new InvalidArgumentException();
-		}
+    extract($info);
 
-		extract($info);
+    if(!self::user_has_right($project_id, $author_id, "communicate")){
+      return array("ERROR" => "ERR_NO_RIGHTS");
+    }
 
-		if(!self::user_has_right($project_id, $author_id, "communicate")){
-			return array("ERROR" => "ERR_NO_RIGHTS");
-		}
+    return DBEZ::insert("project_news", [
+      "project_id" => $project_id,
+      "author_id" => $author_id,
+      "post_time" => time(),
+      "title" => htmlentities($title),
+      "content" => htmlentities($content)
+    ], DBEZ_INSRT_RETURN_ROW);
+  }
+ 
+        //$info["project_news_id"] : id of the news entry
+        //$info["editor_id"] : id of the editor
+        //$info["content"] : content of the news
+  public function edit_news($info){
+    global $mysqli;
 
-		return DBEZ::insert("project_news", [
-			"project_id" => $project_id, 
-			"author_id" => $author_id, 
-			"post_time" => time(), 
-			"title" => htmlentities($title),
-			"content" => htmlentities($content)
-		], DBEZ_INSRT_RETURN_ROW);
-	}
+    if(!isset($info["project_news_id"]) ||
+       !isset($info["editor_id"]) ||
+       !isset($info["content"]) ||
+       !isset($info["title"]))
+    {
+      throw new InvalidArgumentException();
+    }
 
-	//$info["project_news_id"] : id of the news entry
-	//$info["editor_id"] : id of the editor
-	//$info["content"] : content of the news
-	public function edit_news($info){
-		global $mysqli;
+    $news = DBEZ::find("project_news", (int)$info["project_news_id"], "*");
 
-		if(!isset($info["project_news_id"]) ||
-			 !isset($info["editor_id"]) ||
-			 !isset($info["content"]) ||
-			 !isset($info["title"])) 
-		{
-			throw new InvalidArgumentException();
-		}
+    if(!$news){
+      return array("ERROR" => "ERR_NEWS_NONEXISTENT");
+    }
 
-		$news = DBEZ::find("project_news", (int)$info["project_news_id"], "*");
+    extract($info);
 
-		if(!$news){
-			return array("ERROR" => "ERR_NEWS_NONEXISTENT");
-		}
+    if(!self::user_has_right($news["project_id"], $editor_id, "communicate")){
+    	return array("ERROR" => "ERR_NO_RIGHTS");
+    }
 
-		extract($info);
+    $edit_time = time();
+    $escaped_content = htmlentities($content);
+    $escaped_title = htmlentities($title);
 
-		if(!self::user_has_right($news["project_id"], $editor_id, "communicate")){
-			return array("ERROR" => "ERR_NO_RIGHTS");
-		}
+    $query_edit_news = $mysqli->prepare("UPDATE project_news SET content = ?, title = ?, last_editor = ?, last_edit_time = ? WHERE project_news_id = ?");
+    $query_edit_news->bind_param("ssiii", $escaped_content, $escaped_title, $editor_id, $edit_time, $info["project_news_id"]);
+    if(!$query_edit_news->execute()){
+      return array("ERROR" => "ERR_DB_UPDATE_FAILED");
+    }
 
-		$edit_time = time();
-		$escaped_content = htmlentities($content);
-		$escaped_title = htmlentities($title);
-
-		$query_edit_news = $mysqli->prepare("UPDATE project_news SET content = ?, title = ?, last_editor = ?, last_edit_time = ? WHERE project_news_id = ?");
-		$query_edit_news->bind_param("ssiii", $escaped_content, $escaped_title, $editor_id, $edit_time, $info["project_news_id"]);
-		if(!$query_edit_news->execute()){
-			return array("ERROR" => "ERR_DB_UPDATE_FAILED");
-		}
-
-		return self::get_news($info["project_news_id"]);
-	}
+    return self::get_news($info["project_news_id"]);
+  }
 
 	//$info["project_news_id"] : id of the news entry
 	//$info["remover_id"] : id of the remover

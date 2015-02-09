@@ -14,6 +14,7 @@
 #tag_box
 
 global $locale;
+$project = Core::model("Project");
 
 $show_requests = isset($_DATA["project"]["panels"]["requests_panel"]["viewable"]) && $_DATA["project"]["panels"]["requests_panel"]["viewable"];
 $show_private_conversation = isset($_DATA["project"]["panels"]["private_conversation_panel"]["viewable"]) && $_DATA["project"]["panels"]["private_conversation_panel"]["viewable"];
@@ -45,6 +46,7 @@ $(document).ready(function(){
 	});
 });
 
+
 function post(){
 	var title = $('#post_title').val();
 	var content = $('#post_content').val();
@@ -57,23 +59,36 @@ function post(){
 			content: content,
 			project_id : <?=$_DATA["project"]["project_id"]?>
 			}).done(function(data){
+				//console.log(data);
 				var result = JSON.parse(data);
-				var title_result = "is ka titel";
+				var title_result = result.title;
 				var content_result	= result.content;
 				var post_id_result = result.project_news_id;
 				var time_result = result.post_time;
 				
 				//alert(title_result + "|" +content_result+ "|" +post_id_result+ "|" +time_result );
-				
-				$.post("<?=abspath('/project/post_html')?>",{
+				if("ERROR" in result){
+					switch(result.ERROR){
+						case "ERR_NOT_LOGGED_IN":
+						alert("You are not logged in!");
+						break;
+						case "ERR_NO_RIGHTS":
+						alert("You have no permission to post to this project!");
+						break;
+						default: 
+						alert("Error");
+						break;
+					}
+				}else{
+					$.post("<?=abspath('/project/post_html')?>",{
 					title : title_result,
 					content : content_result,
 					time : time_result,
 					post_id : post_id_result }).done(function(data){
 						//alert(data);
-						$('.post').before(data);
+						$('.post').first().before(data);
 					});
-				
+				}
 			});
 	}
 }
@@ -154,7 +169,7 @@ echo Core::view("ProjectBanner", [
 									<?=Core::view("TagBoxTest", ["project_id" => $_DATA["project"]["project_id"], "editable" => $_DATA["user_can_edit"]]);?>
 								</div><!-- COL END-->
 							</div><!--Row End-->
-							<div class="row" style="margin-top: 20px;">
+							<div class="row" style="margin-top: 20px;" <?=(!$_DATA["user_can_communicate"] ? "hidden" : "")?>>
 								<div class="col-md-12">
 									<form>
 										<div class="input-group post_group">
