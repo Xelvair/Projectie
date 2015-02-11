@@ -43,9 +43,19 @@ $show_chat_title = isset($_DATA["chat_title"]);
 </div>
 
 <script>
+function addZero(val){
+  if(val < 10){
+    val = "0" + val;
+  }
+
+  return val;
+}
+
 function <?=$chat_dom_id?>_chat_dispatch(msg_obj, chat_type){
+  msg_date = new Date(msg_obj.send_time * 1000);
+
   var msg_html = $("#chat-msg-prefab").clone().removeAttr("hidden").removeAttr("id");
-  msg_html.find(".chat-msg-time").text("null");
+  msg_html.find(".chat-msg-time").text(addZero(msg_date.getHours()) + ":" + addZero(msg_date.getMinutes()));
   msg_html.find(".chat-msg-sender").text(msg_obj.username);
   msg_html.find(".chat-msg-content").text(msg_obj.message);
 
