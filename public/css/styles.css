@@ -1072,6 +1072,18 @@ box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 	background-size: cover;
 }
 
+.project-banner-title{
+	position: absolute;
+	left: 0;
+	top: 0;
+	color: white;
+	background-color: rgba(0, 0, 0, .3);
+	z-index: 1;
+	font-size: 30px;
+	padding: 3px 10px 3px 10px;
+	border-bottom-right-radius: 10px;
+}
+
 .project-banner-arrow-left,
 .project-banner-arrow-right{
 	min-width: 50px;
@@ -1088,7 +1100,7 @@ box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 .project-banner-arrow-left:hover,
 .project-banner-arrow-right:hover{
 	transition: background-color 0.25s ease;
-	background-color: rgba(0, 0, 0, 0.25);
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 .project-banner-arrow-left{
@@ -1207,9 +1219,13 @@ box-shadow:         3px 3px 10px 0px rgba(50, 50, 50, 0.75);
 }
 
 .preview_properties{
+	background-color: rgba(0, 0, 0, 0.3);
 	position: absolute;
-	bottom: 5px;
-	right: 5px;
+	bottom: 1px;
+	right: 10px;
+	padding: 5px 0 0 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 	font-size: 25px;
 	color: #FFF;
 	font-weight: bold;
@@ -1302,15 +1318,11 @@ a.neutral{
 }
 
 .dark{
-<<<<<<< HEAD
 	background-color: #333;
 }
 
 .light{
 	background-color: white;
-=======
-	background-color: rgba(0, 0, 0, 0.75);
->>>>>>> maxistuff
 }
 
 .footer{
@@ -1375,4 +1387,13 @@ width: 90%;
 
 .post-body{
 	padding-top: 5px;
+}
+
+.project-fav{
+	color: white;
+	cursor: pointer;
+}
+
+.project-fav-active{
+	color: rgba(193,241,91,1);
 }

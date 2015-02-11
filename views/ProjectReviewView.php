@@ -18,7 +18,7 @@ global $locale;
 				<div class="preview_properties pull-right">
 					<div class="favs">
 						<?=number_format($_DATA["fav_count"], 0, ",", ".")?>
-						<span class="glyphicon glyphicon-star"></span>
+						<span class="glyphicon glyphicon-star project-fav" data-project-id="<?=$_DATA["project_id"]?>"></span>
 					</div>
 					<div class="members">
 						<?=number_format($_DATA["participator_count"], 0, ",", ".")?>

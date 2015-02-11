@@ -269,6 +269,15 @@ class ProjectController extends Controller{
 		return json_encode($project->unfavorite($project_id, $user["user_id"]));
 	}
 
+	//$_POST["project_id"] : project to check for faved-being-ness
+	public function is_favorite(){
+		$auth = Core::model("Auth");
+
+		$current_user = $auth->get_current_user();
+
+		return !!DBEZ::find("project_fav", ["project_id" => (integer)$_POST["project_id"], "user_id" => $current_user["user_id"]], ["project_fav_id"]);
+	}
+
  	//$_POST["project_id"] : project to post the news to
  	//$_POST["content"] : content of the news post
   public function post_news(){

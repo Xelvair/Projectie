@@ -15,12 +15,23 @@ function fit_images(){
 	});
 }
 
+function set_title_info(elem, info, animate_time){
+	var title_elem = $(elem).find(".project-banner-title")[0];
+
+	$(title_elem).fadeOut(animate_time / 2, function(){
+		$(title_elem).text(info.title);
+
+		$(title_elem).fadeIn(animate_time / 2);
+	});
+}
+
 function set_banner_info(elem, info, animate_time){
 	var info_elem = $(elem).find(".project-banner-info")[0];
 
 	$(info_elem).fadeOut(animate_time / 2, function(){
 		$(info_elem).find(".project-banner-info-participator-count").text(info.participatorcount.toLocaleString());
 		$(info_elem).find(".project-banner-info-fav-count").text(info.favcount.toLocaleString());
+		$(info_elem).find(".project-fav").attr("data-project-id", info.project_id)
 
 		$(info_elem).fadeIn(animate_time / 2);
 	});
@@ -69,7 +80,8 @@ function scroll_banner(elem, magnitude, animate_time){
 
 	var info = {
 		favcount : parseInt($(list_item_elem).attr("data-fav-count")),
-		participatorcount : parseInt($(list_item_elem).attr("data-participator-count"))
+		participatorcount : parseInt($(list_item_elem).attr("data-participator-count")),
+		project_id : parseInt($(list_item_elem).attr("data-project-id"))
 	}
 
 	var edit_info = {
@@ -77,8 +89,13 @@ function scroll_banner(elem, magnitude, animate_time){
 		project_id : $(list_item_elem).attr("data-project-id")
 	}
 
+	var title_info = {
+		title : $(list_item_elem).attr("data-project-title")
+	}
+
 	set_banner_info(elem, info, animate_time);
-	set_edit_info(elem, edit_info, animate_time)
+	set_edit_info(elem, edit_info, animate_time);
+	set_title_info(elem, title_info, animate_time);
 }
 
 $(document).ready(function(){
