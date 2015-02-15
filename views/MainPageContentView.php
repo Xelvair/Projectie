@@ -20,26 +20,34 @@ global $locale;
 
 <div id="page_list_wrapper">
   <div class="row">
-    <div class="col-md-4 content_list">
+    <div class="col-md-6 content_list">
       <span class="list-headline"><span class="glyphicon glyphicon-asterisk"></span><?=$locale['new_projects']?></span>
       <hr>
       <?php for($i = 0; $i < sizeof($_DATA["new"]); $i++){
     		echo $_DATA["new"][$i];
       } ?>
-    </div><!--col-md-4-->
-    <div class="col-md-4 content_list">
+    </div>
+    <div class="col-md-6 content_list">
       <span class="list-headline"><span class="glyphicon glyphicon-fire"></span><?=$locale['trending_projects']?></span>
       <hr>
       <?php for($i = 0; $i < sizeof($_DATA["trending"]); $i++){
       		echo $_DATA["trending"][$i];
       }  ?>
-    </div><!--col-md-4-->
-    <div class="col-md-4 content_list">
+    </div>
+  </div><!--row-->
+  <div class="row">
+    <div class="col-md-12 content_list">
       <span class="list-headline"><span class="glyphicon glyphicon-refresh"></span><?=$locale['news']?></span>
       <hr>
-      <?php for($i = 0; $i < sizeof($_DATA["news"]); $i++){
-      		echo $_DATA["news"][$i];
-      }   ?>
-    </div><!--col-md-4-->
-  </div><!--row-->
+      <?php 
+        $posts = ProjectNews::newest();
+
+        $post_data = array_map(function($entry){
+          return ["post" => $entry];
+        }, $posts);
+
+        echo Core::view_batch("Post", $post_data); 
+      ?>
+    </div>
+  </div>
 </div>

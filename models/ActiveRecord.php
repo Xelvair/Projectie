@@ -8,7 +8,7 @@ abstract class ActiveRecord{
 
 	/* PUBLIC STATIC */
 	public static final function getTableMeta(){
-		return TableMeta::load(self::getTableName());
+		return TableMeta::load(static::getTableName());
 	}
 
 	public static function getTableName(){
@@ -18,10 +18,10 @@ abstract class ActiveRecord{
 	public static final function get($filter){
 		switch(gettype($filter)){
 			case "integer":
-				return self::getById($filter);
+				return static::getById($filter);
 				break;
 			case "array":
-				return self::getByArray($filter);
+				return static::getByArray($filter);
 				break;
 			default:
 				throw new UnexpectedValueException("ActiveRecord::get(): Parameter has invalid type!");
@@ -31,10 +31,10 @@ abstract class ActiveRecord{
 	public static final function store($content){
 		switch(gettype($content)){
 			case "object":
-				self::storeSingle($content);
+				static::storeSingle($content);
 				break;
 			case "array":
-				self::storeArray($content);
+				static::storeArray($content);
 				break;
 			default:
 				throw new InvalidArgumentError("Invalid argument passed to ActiveRecord::store()! either array or object!");
@@ -45,12 +45,12 @@ abstract class ActiveRecord{
 	/* PRIVATE STATIC */
 	private static final function storeArray($activerecord_array){
 		foreach($activerecord_array as $activerecord){
-			self::storeSingle($activerecord);
+			static::storeSingle($activerecord);
 		}
 	}
 
 	private static final function storeSingle($activerecord){
-		$store_operation_info = self::getStoreOperationInfo($activerecord);
+		$store_operation_info = static::getStoreOperationInfo($activerecord);
 
 		$fields = $store_operation_info["fields"];
 		$operation_type = $store_operation_info["operation_type"];
@@ -87,7 +87,7 @@ abstract class ActiveRecord{
 			"index_field" => null
 		];
 
-		$table_meta = TableMeta::load(self::getTableName());
+		$table_meta = static::getTableMeta();
 
 		$field_metas = $table_meta->getFields();
 
@@ -123,7 +123,7 @@ abstract class ActiveRecord{
 
 	//returns a single instance of the called class which extends ActiveRecord
 	private static final function getById($id){
-		$row = DBEZ::find(self::getTableName(), $id, "*");
+		$row = DBEZ::find(static::getTableName(), $id, "*");
 
 		$subclass_name = get_called_class();
 		$obj = new $subclass_name($id);
@@ -137,7 +137,7 @@ abstract class ActiveRecord{
 
 	//returns an array of the called class which extends ActiveRecords
 	private static final function getByArray($filter){
-		$result = DBEZ::find(self::getTableName(), $filter, "*");
+		$result = DBEZ::find(static::getTableName(), $filter, "*");
 
 		$subclass_name = get_called_class();
 
@@ -158,7 +158,7 @@ abstract class ActiveRecord{
 
 	/* PUBLIC */
 	public function __construct($idx){
-		$table_meta = TableMeta::load(self::getTableName());
+		$table_meta = static::getTableMeta();
 		$primary_key = $table_meta->getPrimaryKey();
 
 		$this->$primary_key = $idx;

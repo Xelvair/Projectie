@@ -191,6 +191,7 @@ class DBEZ{
 		global $mysqli;
 
 		$result = $mysqli->query("SHOW COLUMNS FROM ".$table);
+		
 		return $result->fetch_all(MYSQLI_ASSOC);
 	}
 

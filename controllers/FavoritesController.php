@@ -7,6 +7,8 @@ class FavoritesController extends Controller{
 		global $CONFIG;
 
 		$auth = Core::model("Auth");
+		$project = Core::model("Project");
+
 		$user = $auth->get_current_user();
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
@@ -18,12 +20,7 @@ class FavoritesController extends Controller{
 			$locale->load("en-us");
 		}
 		
-		$list_content = array();
-		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-
+		$list_content = $project->get_favorites((integer)$user["user_id"]);
 		
 		$list = array();
 		foreach($list_content as $entry){
@@ -44,7 +41,6 @@ class FavoritesController extends Controller{
 			"current_user" => $user,
 			"dark" => true
 		));
-		
 		
 	return $html;
 		

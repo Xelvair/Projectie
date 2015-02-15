@@ -483,6 +483,17 @@ class ProjectModel implements Model{
 		return $result->fetch_all(MYSQLI_ASSOC);
 	}
 
+	public function get_favorites($user_id){
+		$fav_projects = DBEZ::find("project_fav", ["user_id" => $user_id], ["project_id"]);
+
+		$result = [];
+		foreach($fav_projects as $fav_project){
+			array_push($result, self::get($fav_project["project_id"]));
+		}
+
+		return $result;
+	}
+
 	public function favorite($project_id, $user_id){
 		$is_faved_already = !!DBEZ::find("project_fav", ["project_id" => $project_id, "user_id" => $user_id], ["project_fav_id"]);
 
@@ -522,8 +533,18 @@ class ProjectModel implements Model{
 		return $res_fav_count;
 	}
 
-	public function get_news($project_news_id){
-	  return DBEZ::find("project_news", $project_news_id, "*");
+	public function get_news($project_news_id = null){
+		global $mysqli;
+		if($project_news_id){
+			$query_get_news = $mysqli->prepare("SELECT * FROM project_news WHERE project_id = ? ORDER BY post_time DESC");
+			$query_get_news->bind_param("i", $project_news_id);
+			$query_get_news->execute();
+			$result = $query_get_news->get_result()->fetch_all(MYSQLI_ASSOC);
+
+			return $result;
+		} else {
+			return $mysqli->query("SELECT * FROM project_news ORDER BY post_time DESC")->fetch_all(MYSQLI_ASSOC);
+		}
 	}
  
   //$info["project_id"] : id of the project the news belong to
