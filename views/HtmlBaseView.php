@@ -36,6 +36,7 @@ if(!empty($_DATA["dark"])){$body_class .= ' dark';}
     <script src="<?=abspath("public/js/TagBoxTest.js")?>"></script>
     <script src="<?=abspath("public/js/ProjectBanner.js")?>"></script>
     <script src="<?=abspath("public/js/ProjectFav.js")?>"></script>
+    <script src="<?=abspath("public/js/create_project_list.js")?>"></script>
     <title><?=$_DATA["title"];?></title>
 </head>    
 <body class="<?=$body_class?>">

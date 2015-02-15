@@ -74,6 +74,12 @@
 	"delete_account" : "Delete Account",
 	"save_changes" : "Save Changes",
 	"lang" : "Language",
+	"adress" : "Adress",
+	"about_us" : "About Us",
+	"contact" : "Contact",
+	"change_password" : "Change Password",
+	"old_password" : "Old Password",
+	"view_project" : "View Project",
 	"discover_projectie" : "Discover Projectie",
 	"search_tags" : "Search Tags"
 }

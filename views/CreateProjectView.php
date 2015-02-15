@@ -52,28 +52,31 @@ global $locale;
 		element.setAttribute('src', '../public/images/upload_pic.png');
 	}
 </script>
-<div class="row" id="banner_wrap">
-        <img class="img-responsive banner" src="../public/images/default-banner.png"/>
-        <div id="upload_tag">
-        	<a href='#PicUploadModal' data-toggle='modal'>
-            	<img src="../public/images/upload_pic.png" onmouseover="hover(this);" onmouseout="unhover(this);"/>
-            </a>
-        </div>
+<div class="row">
+	<div class="col-xs-12 create-project-introduction">
+		<h1>Creating a new Project</h1>
+		<p>
+		Create a Project on Projectie and find people willing to contribute!<br><br>
+		It's as easy as entering a title for your project, a subtitle and a description, then adding a Banner to make your venture more appealing to others.
+		</p>
+	</div>
 </div>
 <div class="row" style="margin-top:20px; margin-bottom:20px;">
-    <div class="col-xs-12" style="padding-left: 5%; padding-right: 5%;">
+    <div class="col-xs-12">
     <form id="create_project_form" action="<?=abspath("/project/create")?>&redirect=/index" method="POST">
             <div class="form-group" id="title_group">
-                <input type="text" name="title" class="form-control .input-lg" 
-                id="title" data-toggle="popover" data-placement="bottom" data-trigger="focus" placeholder="<?=$locale['project_title']?>..." data-content="<?=$locale['create_title_title']?>"/>
+          		<label for="title"><?=$locale['project_title']?></label>
+              <input type="text" name="title" class="form-control .input-lg" 
+              id="title" data-toggle="popover" data-placement="bottom" data-trigger="focus" placeholder="<?=$locale['create_title_title']?>..."/>
             </div>
             <div class="form-group" id="subtitle_group">
-                <input type="text" name="subtitle" class="form-control .input-lg" id="subtitle"
-                 data-toggle="popover" data-placement="bottom" placeholder="<?=$locale['subtitle']?>..." data-content="<?=$locale['create_subtitle_title']?>"/>
+          		<label for="subtitle"><?=$locale['subtitle']?></label>
+              <input type="text" name="subtitle" class="form-control .input-lg" id="subtitle"
+               data-toggle="popover" data-placement="bottom" placeholder="<?=$locale['create_subtitle_title']?>..."/>
             </div>
             <div class="form-group" id="description_group">
-                <textarea name="description" rows="8" class="form-control" id="desc" data-toggle="popover" data-placement="bottom" placeholder="<?=$locale['desc']?>..." 
-                data-content="<?=$locale['create_desc_title']?>"></textarea>
+          		<label for="desc"><?=$locale['desc']?></label>
+              <textarea name="description" rows="8" class="form-control" id="desc" data-toggle="popover" data-placement="bottom" placeholder="<?=$locale['create_desc_title']?>..."></textarea>
             </div>
             <div class="form-group pull-right">
             <button id="create_project_submit" type="button" class="btn btn-default"><?=$locale['create']?></button>        
@@ -81,4 +84,4 @@ global $locale;
      </form>
     </div>
 </div>
- <?=$_DATA['upload_picture_modal']?>
+<?=$_DATA['upload_picture_modal']?>

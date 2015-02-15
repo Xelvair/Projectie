@@ -101,7 +101,7 @@ function user_update(){
 	var pw_correct = false;
 	var lang_correct = false;
 	var username_correct = false;
-	var user_id = 1;
+	var user_id = Projectie.current_user.user_id;
 
 	if(set_pw == "true"){
 		if(pw != "" && pw.length > 7){
@@ -151,7 +151,6 @@ function user_update(){
 }
 
 function settings_updated(data){
-	alert(data);
 	var result = JSON.parse(data);
 	
 	if("ERROR" in result){

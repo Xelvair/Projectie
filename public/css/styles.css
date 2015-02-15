@@ -490,7 +490,10 @@ a:hover{
 	background-color: #FFF;
 	float: left;
 	padding-right: 15px;
-	
+}
+
+#tag_search_result{
+	overflow: hidden;
 }
 
 .chat-wrapper{
@@ -1389,4 +1392,15 @@ width: 90%;
 
 .project-fav-active{
 	color: rgba(193,241,91,1);
+}
+
+.create-project-introduction{
+	font-family: "Source Sans Pro", sans-serif;
+	font-size: 20px;
+	padding-bottom: 50px;
+}
+
+.create-project-introduction h1{
+	font-size: 30px;
+	font-weight: bold;
 }
