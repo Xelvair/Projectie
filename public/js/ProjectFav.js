@@ -27,7 +27,7 @@ $(document).on("click", ".project-fav", function(e){
 				if(result_obj.ERROR){
 					alert(result_obj.ERROR);
 				} else {
-					$(e.target).toggleClass("project-fav-active");
+					$(".project-fav[data-project-id="+project_id+"]").toggleClass("project-fav-active");
 				}
 			});
 		} else {
@@ -36,7 +36,7 @@ $(document).on("click", ".project-fav", function(e){
 				if(result_obj.ERROR){
 					alert(result_obj.ERROR);
 				} else {
-					$(e.target).toggleClass("project-fav-active");
+					$(".project-fav[data-project-id="+project_id+"]").toggleClass("project-fav-active");
 				}
 			});
 		}
