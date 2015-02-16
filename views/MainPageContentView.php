@@ -38,8 +38,6 @@ global $locale;
         <?php } ?>
       </row>
     </div>
-  </div><!--row-->
-  <div class="row">
     <div class="col-md-12 content_list">
       <span class="list-headline"><span class="glyphicon glyphicon-refresh"></span><?=$locale['news']?></span>
       <hr>
