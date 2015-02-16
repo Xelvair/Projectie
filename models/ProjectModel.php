@@ -680,7 +680,37 @@ class ProjectModel implements Model{
 	public function get_new_projects($count){
 		global $mysqli;
 
+		if(!$count)
+			$count = 3;
+
 		$stmt_get_projects = $mysqli->prepare("SELECT project_id FROM project ORDER BY create_time DESC LIMIT ?");
+		$stmt_get_projects->bind_param("i", $count);
+		$stmt_get_projects->execute();
+
+		$project_rows = $stmt_get_projects->get_result()->fetch_all(MYSQL_ASSOC);
+
+		$projects = array();
+		foreach($project_rows as $project_row){
+			array_push($projects, $this->get($project_row["project_id"]));
+		}
+
+		return $projects;
+	}
+
+	public function get_trending_projects($count){
+		global $mysqli;
+
+		if(!$count)
+			$count = 3;
+
+		$stmt_get_projects = $mysqli->prepare("
+			SELECT project_id, COUNT(project_fav_id) as fav_count 
+			FROM project_fav 
+			WHERE UNIX_TIMESTAMP() - fav_time < 86400 
+			GROUP BY project_id 
+			ORDER BY fav_count DESC 
+			LIMIT ?
+		");
 		$stmt_get_projects->bind_param("i", $count);
 		$stmt_get_projects->execute();
 

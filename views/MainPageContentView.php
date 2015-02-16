@@ -20,19 +20,23 @@ global $locale;
 
 <div id="page_list_wrapper">
   <div class="row">
-    <div class="col-md-6 content_list">
-      <span class="list-headline"><span class="glyphicon glyphicon-asterisk"></span><?=$locale['new_projects']?></span>
-      <hr>
-      <?php for($i = 0; $i < sizeof($_DATA["new"]); $i++){
-    		echo $_DATA["new"][$i];
-      } ?>
+    <div class="col-md-12 content_list">
+      <row>
+        <span class="list-headline"><span class="glyphicon glyphicon-fire"></span><?=$locale['trending_projects']?></span>
+        <hr>
+        <?php for($i = 0; $i < sizeof($_DATA["trending"]); $i++){ ?>
+            <div class="col-md-4"><?=$_DATA["trending"][$i]?></div>
+        <?php } ?>
+      </row>
     </div>
-    <div class="col-md-6 content_list">
-      <span class="list-headline"><span class="glyphicon glyphicon-fire"></span><?=$locale['trending_projects']?></span>
-      <hr>
-      <?php for($i = 0; $i < sizeof($_DATA["trending"]); $i++){
-      		echo $_DATA["trending"][$i];
-      }  ?>
+    <div class="col-md-12 content_list">
+      <row>
+        <span class="list-headline"><span class="glyphicon glyphicon-asterisk"></span><?=$locale['new_projects']?></span>
+        <hr>
+        <?php for($i = 0; $i < sizeof($_DATA["new"]); $i++){ ?>
+      		<div class="col-md-4"><?=$_DATA["new"][$i]?></div>
+        <?php } ?>
+      </row>
     </div>
   </div><!--row-->
   <div class="row">
@@ -50,4 +54,5 @@ global $locale;
       ?>
     </div>
   </div>
+    <?=Core::view($locale["locale"]."/CallToAction", ["user" => $_DATA["user"]])?>
 </div>

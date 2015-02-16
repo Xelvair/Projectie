@@ -9,9 +9,9 @@ class HomeController extends Controller{
 		$auth = Core::model("Auth");
 		$project = Core::model("Project");
 
-		$user = $auth->get_current_user();
-		if($user != null){
-			$locale_load_result = $locale->load($user["lang"]);
+		$current_user = $auth->get_current_user();
+		if($current_user != null){
+			$locale_load_result = $locale->load($current_user["lang"]);
 
 			if($locale_load_result == false){
 				$locale->load("en-us");
@@ -39,10 +39,7 @@ class HomeController extends Controller{
 			array_push($html_new, Core::view("ProjectReview", $new));
 		}
 				
-		$trending = array();
-		array_push($trending, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
-		array_push($trending, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
-		array_push($trending, array("project_id" => 1, "fav_count" => 14, "participator_count" => 75, "title" => "Protestie", "description" => "I just came to say hello", "id" => 1));
+		$trending = $project->get_trending_projects(3);
 		
 		$html_trending = array();
 		
@@ -52,18 +49,18 @@ class HomeController extends Controller{
 	
     $mainpagelists = array("top_project" => array("projects" => $project->get_new_projects(3), "editable" => false), "new" => $html_new, "trending" => $html_trending, "news" => $html_news);
 
-		$content = Core::view("MainPageContent", $mainpagelists);
+		$content = Core::view("MainPageContent", array_merge($mainpagelists, ["user" => $current_user]));
 
 		$contentwrap = Core::view("ContentWrapper", array(	
 			"content" => $content, 
-			"user" => ($user == null ? null : $user)
+			"user" => ($current_user == null ? null : $current_user)
 		));
 
 		$html = Core::view("HtmlBase", array(	
 			"title" => "Projectie - Driving Development", 
 			"body" => $contentwrap, 
 			"body_padding" => true,
-			"current_user" => $user,
+			"current_user" => $current_user,
 			"dark" => true
 		));
 
