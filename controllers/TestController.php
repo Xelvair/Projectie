@@ -88,6 +88,10 @@ class TestController extends Controller{
 		return print_r($user, true);
 	}
 
+	public function posttest(){
+		return print_r($_POST, true)."<br>".print_r($_FILES, true);
+	}
+
 	public function carousel(){
 		return Core::view("HtmlBase", [
 			"title" => "Projectie Carousel Test",

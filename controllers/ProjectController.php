@@ -615,7 +615,7 @@ class ProjectController extends Controller{
 				$locale->load("en-us");
 			}
 		} else {
-			$locale->load("en-us");
+			header("Location: /home");
 		}
 		
 		$upload_picture_modal = Core::view("UploadPictureModal", "");

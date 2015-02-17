@@ -8,6 +8,7 @@ require_once(abspath_lcl('templates/user_review.html'));
 global $locale;
 
 $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
+$user_id = isset($_DATA["user"]) ? $_DATA["user"]["user_id"] : 0;
 
 ?>
 <script>
@@ -126,27 +127,16 @@ function user_update(){
 	}
 	
 	if(lang_correct){
-		if(set_pw == "true"){
-				$.post( "<?=abspath('/auth/set_user');?>", {
-					user_id: user_id,
-					old_password: old_pw,
-					new_password: pw,
-					email: email, 
-					lang: lang,
-					}
-				).done(function(data){
-					settings_updated(data);
-				});
-		}else{
-				$.post( "<?=abspath('/auth/set_user');?>", {
-					user_id: user_id,
-					email: email, 
-					lang: lang,
-					}
-				).done(function(data){
-					settings_updated(data);
-				});
-		}
+		var form_data = new FormData($("#settings_form")[0]);
+		$.ajax({
+			type: "POST",
+			url: Projectie.server_addr + "/auth/set_user",
+			data: form_data,
+			contentType: false,
+			cache: false,
+			processData: false,
+			success: function(result){console.log(result);}
+		});
 	}	
 }
 
@@ -163,7 +153,7 @@ function settings_updated(data){
 				break;
 		}
 	} else {
-		window.location.href = "<?=abspath("")?>";
+		window.location.reload();
 	}
 }
 
@@ -190,7 +180,7 @@ function remove_news(id){
           <div class="modal-body">
 			<div class="row">
 				<div class="col-md-12">
-					<form>
+					<form method="post" action="<?=abspath('/auth/set_user')?>">
 						<div class="form-group" id="search_group">
 							<input type="text" id="search_input" class="form-control" placeholder="<?=$locale['project_title']?>..."/>
 						</div> 
@@ -233,7 +223,8 @@ function remove_news(id){
               <h2 class="text-center"><?=$locale["settings"]?></h2>
           </div>
           <div class="modal-body">
-				<form>
+				<form id="settings_form">
+					<input type="hidden" name="user_id" value="<?=$user_id?>">
 					<div class="form-group" style="height:125px;">
 						<div class="row">
 							<label><?=$locale["profile_pic"]?></label>
@@ -243,13 +234,13 @@ function remove_news(id){
 								<img src="<?=abspath('public/images/default-profile-pic.png')?>" class="media-object pull-left">
 							</div>
 							<div class="col-xs-9">
-								<input id="input-1" type="file" class="file">
+								<input id="input-1" type="file" name="profile_picture"> <!-- add 'class="file" to this item to reenable the fileinput panel' -->
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<label>E-mail</label>
-						<input id="settings_email" type="text" class="form-control" value="<?=$_DATA["user"]["email"]?>">
+						<input id="settings_email" name="email" type="text" class="form-control" value="<?=$_DATA["user"]["email"]?>">
 					</div>
 					<div style="min-height: 40px; width: 100%;">
 						<label id="change_pw" style="margin-bottom: 20px; cursor: pointer;"><?=$locale['change_password']?>...</label>
@@ -257,11 +248,11 @@ function remove_news(id){
 						<div id="new_pw_div" style="display: none;">
 							<div class="form-group">
 								<label><?=$locale["old_password"]?></label><span id="change_pw_close" style="cursor: pointer;" class="glyphicon glyphicon-remove pull-right"></span>
-								<input id="settings_old_pw" type="password" class="form-control">
+								<input id="settings_old_pw" name="old_password" type="password" class="form-control">
 							</div>
 							<div class="form-group">
 								<label><?=$locale["new_password"]?></label>
-								<input id="settings_pw" type="password" class="form-control">
+								<input id="settings_pw" name="new_password" type="password" class="form-control">
 							</div>
 							<div class="form-group">
 								<label><?=$locale["retype_new_password"]?></label>
@@ -271,7 +262,7 @@ function remove_news(id){
 					</div>
 					<div class="form-group">
 						<label><?=$locale["lang"]?></label>
-						<select name="language" class="form-control" id="settings_lang">
+						<select name="lang" class="form-control" id="settings_lang">
 							<option value="0"><?=$locale["select_language"]?>.</option>
 							<option value="en-us" <?php if($_DATA["user"]["lang"] == "en-us"){echo "selected";}?>>English(US)</option>
 							<option value="en-gb" <?php if($_DATA["user"]["lang"] == "en-gb"){echo "selected";}?>>English(GB)</option>

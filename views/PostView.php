@@ -1,15 +1,9 @@
 ﻿<?php
 #PARAMETERS
 #
-#project : Project were its from /NOT NECESSARY
-	#id : id of project
-	#title : title of project
-#creator : creator of post
-	#id
-	#name
-#time : time created
-#title : title of post  /NOT NECESSARY
-#content : post content
+#post : ProjectNews object of the news post
+#user_is_author : whether the user can edit/delete the news post
+#show_project_title : whether the project title should be shown
 
 $post = $_DATA["post"];
 ?>

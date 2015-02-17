@@ -29,13 +29,14 @@ global $locale;
 <hr style="box-shadow:  2px 2px 5px 0px rgba(50, 48, 50, 0.5);"/>
 <div class="row">
     <div class="col-md-6 col-xs-12 content_list">
-	<h3><?=$locale['projects_involved']?></h3><hr>
+    	<span class="list-headline"><?=$locale['projects_involved']?></span>
+      <hr>
 		<?php for($i = 0; $i < sizeof($_DATA["projects_involved"]); $i++){
 				echo $_DATA["projects_involved"][$i];
 		}  ?>
     </div><!--col-->
     <div class="col-md-6 col-xs-12 content_list">
-	<h3><?=$locale['projects_created']?></h3><hr>
+    <span class="list-headline"><?=$locale['projects_created']?></span><hr>
 		<?php for($i = 0; $i < sizeof($_DATA["projects_created"]); $i++){
 				echo $_DATA["projects_created"][$i];
 		}  ?>

@@ -62,16 +62,26 @@ class AuthController extends Controller{
 	//	new_password : new password when pw change
 	//	lang : set lang when lang change
 	public function set_user(){
-		if(!validate($_POST, ["user_id" => "int"], VALIDATE_CAST)){
-			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
-		}	
-
 		$auth = Core::model("Auth");
 
 		$user = $auth->get_current_user();
 
+		if(!validate($_POST, ["user_id" => "int"], VALIDATE_CAST)){
+			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
+		}	
+
 		if(!$user || ($user["user_id"] != $_POST["user_id"])){
 			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
+		}
+
+		if($_FILES["profile_picture"]["error"] == 0){
+			try{
+				$picture = Picture::storeFromPost($_FILES["profile_picture"], (int)$user["user_id"]);
+
+				$_POST["picture_id"] = $picture->picture_id;
+			} catch (Exception $e){
+				return json_encode(array("ERROR" => $e->getMessage()));
+			}
 		}
 
 		return json_encode($auth->set_user($_POST));

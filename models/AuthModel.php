@@ -244,6 +244,7 @@ class AuthModel implements Model{
 
 		try{
 			if(validate($info, ["email" => "string"]) && $info["email"] != $user["email"]){
+
 				self::validate_email($info["email"]);
 
 				$stmt_set_email = $mysqli->prepare("UPDATE user SET email = ? WHERE user_id = ?");
@@ -261,13 +262,11 @@ class AuthModel implements Model{
 				array_push($on_success_queries, $stmt_set_lang);
 			}
 
-			if(validate($info, ["username" => "string"])){
-				self::validate_username($info["username"]);
+			if(validate($info, ["picture_id" => "int"])){
+				$stmt_set_picture = $mysqli->prepare("UPDATE user SET picture_id = ? WHERE user_id = ?");
+				$stmt_set_picture->bind_param("ii", $info["picture_id"], $info["user_id"]);
 
-				$stmt_set_username = $mysqli->prepare("UPDATE user SET username = ? WHERE user_id = ?");
-				$stmt_set_username->bind_param("si", $info["username"], $info["user_id"]);
-
-				array_push($on_success_queries, $stmt_set_username);
+				array_push($on_success_queries, $stmt_set_picture);
 			}
 
 			if(validate($info, ["old_password" => "string", "new_password" => "string"])){
@@ -292,7 +291,9 @@ class AuthModel implements Model{
 		}
 
 		foreach($on_success_queries as $stmt){
-			$stmt->execute();
+			if(!$stmt->execute()){
+				return array("ERROR" => "ERR_DB_INSERT_FAILED");
+			}
 		}
 
 		return array();

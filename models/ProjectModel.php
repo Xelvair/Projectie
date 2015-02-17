@@ -494,6 +494,17 @@ class ProjectModel implements Model{
 		return $result;
 	}
 
+	public function get_participated_projects($user_id){
+		$participated_projects = DBEZ::find("project_position", ["user_id" => $user_id], ["project_id"]);
+
+		$result = [];
+		foreach($participated_projects as $participated_project){
+			array_push($result, self::get($participated_project["project_id"]));
+		}
+
+		return $result;
+	}
+
 	public function favorite($project_id, $user_id){
 		$is_faved_already = !!DBEZ::find("project_fav", ["project_id" => $project_id, "user_id" => $user_id], ["project_fav_id"]);
 

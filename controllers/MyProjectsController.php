@@ -7,7 +7,10 @@ class MyProjectsController extends Controller{
 		global $CONFIG;
 
 		$auth = Core::model("Auth");
+		$project = Core::model("Project");
+		
 		$user = $auth->get_current_user();
+
 		if($user != null){
 			$locale_load_result = $locale->load($user["lang"]);
 
@@ -18,19 +21,14 @@ class MyProjectsController extends Controller{
 			$locale->load("en-us");
 		
 		}
-		
-		$list_content = array();
-		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($list_content, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		
-		$list = array();
-		foreach($list_content as $entry){
-			array_push($list, Core::view("ProjectReview", $entry));
+
+		$projects_list = $project->get_participated_projects((integer)$user["user_id"]);
+		$projects_html_list = [];
+		foreach($projects_list as $entry){
+			array_push($projects_html_list, Core::view("ProjectReview", $entry));
 		}
 		
-		$content = Core::view("ListPage", array("list" => $list, "list_title" => $locale["my_projects"]));
+		$content = Core::view("ListPage", array("list" => $projects_html_list, "list_title" => $locale["my_projects"]));
 		
 		$contentwrap = Core::view("ContentWrapper", array(	
 			"content" => $content, 

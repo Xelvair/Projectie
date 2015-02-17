@@ -1,10 +1,11 @@
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
-	user_id       int(11) NOT NULL AUTO_INCREMENT,
-	create_time   int(11) NOT NULL,
+	user_id       int NOT NULL AUTO_INCREMENT,
+	create_time   int NOT NULL,
 	email         varchar(128) NOT NULL,
 	username      varchar(32) NOT NULL,
 	lang          varchar(10) NOT NULL,
+	picture_id 		int NOT NULL DEFAULT 1,
 	password_salt varchar(8) NOT NULL,
 	password_hash varchar(32) NOT NULL,
 	is_admin      boolean NOT NULL DEFAULT 0,
