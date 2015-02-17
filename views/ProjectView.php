@@ -84,8 +84,8 @@ function post(){
 					title : title_result,
 					content : content_result,
 					time : time_result,
-					post_id : post_id_result }).done(function(data){
-						//alert(data);
+					project_news_id : post_id_result }).done(function(data){
+						alert(data);
 						$('.post').first().before(data);
 					});
 				}
@@ -182,7 +182,7 @@ echo Core::view("ProjectBanner", [
 							</div>
 							<div class="row" style="margin-top: 20px;">
 								<div class="col-md-12">
-									<h2><?=$locale['news_feed']?></h2>
+									<span class="list-headline"><span class="glyphicon glyphicon-refresh"></span><?=$locale['news_feed']?></span>
 									<?=$_DATA['news_feed']?>
 								</div>
 							</div>

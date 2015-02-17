@@ -166,6 +166,16 @@ function settings_updated(data){
 		window.location.href = "<?=abspath("")?>";
 	}
 }
+
+function remove_news(id){
+	if(confirm("relly doe?")){
+		$.post("<?=abspath('/project/remove_news');?>", {
+			project_news_id : id
+		}).done(function(data){
+			alert(data);
+		});
+	}
+}
 </script>
 
 <?=Core::view("LoginModal")?>
