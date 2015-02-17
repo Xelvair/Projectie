@@ -13,15 +13,15 @@
 
 $post = $_DATA["post"];
 ?>
-<div class="post">
-	<?php #if($post->user_is_author()){ <?=$post->project_news_id();?>
+<div class="post" id="post_id_<?=$post->project_news_id?>">
+	<?php if($_DATA["user_is_author"]){ ?>
 		<span class="glyphicon glyphicon-remove pull-right remove_btn" onclick="remove_news(<?=$post->project_news_id?>);"></span>
-	<?php #} ?>
+	<?php } ?>
 	<div class="post-head">
 		<a class="pull-left" href="#">
 			<img class="media-object" src="<?=abspath('/public/images/default-profile-pic.png')?>">
 		</a>
-		<?php if(isset($post->project_id/*seas */)){ ?>
+		<?php if(isset($post->project_id) && $_DATA["show_project_title"]){ ?>
 			<a href="<?=abspath("/project/show/").$post->getAuthor()->user_id?>">
 				<h3><?=$post->getProject()->title?></h3>
 			</a>

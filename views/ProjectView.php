@@ -85,8 +85,9 @@ function post(){
 					content : content_result,
 					time : time_result,
 					project_news_id : post_id_result }).done(function(data){
-						alert(data);
-						$('.post').first().before(data);
+						//alert(data);
+						$('#project_news').prepend(data);
+				
 					});
 				}
 			});
@@ -174,7 +175,7 @@ echo Core::view("ProjectBanner", [
 							</div><!--Row End-->
 							<div class="row" style="margin-top: 20px;" <?=(!$_DATA["user_can_communicate"] ? "hidden" : "")?>>
 								<div class="col-md-12">
-									<form>
+									<form enter_action="post">
 										<div class="input-group post_group">
 											<input type="text" class="" placeholder="<?=$locale['post_title']?>..." id="post_title"/>
 											<textarea class="" placeholder="<?=$locale['write_something']?>"rows="3" style="resize:none" id="post_content"></textarea>
@@ -184,9 +185,11 @@ echo Core::view("ProjectBanner", [
 								</div>
 							</div>
 							<div class="row" style="margin-top: 20px;">
-								<div class="col-md-12">
-									<span class="list-headline"><span class="glyphicon glyphicon-refresh"></span><?=$locale['news_feed']?></span>
-									<?=$_DATA['news_feed']?>
+								<div class="col-md-12 content_list">
+									<span class="list-headline"><span class="glyphicon glyphicon-refresh"></span><?=$locale['news_feed']?><hr></span>
+									<div id="project_news">
+										<?=$_DATA['news_feed']?>
+									</div>
 								</div>
 							</div>
 						</div>

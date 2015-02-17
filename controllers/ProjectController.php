@@ -345,7 +345,15 @@ class ProjectController extends Controller{
 	//$_POST["project_news_id"] : id of the news to edit
 	//$_POST["content"] : content of the new post
 	public function post_html(){
-		return Core::view("Post", ["post" => ProjectNews::get((integer)$_POST["project_news_id"])]);
+		
+		$auth = Core::model("Auth");
+		$user = $auth->get_current_user();
+		$post = ProjectNews::get((integer)$_POST["project_news_id"]);
+		
+		return Core::view("Post", ["post" => $post,
+									"show_project_title" => false,
+									"user_is_author" => $user["user_id"] == $post->getAuthor()->user_id
+								]);
 	}
 
 	public function get_tag_meta($project_id){

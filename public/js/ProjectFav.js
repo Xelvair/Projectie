@@ -27,7 +27,13 @@ $(document).on("click", ".project-fav", function(e){
 				if(result_obj.ERROR){
 					alert(result_obj.ERROR);
 				} else {
-					$(".project-fav[data-project-id="+project_id+"]").toggleClass("project-fav-active");
+					var favs_span = $(e.currentTarget).prev('.favs_number');
+					var favs = parseInt(favs_span.text());
+					favs = favs - 1;
+					favs_span.text(favs);
+					
+					$(".project-fav[data-project-id="+project_id+"]").toggleClass("project-fav-active").prev().text(favs);
+					
 				}
 			});
 		} else {
@@ -36,7 +42,12 @@ $(document).on("click", ".project-fav", function(e){
 				if(result_obj.ERROR){
 					alert(result_obj.ERROR);
 				} else {
-					$(".project-fav[data-project-id="+project_id+"]").toggleClass("project-fav-active");
+					var favs_span = $(e.currentTarget).prev('.favs_number');
+					var favs = parseInt(favs_span.text());
+					favs = favs + 1;
+					favs_span.text(favs);
+					$(".project-fav[data-project-id="+project_id+"]").toggleClass("project-fav-active").prev().text(favs);
+
 				}
 			});
 		}

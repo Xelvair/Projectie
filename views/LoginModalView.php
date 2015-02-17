@@ -145,7 +145,7 @@ $(document).ready(function(){
               <h2 class="text-center">Login</h2>
           </div>
           <div class="modal-body">
-          	<form name="login_form">
+          	<form name="login_form" enter_action="user_login">
                 <div class="form-group" id="email_form_group">
                 	<input type="text" class="form-control" placeholder="E-mail" id="email" data-content="<?=$locale["login_email_err"]?>" data-placement="top"/>
                 </div>
@@ -179,7 +179,7 @@ $(document).ready(function(){
 			  <h2 class="text-center"><?=$locale["register"]?></h2>
      	</div>
       <div class="modal-body">
-        <form name="login_form" id="login_form">
+        <form name="register_form" id="register_form" enter_action="user_register">
           <div class="form-group" id="reg_email_form">
           	<input type="text" class="form-control" placeholder="E-mail" id="reg_email"  data-placement="bottom" />
          	</div>
