@@ -436,6 +436,25 @@ class ProjectController extends Controller{
 		DBEZ::update("project", $project_id, ["title_picture_id" => $picture->picture_id]);
 	}
 
+	public function update_description($data){
+		$project = Core::model("Project");
+		$auth = Core::model("Auth");
+
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		$project_id = (integer)$data[0];
+
+		if($project->user_has_right($project_id, $current_user["user_id"], "edit")){
+			DBEZ::update("project", ["project_id" => $project_id], ["description" => strip_tags($_POST["description"])]);
+		} else {
+			return json_encode(array("ERROR" => "ERR_NO_RIGHTS"));
+		}
+	}
+
 	public function show($data){
 		global $locale;
 		global $CONFIG;
@@ -524,11 +543,15 @@ class ProjectController extends Controller{
 		
     $posts = ProjectNews::newestFromProject((int)$data[0]);
 
-    $post_data = array_map(function($entry){
-      return ["post" => $entry];
+    $post_data = array_map(function($entry) use ($user){
+      return [
+	      "post" => $entry, 
+	      "show_project_title" => false,
+				"user_is_author" => $user["user_id"] == $entry->getAuthor()->user_id
+      ];
     }, $posts);
 
-    $news_feed = Core::view_batch("Post", $post_data); 
+    $news_feed = Core::view_batch("Post", array_merge($post_data)); 
 
 		return Core::view("HtmlBase", array(	
 			"title" => "Projectie - Driving Development", 

@@ -96,6 +96,9 @@ function post(){
 function update_desc(){
 	var desc = $('#desc_area').val();
 	if(desc != ""){
+		$.post('<?=abspath("/project/update_description/".$_DATA["project"]["project_id"])?>', {description : desc}, function(result){
+			console.log(result);
+		});
 		/*UPDATE DESCRIPTION PHP PLACEHOLDER*/	
 		exit_desc(desc);
 	}else{

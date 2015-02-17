@@ -8,6 +8,7 @@
 #thumb : pic
 #title: project title
 #desc: project description
+#user : user obj
 
 global $locale;
 ?>
@@ -44,8 +45,13 @@ global $locale;
       <?php 
         $posts = ProjectNews::newest();
 
-        $post_data = array_map(function($entry){
-          return ["post" => $entry];
+        $post_data = array_map(function($entry) use ($_DATA){
+          $user_is_author = ($_DATA["user"]["user_id"] == $entry->getAuthor()->user_id);
+          return [
+            "post" => $entry, 
+            "show_project_title" => true,
+            "user_is_author" => $user_is_author
+          ];
         }, $posts);
 
         echo Core::view_batch("Post", $post_data); 
