@@ -19,7 +19,7 @@ $user_logged_in = (isset($_DATA["user"]) && !empty($_DATA["user"]));
 		
 		$('#logout_btn').on('click', function(){
 		  $.post("<?=abspath("/auth/logout")?>").done(function(){
-			 window.location.href="<?=abspath("")?>";
+			 window.location.reload();
 			});
 		});
 		

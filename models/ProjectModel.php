@@ -46,7 +46,7 @@ class ProjectModel implements Model{
 			"participator_since" => time()
 		]);
 		
-		return array();
+		return DBEZ::find("project", $project_position_id, "*");
 	}
 
 	public function get_participators($project_id){

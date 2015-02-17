@@ -34,7 +34,7 @@ function user_login(){
 							break;
 					}
 				} else {
-					window.location.href = "<?=abspath("")?>";
+					window.location.reload();
 				}
 			});
 		} else {
@@ -89,7 +89,7 @@ function user_register(){
 											break;
 										}
 									} else {
-										window.location.href = "<?=abspath("")?>";
+										window.location.reload();
 									}
 							});//post
 					  } else {

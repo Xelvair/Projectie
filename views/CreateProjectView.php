@@ -39,8 +39,16 @@ global $locale;
 		});	
 
 		$('#create_project_submit').on("click", function(){
-			console.log("pls");
-			$('#create_project_form').submit();
+			var form_data = $('#create_project_form').serialize();
+
+			$.post("<?=abspath('/project/create')?>", form_data, function(result){
+				result_obj = JSON.parse(result);
+				if(result_obj.ERROR === undefined){
+					window.location = "<?=abspath('/project/show/')?>" + result_obj.project_id;
+				} else {
+					alert("There was an error with the submission, we're sorry!");
+				}
+			})
 		});
 	});
 	
@@ -66,17 +74,17 @@ global $locale;
     <form id="create_project_form" action="<?=abspath("/project/create")?>&redirect=/index" method="POST">
             <div class="form-group" id="title_group">
           		<label for="title"><?=$locale['project_title']?></label>
-              <input type="text" name="title" class="form-control .input-lg" 
+              <input type="text" name="title" class="form-control .input-lg" autocomplete="off"
               id="title" data-toggle="popover" data-placement="bottom" data-trigger="focus" placeholder="<?=$locale['create_title_title']?>..."/>
             </div>
             <div class="form-group" id="subtitle_group">
           		<label for="subtitle"><?=$locale['subtitle']?></label>
-              <input type="text" name="subtitle" class="form-control .input-lg" id="subtitle"
+              <input type="text" name="subtitle" class="form-control .input-lg" id="subtitle" autocomplete="off"
                data-toggle="popover" data-placement="bottom" placeholder="<?=$locale['create_subtitle_title']?>..."/>
             </div>
             <div class="form-group" id="description_group">
           		<label for="desc"><?=$locale['desc']?></label>
-              <textarea name="description" rows="8" class="form-control" id="desc" data-toggle="popover" data-placement="bottom" placeholder="<?=$locale['create_desc_title']?>..."></textarea>
+              <textarea name="description" rows="8" class="form-control" id="desc" autocomplete="off" data-toggle="popover" data-placement="bottom" placeholder="<?=$locale['create_desc_title']?>..."></textarea>
             </div>
             <div class="form-group pull-right">
             <button id="create_project_submit" type="button" class="btn btn-default"><?=$locale['create']?></button>        

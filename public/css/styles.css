@@ -1388,6 +1388,10 @@ width: 90%;
 	cursor: pointer;
 }
 
+.project-fav:hover{
+	color: yellow;
+}
+
 .project-fav-active{
 	color: rgba(193,241,91,1);
 }

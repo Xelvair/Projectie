@@ -80,7 +80,7 @@ function chat_load(chat_obj){
 var <?=$chat_dom_id?>_chatbox_obj = null;
 
 $(document).ready(function(){
-  <?=$chat_dom_id?>_chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"]?>, '<?=$_DATA["username"]?>', <?=$_DATA["chat_id"]?>, chat_load, <?=$chat_dom_id?>_chat_dispatch);
+  <?=$chat_dom_id?>_chatbox_obj = new Projectie.Messaging.Chatbox("<?=abspath('/chat/')?>", <?=$_DATA["user_id"] ?: 0?>, '<?=$_DATA["username"] ?: "Guest"?>', <?=$_DATA["chat_id"]?>, chat_load, <?=$chat_dom_id?>_chat_dispatch);
 
   var send_msg = function(){
     <?=$chat_dom_id?>_chatbox_obj.send($("#<?=$chat_dom_id?> .chat-input").val());
