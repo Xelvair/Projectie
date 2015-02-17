@@ -8,12 +8,12 @@ $CONFIG = array();
 
 require_once("Debug.php");
 require_once("Logger.php");
-require_once("Locale.php");
+require_once("StringLocale.php");
 require_once("Validate.php");
 
 //Initialize logger
 $logger = new Logger("projectie.log", Logger::DEBUG);
-$locale = new Locale();
+$locale = new StringLocale();
 $mysqli = null;
 
 require_once("Db.php");

@@ -1,6 +1,6 @@
 <?php
 
-class Locale implements ArrayAccess{
+class StringLocale implements ArrayAccess{
 	public function load($lang){
 		//Generate path and check if file exists
 		$locale_filepath = self::localeFilepath($lang);
