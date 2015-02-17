@@ -979,13 +979,6 @@ margin: 5px;
 border-left: 1px solid #CCC;
 }
 
-.post_group input, 
-.post_group textarea, 
-.post_group input:focus, 
-.post_group textarea:focus{
-border-left: 5px solid #C1F15B;
-}
-
 .post_group input, .post_group textarea, .post_group textarea:focus{
 	border: none;
 	outline-width: 0;
@@ -1350,7 +1343,8 @@ a.neutral{
 	width: 100%;
 	max-height: 390px;
 	padding: 5px;
-	margin: 20px 5px 20px 5px;
+	padding-left: 10px;
+	margin: 20px 5px 0px 5px;
 	border-left: 5px solid #C1F15B;
 	overflow: hidden;
 }
@@ -1382,9 +1376,6 @@ width: 90%;
 
 .post-head{
 	padding-bottom: 5px;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-bottom-color: #d2d2d2;
 	margin-bottom: 5px;
 }
 
