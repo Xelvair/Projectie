@@ -89,6 +89,13 @@ $user_id = isset($_DATA["user"]) ? $_DATA["user"]["user_id"] : 0;
 			$(this).parent().removeClass('has-error');
 		})
 		
+		$(document).find("input").on('keypress',function(){
+			var action = $(this).closest('form').attr('enter_action');
+			if(action !== undefined && event.keyCode == 13){
+				window[action]();	
+			}
+		});
+		
 	});
 	
 function user_update(){
@@ -135,7 +142,7 @@ function user_update(){
 			contentType: false,
 			cache: false,
 			processData: false,
-			success: function(result){console.log(result);}
+			success: function(result){window.location.reload();}
 		});
 	}	
 }
@@ -162,7 +169,16 @@ function remove_news(id){
 		$.post("<?=abspath('/project/remove_news');?>", {
 			project_news_id : id
 		}).done(function(data){
-			alert(data);
+			var result = JSON.parse(data);
+	
+			if("ERROR" in result){
+				switch(result.ERROR){
+					case "ERR_NO_RIGHTS":
+					alert('You have no permission to do that!')
+				}
+			}else{
+				$('#post_id_'+id).slideUp(250);
+			}
 		});
 	}
 }
@@ -223,7 +239,7 @@ function remove_news(id){
               <h2 class="text-center"><?=$locale["settings"]?></h2>
           </div>
           <div class="modal-body">
-				<form id="settings_form">
+				<form id="settings_form" enter_action="user_update">
 					<input type="hidden" name="user_id" value="<?=$user_id?>">
 					<div class="form-group" style="height:125px;">
 						<div class="row">

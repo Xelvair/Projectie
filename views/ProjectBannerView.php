@@ -22,7 +22,7 @@ require_once(abspath_lcl("/templates/upload_title_picture_modal.html"));
 		</div>
 		<div class="project-banner-info">
 			<span class="project-banner-info-participator-count">&nbsp;</span><span class="glyphicon glyphicon-user"></span>
-			<span class="project-banner-info-fav-count">&nbsp;</span><span class="project-fav glyphicon glyphicon-star" data-project-id=""></span>
+			<span class="project-banner-info-fav-count favs_number">&nbsp;</span><span class="project-fav glyphicon glyphicon-star" data-project-id=""></span>
 		</div>
 		<div class="project-banner-content">
 			<ul class="project-banner-content-list">

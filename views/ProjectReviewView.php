@@ -17,7 +17,7 @@ global $locale;
 				<img src="<?=abspath($_DATA['title_picture']['file_path'])?>">
 				<div class="preview_properties pull-right">
 					<div class="favs">
-						<?=number_format($_DATA["fav_count"], 0, ",", ".")?>
+						<span class="favs_number"><?=number_format($_DATA["fav_count"], 0, ",", ".")?></span>
 						<span class="glyphicon glyphicon-star project-fav" data-project-id="<?=$_DATA["project_id"]?>"></span>
 					</div>
 					<div class="members">
