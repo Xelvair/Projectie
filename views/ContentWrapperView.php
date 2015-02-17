@@ -247,7 +247,7 @@ function remove_news(id){
 						</div>
 						<div class="row">
 							<div class="col-xs-3">
-								<img src="<?=abspath('public/images/default-profile-pic.png')?>" class="media-object pull-left">
+								<img src="<?=$_DATA["user"] ? abspath($_DATA["user"]["picture"]->file_path) : "#"?>" class="media-object pull-left">
 							</div>
 							<div class="col-xs-9">
 								<input id="input-1" type="file" name="profile_picture"> <!-- add 'class="file" to this item to reenable the fileinput panel' -->

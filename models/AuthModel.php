@@ -207,7 +207,7 @@ class AuthModel implements Model{
 	}
 
 	public function get_user($user_id){
-		$result = DBEZ::find("user", ["user_id" => (int)$user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "is_admin"]);
+		$result = DBEZ::find("user", ["user_id" => (int)$user_id, "active" => 1], ["user_id", "create_time", "username", "email", "lang", "picture_id", "is_admin"]);
 
 		if(!$result)
 			return array();
@@ -222,7 +222,8 @@ class AuthModel implements Model{
 			"project_participations" => self::get_user_participations($user_id),
 			"chat_participations" => self::get_chat_participations($user_id),
 			"tags" => self::get_tags($user_id),
-			"fav_projects" => self::get_fav_projects($user_id)
+			"fav_projects" => self::get_fav_projects($user_id),
+			"picture" => Picture::get($user["picture_id"])
 		);
 
 		return $user;
