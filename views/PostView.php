@@ -38,6 +38,6 @@ $post = $_DATA["post"];
 		<?php if(isset($post->title) && $post->title != ""){ ?>
 			<h4><?=$post->title?></h4>
 		<?php } ?>
-		<p><?=$post->content?></p>
+		<p><?=nl2br($post->content)?></p>
 	</div>
 </div>

@@ -38,19 +38,11 @@ class ProjectNews extends ActiveRecord{
 
 	/* PUBLIC */
 	public function getProject(){
-		if(!isset($this->project_id)){
-			$this->project_id = self::get($this->project_news_id)->project_id;
-		}
-
-		return Project::get($this->project_id);
+		return $this->getRelative("Project", "project_id");
 	}
 
 	public function getAuthor(){
-		if(!isset($this->author_id)){
-			$this->author_id = self::get($this->project_news_id)->author_id;
-		}
-
-		return User::get($this->author_id);
+		return $this->getRelative("User", "author_id");
 	}
 }
 

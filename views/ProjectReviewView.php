@@ -29,7 +29,7 @@ global $locale;
 		</div>
 		<div class="preview_content">
 			<h3><?=$_DATA["title"]?></h3>
-			<?=$_DATA["description"]?>
+			<?=nl2br($_DATA["description"])?>
 		</div>
 	</div>
 </a>

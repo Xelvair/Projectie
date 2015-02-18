@@ -161,7 +161,7 @@ echo Core::view("ProjectBanner", [
 								<div class="col-md-7">
 									<h1 class="project-title"><?=$_DATA["project"]["title"]?></h1>
 									<div class="panel-body" id="desc_panel">
-										<div id="desc_wrap" data-editable="<?=($_DATA["user_can_edit"] ? 1 : 0)?>"><?=$_DATA['project']['description']?></div>
+										<div id="desc_wrap" data-editable="<?=($_DATA["user_can_edit"] ? 1 : 0)?>"><?=nl2br($_DATA['project']['description'])?></div>
 										<div id="desc_update_wrap" class="form-group" style="display: none;">
 											<textarea name="desc" rows="6" class="form-control" id="desc_area" style="margin-bottom: 15px;"></textarea>
 											<button onclick="update_desc()" class="btn btn-default pull-left"><?=$locale['update']?></button>

@@ -57,7 +57,7 @@ function <?=$chat_dom_id?>_chat_dispatch(msg_obj, chat_type){
   var msg_html = $("#chat-msg-prefab").clone().removeAttr("hidden").removeAttr("id");
   msg_html.find(".chat-msg-time").text(addZero(msg_date.getHours()) + ":" + addZero(msg_date.getMinutes()));
   msg_html.find(".chat-msg-sender").text(msg_obj.username);
-  msg_html.find(".chat-msg-content").text(msg_obj.message);
+  msg_html.find(".chat-msg-content").html(msg_obj.message.replace(/\n/g, "<br>"));
 
   if(msg_obj.user_id == <?=$_DATA["user_id"]?>){
     msg_html.find(".chat-img").removeClass("pull-right").addClass("pull-left");
@@ -88,7 +88,9 @@ $(document).ready(function(){
   }
 
   $("#<?=$chat_dom_id?> .chat-input").on("keypress", function(e){
-      if(e.which == 13){
+      if(e.which == 13 && !e.shiftKey){
+        e.preventDefault();
+        e.stopPropagation();
         send_msg();
       }
     });

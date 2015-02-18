@@ -42,6 +42,23 @@ abstract class ActiveRecord{
 		}
 	}
 
+	public final function getRelative($class_name, $field_name){
+		//TODO: Cache result so that we don't have to do a db access everytime we access a relative
+		if(!isset($this->$field_name)){
+			$primary_key_field = static::getTableMeta()->getPrimaryKey();
+
+			if(!isset($this->$primary_key_field)){
+				throw new RuntimeException("Unable to retrieve attribute '".$field_name."', object has neither '".$field_name."'' nor '".$primary_key_field."'!");
+			}
+
+			$db_this = static::get($this->$primary_key_field);
+
+			$this->$field_name = $db_this->$field_name;
+		}
+
+		return $class_name::get($this->$field_name);
+	}
+
 	/* PRIVATE STATIC */
 	private static final function storeArray($activerecord_array){
 		foreach($activerecord_array as $activerecord){

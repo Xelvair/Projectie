@@ -84,7 +84,8 @@ class TestController extends Controller{
 		$user = new User(1);
 		$user->username = "faget";
 
-		User::store($user);
+		return print_r($user->getRelative("Picture", "picture_id"), true);
+
 		return print_r($user, true);
 	}
 
