@@ -5,7 +5,7 @@ CREATE TABLE user (
 	email         varchar(128) NOT NULL,
 	username      varchar(32) NOT NULL,
 	lang          varchar(10) NOT NULL,
-	picture_id 		int NOT NULL DEFAULT 1,
+	picture_id 		int NOT NULL DEFAULT 2,
 	password_salt varchar(8) NOT NULL,
 	password_hash varchar(32) NOT NULL,
 	is_admin      boolean NOT NULL DEFAULT 0,
@@ -149,6 +149,7 @@ CREATE TABLE picture (
 );
 
 INSERT INTO picture (picture_id, file_path, upload_date, uploader_id) VALUES (1, "/public/images/default-banner.png", 0, 0);
+INSERT INTO picture (picture_id, file_path, upload_date, uploader_id) VALUES (2, "/public/images/default-profile-pic.png", 0, 0);
 
 /* PRESET TAGS */
 INSERT INTO tag (name) VALUES 

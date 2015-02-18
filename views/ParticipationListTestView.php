@@ -7,6 +7,8 @@ require_once(abspath_lcl("/templates/position_participate_modal.html"));
 
 $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
 
+$user = $_DATA["project_position"]["user"];
+
 # project_position : assoc array of project_position as in database
 # project_position[user] : assoc array of user as in database
 # flags : flags for functions
@@ -20,10 +22,10 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
 	<div><?=$_DATA["project_position"]["job_title"]?></div>
 	<div>
 		<div>
-			<img class="media-object" src="/public/images/default-profile-pic.png"></div>
+			<img class="media-object" src="<?=$user ? abspath($user->getPicture()->file_path) : abspath("/public/images/default-profile-pic.png")?>"></div>
 		<div>
             <?php if($is_position_filled){ ?>
-                <h1><?=$_DATA["project_position"]["user"]["username"]?></h1>
+                <h1><?=$user->username?></h1>
                 <h2>Participator since <?=date("j.n.Y", $_DATA["project_position"]["participator_since"])?></h2>
             <?php } else {?>
                 <h1>Open Position</h1>
@@ -36,7 +38,7 @@ $is_position_filled = !empty($_DATA["project_position"]["user_id"]);
 
                 <?php if(array_search("KICK", $_DATA["flags"]) !== false){ ?>
                     <a href="#" data-toggle="modal" data-target="#position_kick_modal" 
-                        data-username="<?=$_DATA["project_position"]["user"]["username"]?>" 
+                        data-username="<?=$user->username?>" 
                         data-project-position-id="<?=$_DATA["project_position"]["project_position_id"]?>"
                     >
     					<div class="kick"><span class="glyphicon glyphicon-remove"></span> Kick</div>

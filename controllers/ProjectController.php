@@ -484,14 +484,16 @@ class ProjectController extends Controller{
 		
 		$member_list = $project->get_positions((int)$data[0]);
 		$member_list = array_map(function($entry) use ($auth, $project, $project_obj, $user){
-			$result = array_merge($entry, array("user" => $auth->get_user($entry["user_id"])), array("project" => $project->get($entry["project_id"])));
+			$result = $entry;
+			$result["project"] = $project->get($entry["project_id"]);
+			$result["user"] = $entry["user_id"] ? User::get((int)$entry["user_id"]) : null;
 			$flags = array();
 
 			if($user){
 				//If the currently shown user is the logged in user
 				if(
 					$project->exists_participation($project_obj["project_id"], $entry["user_id"]) &&
-					$user["user_id"] == $result["user"]["user_id"] &&
+					$user["user_id"] == $result["user"]->user_id &&
 					$project_obj["creator_id"] != $user["user_id"]
 				){
 					array_push($flags, "LEAVE", "RIGHTS");

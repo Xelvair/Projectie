@@ -6,6 +6,7 @@
 #show_project_title : whether the project title should be shown
 
 $post = $_DATA["post"];
+$show_project_title = $_DATA["show_project_title"];
 ?>
 <div class="post" id="post_id_<?=$post->project_news_id?>">
 	<?php if($_DATA["user_is_author"]){ ?>
@@ -13,9 +14,9 @@ $post = $_DATA["post"];
 	<?php } ?>
 	<div class="post-head">
 		<a class="pull-left" href="#">
-			<img class="media-object" src="<?=abspath($post->getAuthor()->getPicture()->file_path)?>">
+			<img class="media-object" src="<?=$show_project_title ? abspath($post->getProject()->getTitlePicture()->file_path) : abspath($post->getAuthor()->getPicture()->file_path)?>">
 		</a>
-		<?php if(isset($post->project_id) && $_DATA["show_project_title"]){ ?>
+		<?php if(isset($post->project_id) && $show_project_title){ ?>
 			<a href="<?=abspath("/project/show/").$post->getAuthor()->user_id?>">
 				<h3><?=$post->getProject()->title?></h3>
 			</a>
