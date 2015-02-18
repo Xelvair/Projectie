@@ -1003,6 +1003,7 @@ border-left: 5px solid #C1F15B;
 
 .request-entry{
 	overflow: hidden;
+	border: 1px solid #CCC;
 }
 
 .request-entry:first-child{

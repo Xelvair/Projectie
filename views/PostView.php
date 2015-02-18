@@ -13,7 +13,7 @@ $post = $_DATA["post"];
 	<?php } ?>
 	<div class="post-head">
 		<a class="pull-left" href="#">
-			<img class="media-object" src="<?=abspath('/public/images/default-profile-pic.png')?>">
+			<img class="media-object" src="<?=abspath($post->getAuthor()->getPicture()->file_path)?>">
 		</a>
 		<?php if(isset($post->project_id) && $_DATA["show_project_title"]){ ?>
 			<a href="<?=abspath("/project/show/").$post->getAuthor()->user_id?>">
@@ -24,7 +24,7 @@ $post = $_DATA["post"];
 					<a href="<?=abspath('/profile/show/').$post->getAuthor()->user_id?>">
 						<span class="user" user-id="<?=$post->getAuthor()->user_id?>"><?=$post->getAuthor()->username?></span>
 					</a>
-					<span><?=date("d.m.Y\ H:i",$post->post_time)?></span>
+					<span><?=date("d.m.Y\ H:i", $post->post_time)?></span>
 				</small>
 			</h3>
 		<?php }else{?>

@@ -351,7 +351,7 @@ class ProjectModel implements Model{
 
 		foreach($result as &$result_entry){
 			write_log(Logger::DEBUG, print_r($result_entry, true));
-			$result_entry["user"] = $auth->get_user($result_entry["user_id"]);
+			$result_entry["user"] = User::get((int)$result_entry["user_id"]);
 			$result_entry["project_position"] = DBEZ::find("project_position", $result_entry["project_position_id"], ["project_position_id", "job_title"]);
 		}
 
