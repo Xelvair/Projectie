@@ -22,50 +22,15 @@ class ProfileController extends Controller{
 		} else {
 			$locale->load("en-us");
 		}
-		
-		$viewed_user = $auth->get_user($data[0]);
 
 		if(isset($viewed_user["ERROR"])){
 			header("Location: /home");
 			return;
 		}
 		
-		$projects_involved = array();
-		
-		array_push($projects_involved, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($projects_involved, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($projects_involved, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($projects_involved, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		
-		$projects_involved_list = array();
-		
-		foreach($projects_involved as $entry){
-			array_push($projects_involved_list, Core::view("ProjectReview", $entry));
-		}
-		
-		$projects_created = array();
-		
-		array_push($projects_created, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($projects_created, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($projects_created, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		array_push($projects_created, array("title" => "Test 1", "desc" => "Test desc", "thumb" => abspath("/public/images/default-banner.png"), "members" => 30, "favs" => 20, "id" => 1));
-		
-		$projects_created_list = array();
-		
-		foreach($projects_created as $entry){
-			array_push($projects_created_list, Core::view("ProjectReview", $entry));
-		}
-		
-		$tags = array("tags" => array(), "tag_box_title" => true);
-		array_push($tags["tags"], array("tag_id" => 12, "name" => "dafuq r u?"));
-		
-		$tag_box = Core::view("TagBox", $tags);
-		
 		$profile_content = array(
-			"user" => $viewed_user,
-			"projects_created" => $projects_created_list,
-			"projects_involved" => $projects_involved_list,
-			"tag_box" => $tag_box
+			"user" => User::get((int)$data[0]),
+			"viewer_can_edit" => $user["user_id"] == $data[0]
 		);
 
 		$content = Core::view("Profile", $profile_content);

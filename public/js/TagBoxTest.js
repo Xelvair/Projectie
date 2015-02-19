@@ -94,7 +94,11 @@ $(document).ready(function(){
 
 		if(tagdelete){
 			$.post(Projectie.server_addr + tagdelete, tag, function(result){
-				var result = JSON.parse(result);
+				try{
+					var result = JSON.parse(result);
+				} catch(e){
+					console.log(result);
+				}
 
 				if(!result.ERROR){
 					$(e.currentTarget).find(".tag[data-tag-id="+tag.tag_id+"]").remove();
@@ -118,10 +122,14 @@ $(document).ready(function(){
 
 		if(tagadd){
 			$.post(Projectie.server_addr + tagadd, tag, function(result){
-				var result = JSON.parse(result);
+				try{
+					var result_obj = JSON.parse(result);
+				} catch (e){
+					console.log(result);
+				}
 
-				if(result.ERROR){
-					alert(result.ERROR);
+				if(result_obj.ERROR){
+					alert(result_obj.ERROR);
 				} else {
 					if($(e.currentTarget).attr("data-editable") == 1){
 						var remove_elem = $("<span style='display: none;' class='tag-remove glyphicon glyphicon-remove'></span>");

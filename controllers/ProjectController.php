@@ -193,7 +193,6 @@ class ProjectController extends Controller{
 		}
 
 		return json_encode($project->tag($tag, $project_id, (integer)$_POST["tag_id"]));
-
 	}
 
 	public function get_tags($data){
