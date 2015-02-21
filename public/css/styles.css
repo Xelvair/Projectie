@@ -560,7 +560,7 @@ margin-bottom: 10px;
 }
 
 .chat{
-	list-style:none;
+	list-style-type:none;
 	padding: 0px;
 }
 
@@ -1387,6 +1387,11 @@ width: 90%;
 
 .post-body{
 	padding-top: 5px;
+}
+
+.remove_btn{
+	cursor: pointer;
+	color: #AAA;
 }
 
 .project-fav{
