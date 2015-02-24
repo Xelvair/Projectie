@@ -5,7 +5,7 @@
 #members : number of members
 #favs : number of favs
 #title : project title
-#description : project description
+#subtitle : project subtitle
 #project_id : project id
 global $locale;
 ?>
@@ -29,7 +29,7 @@ global $locale;
 		</div>
 		<div class="preview_content">
 			<h3><?=$_DATA["title"]?></h3>
-			<?=nl2br($_DATA["description"])?>
+			<?=nl2br($_DATA["subtitle"])?>
 		</div>
 	</div>
 </a>

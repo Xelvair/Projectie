@@ -36,7 +36,7 @@ class HomeController extends Controller{
 			array_push($html_trending, Core::view("ProjectReview", $trending));
 		}
 	
-    	$mainpagelists = array("top_project" => array("projects" => $project->get_new_projects(3), "editable" => false), "new" => $html_new, "trending" => $html_trending);
+    	$mainpagelists = array("top_project" => array("projects" => $project->get_top_projects(3), "editable" => false), "new" => $html_new, "trending" => $html_trending);
 
 		$content = Core::view("MainPageContent", array_merge($mainpagelists, ["user" => $current_user]));
 

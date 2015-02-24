@@ -708,6 +708,32 @@ class ProjectModel implements Model{
 		return $projects;
 	}
 
+	public function get_top_projects($count){
+		global $mysqli;
+
+		if(!$count)
+			$count = 3;
+
+		$stmt_get_projects = $mysqli->prepare("
+			SELECT project.project_id, COUNT(project_fav.project_fav_id) as fav_count
+			FROM project 
+			JOIN project_fav ON(project.project_id = project_fav.project_id) 
+			GROUP BY project_id
+			ORDER BY fav_count DESC LIMIT ?
+		");
+		$stmt_get_projects->bind_param("i", $count);
+		$stmt_get_projects->execute();
+
+		$project_rows = $stmt_get_projects->get_result()->fetch_all(MYSQL_ASSOC);
+
+		$projects = array();
+		foreach($project_rows as $project_row){
+			array_push($projects, $this->get($project_row["project_id"]));
+		}
+
+		return $projects;
+	}
+
 	public function get_trending_projects($count){
 		global $mysqli;
 

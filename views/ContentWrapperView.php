@@ -186,51 +186,6 @@ function remove_news(id){
 
 <?=Core::view("LoginModal")?>
 
-<div id="AdvancedSearchModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-   <div class="modal-dialog">
-       <div class="modal-content">
-           <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
-              <h2 class="text-center"><?=$locale["search"]?></h2>
-          </div>
-          <div class="modal-body">
-			<div class="row">
-				<div class="col-md-12">
-					<form method="post" action="<?=abspath('/auth/set_user')?>">
-						<div class="form-group" id="search_group">
-							<input type="text" id="search_input" class="form-control" placeholder="<?=$locale['project_title']?>..."/>
-						</div> 
-						<div class="row  text-center">
-							<div class="col-xs-12">
-								<h3><?=$locale['sorted_by']?>...</h3>
-								<div class="form-group">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-default active">
-											<input type="radio" name="radio_sorted_by" value="relevance" autocomplete="off" checked><?=$locale['relevance']?>
-										</label>
-										<label class="btn btn-default">
-											<input type="radio" name="radio_sorted_by" value="alphabet" autocomplete="off"><?=$locale['alphabet']?>
-										</label>
-										<label class="btn btn-default">
-											<input type="radio" name="radio_sorted_by" value="date" autocomplete="off"><?=$locale['date']?>
-										</label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-			<div class="row">     
-				  <div class="col-md-12 text-right">
-					<button type="button" id="btn_search" class="btn btn-default"><?=$locale["search"]?></button>
-				  </div>
-			</div>
-          </div>
-       </div>
-   </div>
-</div>
-
 <div id="settingsModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
    <div class="modal-dialog">
        <div class="modal-content">
@@ -329,7 +284,7 @@ function remove_news(id){
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$locale["more"]?><span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-			<li><a href="#" data-toggle="modal" data-target="#AdvancedSearchModal"><?=$locale["placeholder_search"]?></a></li>
+			<!--<li><a href="#" data-toggle="modal" data-target="#AdvancedSearchModal"><?=$locale["placeholder_search"]?></a></li>-->
             <li><a href="<?=abspath('about')?>"><?=$locale["about"]?></a></li>
             <li class="divider"></li>
 			<?php if($user_logged_in){?>
