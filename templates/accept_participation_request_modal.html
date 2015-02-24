@@ -1,0 +1,33 @@
+<div id="accept_participation_request_modal" class="modal fade" tabindex="-1" role="dialog" data-project-position-id="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
+            </div>
+            <div class="modal-body">
+                <h3>Do you really want to add <span class="username"></span> to the Project?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-default confirm">Add</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+$(document).ready(function(){
+    $("#accept_participation_request_modal").on("show.bs.modal", function(event){
+        $(event.currentTarget).find(".username").text($(event.relatedTarget).data("username"));
+        $(event.currentTarget).attr("data-project-position-id", $(event.relatedTarget).data("project-position-id"));
+    });
+
+    $("#accept_participation_request_modal").on("click", ".confirm", function(event){
+        Projectie.Project.cancelParticipation($(event.delegateTarget).attr("data-project-position-id"));
+        location.reload();
+    });
+});
+
+</script>

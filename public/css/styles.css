@@ -321,8 +321,8 @@ hr{
 }
 
 .media-object-small{
-    height:50px;
-    width: 50px;
+    height:60px;
+    width: 60px;
 }
 
 .media-heading{
@@ -1004,6 +1004,33 @@ border-left: 5px solid #C1F15B;
 .request-entry{
 	overflow: hidden;
 	border: 1px solid #CCC;
+}
+
+.request-entry-buttons{
+	padding: 0;
+	float: right;
+}
+
+.request-entry-btn{
+	margin: 5px 2px 5px 2px;
+	padding: 2px;
+	border-radius: 5px;
+	border: 1px solid #999;
+	display: inline-block;
+	font-size: 12px;
+	font-weight: bold;
+	cursor: pointer;
+	background-color: red;
+}
+
+.request-entry-btn.deny{
+	background-color: #D9534F !important;
+	border-color: #D23531 !important;
+}
+
+.request-entry-btn.accept{
+	background-color: #92D405 !important;
+	border-color: #88C804 !important;
 }
 
 .request-entry:first-child{

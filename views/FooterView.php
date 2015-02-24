@@ -11,7 +11,7 @@ global $locale;
 	</div> 
     <div class="col-md-4 col-xs-4 text-center">
     	<ul class="list-inline">
-       		 <li>Online: 103.232</li>
+       		 <!--<li>Online: 103.232</li>-->
         </ul>
     </div>
     <div class="col-md-4 col-xs-4 text-right">

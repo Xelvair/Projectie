@@ -596,8 +596,10 @@ class ProjectController extends Controller{
 								"viewable" => true
 							),
 							"requests_panel" => array(
-								"content" => Core::view_batch("RequestEntry", $project->get_participation_requests($auth, $project_obj["project_id"])),
-								"viewable" => $user_is_participator
+								"content" => Core::view_batch("RequestEntry", array_map(function($entry) use($user_can_edit){
+									return array_merge($entry, ["viewer_can_edit" => $user_can_edit]);
+								}, $project->get_participation_requests($auth, $project_obj["project_id"]))),
+								"viewable" => true
 							)
 						)
 					),
