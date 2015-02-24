@@ -285,7 +285,7 @@ class DBEZ{
 		} else if (gettype($result_format) == "string" && $result_format == "*"){
 			$query_str = "SELECT * FROM ".$table;
 		} else {
-			throw new Exception("Parameter $result_format is of invalid type".gettype($result_format)."!");
+			throw new Exception("Parameter $result_format is of invalid type ".gettype($result_format)."!");
 		}
 
 

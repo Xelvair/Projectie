@@ -24,25 +24,6 @@ $user_id = isset($_DATA["user"]) ? $_DATA["user"]["user_id"] : 0;
 			});
 		});
 		
-		$('#btn_search').on('click', function(){
-			
-			var search_val = $('#search_input').val();
-			var search_for = $("input[name='radio_search_for']:checked").val();
-			var sorted_by = $("input[name='radio_sorted_by']:checked").val();
-			
-			if(search_val != ""){
-			
-			alert('search_val: '+search_val+'search_for: '+search_for+'sorted_by: '+sorted_by)
-			}else{
-				$('#search_group').addClass('has-error');
-			}
-			
-		});
-		
-		$('#search_input').keypress(function(){
-			$(this).parent().removeClass('has-error');
-		});
-		
 		$('#change_pw').click(function(){
 			$(this).slideUp(300);
 			setTimeout(function(){ 
@@ -284,7 +265,6 @@ function remove_news(id){
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$locale["more"]?><span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-			<!--<li><a href="#" data-toggle="modal" data-target="#AdvancedSearchModal"><?=$locale["placeholder_search"]?></a></li>-->
             <li><a href="<?=abspath('about')?>"><?=$locale["about"]?></a></li>
             <li class="divider"></li>
 			<?php if($user_logged_in){?>
@@ -316,9 +296,9 @@ function remove_news(id){
 	      <li>
 	        <a href="<?=abspath("favorites")?>"><?=$locale["favorites"]?></a>
 	      </li>
-	      <li>
+	      <!--<li>
 	        <a href="<?=abspath("chat")?>"><?=$locale["conversations"]?></a>
-	      </li>
+	      </li>-->
 	    </ul>
 	  </div>
 	<?php } ?>
