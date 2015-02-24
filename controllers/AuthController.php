@@ -86,6 +86,75 @@ class AuthController extends Controller{
 
 		return json_encode($auth->set_user($_POST));
 	}
+
+	# $_POST["tag_id"] || $_POST["tag_name"]
+	public function tag($data){
+		$exists_and_filled_out = function(&$var){
+			return (isset($var) && !empty($var));
+		};
+
+		if
+		(
+			!$exists_and_filled_out($data[0]) ||
+			!(
+				$exists_and_filled_out($_POST["tag_id"]) ||
+				$exists_and_filled_out($_POST["tag_name"])
+			)
+		){
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+
+		if($exists_and_filled_out($_POST["tag_id"])){
+			if(!filter_var($_POST["tag_id"], FILTER_VALIDATE_INT)){
+				return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS")); 
+			}
+		}
+
+		$auth = Core::model("Auth");
+		$tag = Core::model("Tag");
+
+		$current_user = $auth->get_current_user();
+
+		if(!$current_user){
+			return json_encode(array("ERROR" => "ERR_NOT_LOGGED_IN"));
+		}
+
+		$user_id = (integer)$data[0];
+
+		$current_user_id = $auth->get_current_user()["id"];
+
+		return json_encode($auth->tag($tag, $user_id, (integer)$_POST["tag_id"]));
+	}
+
+	public function untag($data){
+		if(sizeof($data) <= 0){
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+
+		if(!isset($_POST["tag_id"])){
+			return json_encode(array("ERROR" => "ERR_INVALID_PARAMETERS"));
+		}
+
+		$user_id = (int)$data[0];
+		$tag_id = (int)$_POST["tag_id"];
+
+		$auth = Core::model("Auth");
+		$tag = Core::model("Tag");
+
+		$current_user = $auth->get_current_user();
+
+		return json_encode($auth->untag($tag, $user_id, $tag_id));
+	}
+
+	public function get_tags($data){
+		if(sizeof($data) <= 0){
+			return json_encode(array("ERROR" => "ERR_INSUFFICIENT_PARAMETERS"));
+		}
+
+		$auth = Core::model("Auth");
+		
+		return json_encode($auth->get_tags((int)$data[0]));
+	}
 }
 
 ?>

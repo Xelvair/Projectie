@@ -15,6 +15,18 @@ class User extends ActiveRecord{
 
 		return $result;
 	}
+
+	public function getCreatedProjectsCount(){
+		$result = DBEZ::find("project", ["creator_id" => $this->user_id], ["project_id"]);
+
+		return sizeof($result);
+	}
+
+	public function getParticipatedProjectsCount(){
+		$result = DBEZ::find("project_position", ["user_id" => $this->user_id], ["project_position_id"]);
+
+		return sizeof($result);
+	}
 }
 
 ?>

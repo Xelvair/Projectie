@@ -1462,3 +1462,40 @@ width: 90%;
 .navbar-default .navbar-collapse, .navbar-default .navbar-form{
 	border: none !important;
 }
+
+.profile-picture{
+	max-height: 200px;
+	max-width: 100%;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.profile-top-row{
+	margin-top: 25px;
+	height: 200px;
+}
+
+.user-name{
+	font-weight: bold;
+	font-size: 2em;
+	color: #333;
+}
+
+.user-info{
+	display: block;
+	font-weight: bold;
+	color: #777;
+}
+
+.user-info-value{
+	margin-left: 10px;
+	color: #333;
+}
