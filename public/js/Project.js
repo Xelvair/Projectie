@@ -35,6 +35,7 @@ Projectie.Project.acceptParticipationRequest = function(participation_request_id
 			project_participation_request_id : participation_request_id
 		},
 		function(result){
+			console.log(result);
 			if(result.ERROR){
 				console.log("acceptParticipationRequest: "+result.ERROR);
 			}
@@ -49,6 +50,7 @@ Projectie.Project.cancelParticipationRequest = function(participation_request_id
 			project_participation_request_id : participation_request_id
 		},
 		function(result){
+			console.log(result);
 			if(result.ERROR){
 				console.log("cancelParticipationRequest: "+result.ERROR);
 			}

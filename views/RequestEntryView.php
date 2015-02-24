@@ -31,10 +31,10 @@ $user = $_DATA["user"];
 	</span>
 	<?php if($_DATA["viewer_can_edit"]){ ?>
 		<div class="request-entry-buttons">
-			<a href="#" data-toggle="modal" data-target="#deny_participation_request_modal" data-participation-request-id="<?=$_DATA["participatioN_request_id"]?>" data-username="<?=$user->username?>">
+			<a href="#" data-toggle="modal" data-target="#deny_participation_request_modal" data-project-participation-request-id="<?=$_DATA["project_participation_request_id"]?>" data-username="<?=$user->username?>">
 				<div class="request-entry-btn deny">Deny</div>
 			</a>
-			<a href="#" data-toggle="modal" data-target="#accept_participation_request_modal" data-participation-request-id="<?=$_DATA["participatioN_request_id"]?>" data-username="<?=$user->username?>">
+			<a href="#" data-toggle="modal" data-target="#accept_participation_request_modal" data-project-participation-request-id="<?=$_DATA["project_participation_request_id"]?>" data-username="<?=$user->username?>">
 			<div class="request-entry-btn accept">Accept</div>
 			</a>
 		</div>

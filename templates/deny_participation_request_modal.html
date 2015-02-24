@@ -1,4 +1,4 @@
-<div id="deny_participation_request_modal" class="modal fade" tabindex="-1" role="dialog" data-project-position-id="-1">
+<div id="deny_participation_request_modal" class="modal fade" tabindex="-1" role="dialog" data-project-participation-request-id="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,11 +21,11 @@
 $(document).ready(function(){
     $("#deny_participation_request_modal").on("show.bs.modal", function(event){
         $(event.currentTarget).find(".username").text($(event.relatedTarget).data("username"));
-        $(event.currentTarget).attr("data-project-position-id", $(event.relatedTarget).data("project-position-id"));
+        $(event.currentTarget).attr("data-project-participation-request-id", $(event.relatedTarget).data("project-participation-request-id-id"));
     });
 
     $("#deny_participation_request_modal").on("click", ".confirm", function(event){
-        Projectie.Project.cancelParticipation($(event.delegateTarget).attr("data-project-position-id"));
+        Projectie.Project.cancelParticipationRequest($(event.delegateTarget).attr("data-project-participation-request-id"));
         location.reload();
     });
 });
