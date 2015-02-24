@@ -1,6 +1,7 @@
 <div class="row" style="margin-bottom: 20px;">
-	<div class="col-md-12 page-header text-center">
-		<h1><?=$_DATA["list_title"]?></h1>
+	<div class="col-md-12 page-header content_list" style="margin-bottom: 20px">
+		<span class="list-headline"><?=$_DATA["list_title"]?></span>
+		<hr>
 	</div>
 </div>
 

@@ -23,9 +23,31 @@ $show_members = isset($_DATA["project"]["panels"]["members_panel"]["viewable"]) 
 ?>
 
 <script>
+Projectie.selected_panel = "<?=$_DATA['selected_panel']?>";
+
 var desc_click = 0;
 
 $(document).ready(function(){	
+	switch(Projectie.selected_panel){
+		case "private_conversation":
+			$("#home-btn").tab("show");
+			break;
+		case "public_conversation":
+			$("#conversation-btn").tab("show");
+			break;
+		case "home":
+			$("#conversation-btn").tab("show");
+			break;
+		case "members":
+			$("#member-btn").tab("show");
+			break;
+		case "requests":
+			$("#request-btn").tab("show");
+			break;
+		default:
+			break;
+	}
+
 	$('#desc_area').keypress(function(){
 		$(this).parent().removeClass('has-error');
 	});

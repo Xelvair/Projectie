@@ -42,6 +42,7 @@ global $locale;
 			var form_data = $('#create_project_form').serialize();
 
 			$.post("<?=abspath('/project/create')?>", form_data, function(result){
+				console.log(result);
 				result_obj = JSON.parse(result);
 				if(result_obj.ERROR === undefined){
 					window.location = "<?=abspath('/project/show/')?>" + result_obj.project_id;
