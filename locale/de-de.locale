@@ -82,5 +82,13 @@
 	"old_password" : "Altes Passwort",
 	"view_project" : "Projekt Ansehen",
 	"discover_projectie" : "Projectie Entdecken",
-	"search_tags" : "Suchtags"
+	"search_tags" : "Suchtags",
+	"delete_post" : "Wollen Sie diesen Post wirklich löschen?",
+	"are_you_sure" : "Sind Sie sicher?",
+	"programming" : "Programierung",
+	"web_design" : "Web-Design",
+	"video_editing" : "Videoschnitt",
+	"presentation" : "Präsentation",
+	"manuel" : "Handbuch",
+	"project_leader": "Projektleiter"
 }
